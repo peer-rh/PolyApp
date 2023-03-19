@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:language_pal/app/chat/models/scenariosModel.dart';
 import 'package:language_pal/app/chat/presentation/chatPage.dart';
-import 'package:language_pal/app/chat/scenariosModel.dart';
+import 'package:language_pal/app/user/userProvider.dart';
+import 'package:provider/provider.dart';
 
 class SelectScenarioPage extends StatefulWidget {
-  SelectScenarioPage({Key? key}) : super(key: key);
+  const SelectScenarioPage({Key? key}) : super(key: key);
 
   @override
   State<SelectScenarioPage> createState() => _SelectScenarioPageState();
@@ -16,8 +17,8 @@ class SelectScenarioPage extends StatefulWidget {
 class _SelectScenarioPageState extends State<SelectScenarioPage> {
   List<ScenarioModel> scenarios = [];
 
-  void loadScenarios() async {
-    var tmp = await loadScenariosFromJson('assets/scenarios_de.json');
+  void loadScenarios(String language) async {
+    var tmp = await loadScenarioModels(language);
     setState(() {
       scenarios = tmp;
     });
@@ -26,7 +27,9 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
   @override
   void initState() {
     super.initState();
-    loadScenarios();
+    String lang =
+        Provider.of<UserProvider>(context, listen: false).u!.learnLang;
+    loadScenarios(lang);
   }
 
   @override
@@ -59,6 +62,10 @@ class PersonChatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String learnLang =
+        Provider.of<UserProvider>(context, listen: false).u!.learnLang;
+    String ownLang =
+        Provider.of<UserProvider>(context, listen: false).u!.ownLang;
     return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -66,17 +73,19 @@ class PersonChatButton extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => ChatPage(
                         scenario: aiBot,
+                        ownLang: ownLang,
+                        learnLang: learnLang,
                       )));
         },
         child: Container(
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 20),
           color: Colors.grey[300],
           child: Center(
               child: Text(
             aiBot.name,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: "nunito"),

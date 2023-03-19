@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
     return ChangeNotifierProvider(
-      create: (_) => UserProvider(authProvider.user as User),
+      create: (context) => UserProvider(authProvider.user as User),
       builder: (context, child) {
         UserProvider up = Provider.of(context);
         switch (up.status) {
