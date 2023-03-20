@@ -116,11 +116,10 @@ class _ChatPageState extends State<ChatPage> {
       _scrollController.animateTo(0.0,
           duration: Duration(milliseconds: 200), curve: Curves.bounceInOut);
     });
-
-    getGrammarCorrection(personMsg.msg, widget.learnLang).then((resp) {
+    print("Called Get Grammar");
+    getGrammarCorrection(personMsg.msg).then((resp) {
       setState(() {
         personMsg.grammarCorrection = resp;
-        disabled = false;
       });
     });
   }

@@ -1,7 +1,7 @@
 [
     {
         "name": "Ordering Food",
-        "prompt": "At the restaunt, you are a very polite waiter and I am the customer",
+        "prompt": "At a fine restaunt, you are a very polite waiter and I am the customer",
         "starting_msgs": [
             "[relevancy_score: 1] Hallo haben sie eine Reservierung?"
         ]

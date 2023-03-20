@@ -22,6 +22,6 @@ Future<List<ScenarioModel>> loadScenarioModels(String language) async {
     return ScenarioModel(
         e["name"],
         scenario_prompt.replaceAll("<SCENARIO>", e["name"]),
-        e["starting_msgs"]);
+        e["starting_msgs"].cast<String>());
   }).toList();
 }

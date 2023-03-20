@@ -36,7 +36,7 @@ class OwnMsgBubble extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text("Grammar Correction"),
+                          title: const Text("Is this correct?"),
                           content: Text(msg.grammarCorrection!),
                           actions: [
                             TextButton(

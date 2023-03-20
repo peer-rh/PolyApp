@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -11,8 +12,6 @@ import 'package:language_pal/firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // TODO Features
-// - Grammar Correction
-// - Grade of how good the answer was
 // - Text2Speech
 
 void main() async {
@@ -23,6 +22,9 @@ void main() async {
   // Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
   );
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

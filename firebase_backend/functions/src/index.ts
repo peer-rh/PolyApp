@@ -15,7 +15,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
     let user_doc = admin.firestore().collection("users").doc(uid);
     let user_data = await user_doc.get();
     let dM = user_data.get("dailyMsgCount");
-    if (dM > 100) throw new functions.https.HttpsError('failed-precondition', "The user has used up all of his messages.");
+    if (dM > 40) throw new functions.https.HttpsError('failed-precondition', "The user has used up all of his messages.");
 
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
@@ -24,7 +24,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
 
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        max_tokens: 70,
+        max_tokens: 100,
         messages: data,
         user: uid,
     })).data
@@ -43,9 +43,9 @@ export const getTranslation = functions.runWith({ secrets: ["OPENAI_KEY"] }).htt
     const openai = new OpenAIApi(configuration);
 
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
-        model: "gpt-3.5-turbo", // TODO: Compare to gpt-4
+        model: "gpt-3.5-turbo",
         user: uid,
-        max_tokens: 150,
+        max_tokens: 200,
         messages: [
             { role: "system", content: `You will translate this sentence into ${data["lang"]}. Give 2 Options.` },
             { role: "user", content: data["text"] }
@@ -54,6 +54,17 @@ export const getTranslation = functions.runWith({ secrets: ["OPENAI_KEY"] }).htt
     })).data;
     return comp.choices[0].message?.content;
 })
+
+export const transcribeAudio = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
+    // Check if current user is allowed to do so
+    const uid = context.auth?.uid;
+    if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
+    const configuration = new Configuration({
+        apiKey: openAIKey.value(),
+    });
+    const openai = new OpenAIApi(configuration);
+    let trans = (await openai.createTranscription()).data;
+    return trans["text"];
 
 export const getGrammarCorrection = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
     // Check if current user is allowed to do so
@@ -65,12 +76,12 @@ export const getGrammarCorrection = functions.runWith({ secrets: ["OPENAI_KEY"] 
     const openai = new OpenAIApi(configuration);
 
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
-        model: "gpt-3.5-turbo", // TODO: Compare to gpt-4
+        model: "gpt-3.5-turbo",
         user: uid,
-        max_tokens: 150,
+        max_tokens: 200,
         messages: [
-            { role: "system", content: `Is this sentence grammatically correct in ${data["lang"]}? If yes, return only [correct] otherwise return [corrected_version: ...].` },
-            { role: "user", content: data["text"] }
+            { role: "system", content: `You will only answer yes and no. If no, you will provide explanation` },
+            { role: "user", content: `Is this sentence grammatically correct: "${data["text"]}"?` }
         ],
 
     })).data;
