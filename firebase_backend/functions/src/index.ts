@@ -22,6 +22,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
     });
     const openai = new OpenAIApi(configuration);
 
+    functions.logger.info("Loaded OpenAI API in getAIMsgResponse");
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         max_tokens: 100,
@@ -29,6 +30,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
         user: uid,
     })).data
     user_doc.update({ "dailyMsgCount": dM + 1 });
+    functions.logger.info("Returning response");
     return comp.choices[0].message?.content;
 
 });
@@ -41,7 +43,6 @@ export const getTranslation = functions.runWith({ secrets: ["OPENAI_KEY"] }).htt
         apiKey: openAIKey.value(),
     });
     const openai = new OpenAIApi(configuration);
-
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         user: uid,
