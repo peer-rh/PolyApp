@@ -16,3 +16,9 @@ Future<void> initPlatformState() async {
   final analysisId = await FirebaseAnalytics.instance.appInstanceId;
   Purchases.setFirebaseAppInstanceId(analysisId!);
 }
+
+// NOTE:
+// 3 Levels
+// Lite: 3.99$ per month - Limited Messages - Ads for more messages
+// Base: 7.99$ per month - Unlimited Messages - No Ads - Whisper Input
+// Pro: 14.99$ per month - Unlimited Messages - GPT-4

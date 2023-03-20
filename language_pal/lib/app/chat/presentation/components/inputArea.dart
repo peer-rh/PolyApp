@@ -17,19 +17,26 @@ class ChatInputArea extends StatefulWidget {
 class _InputAreaState extends State<ChatInputArea> {
   final controller = TextEditingController();
   var showMic = true;
+  stt.SpeechToText? speech;
+
+  @override
+  void dispose() {
+    speech = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     controller.addListener(() => setState(() {
           controller.text == "" ? showMic = true : showMic = false;
         }));
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Row(
         children: <Widget>[
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30), color: Colors.white),
               alignment: Alignment.centerLeft,
@@ -45,7 +52,7 @@ class _InputAreaState extends State<ChatInputArea> {
                 maxLines: 5,
                 minLines: 1,
                 textInputAction: TextInputAction.send,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Write message...",
                   hintStyle: TextStyle(color: Colors.black54),
                   border: InputBorder.none,
@@ -53,22 +60,19 @@ class _InputAreaState extends State<ChatInputArea> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
-          FloatingActionButton(
-            onPressed: () async {
+          GestureDetector(
+            onTapDown: (_) async {
               if (widget.disabled) return;
-              // TODO: Maybe use input default method
-              // TODO: Or build Tensorflow Model to also correct pronounciation
-              // TODO: Use Button Hold Down
-              // BUG: Quick Double Press emediatly sends text
               if (showMic) {
-                stt.SpeechToText speech = stt.SpeechToText();
+                print("Start listening");
+                speech = stt.SpeechToText();
                 bool available =
-                    await speech.initialize(onStatus: (s) {}, onError: (e) {});
+                    await speech!.initialize(onStatus: (s) {}, onError: (e) {});
                 if (available) {
-                  speech.listen(
+                  speech!.listen(
                       onResult: (s) {
                         setState(() {
                           controller.text = s.recognizedWords;
@@ -78,20 +82,28 @@ class _InputAreaState extends State<ChatInputArea> {
                 } else {
                   print("The user has denied the use of speech recognition.");
                 }
-                // some time later...
-                sleep(Duration(seconds: 5));
-                speech.stop();
+              }
+            },
+            onTapUp: (_) {
+              if (widget.disabled) return;
+              if (showMic && speech != null) {
+                print("Finished Listening");
+                speech!.stop();
               } else {
                 widget.sendMsg(controller.text);
                 controller.text = "";
               }
             },
-            backgroundColor: widget.disabled ? Colors.grey : Colors.blue,
-            elevation: 0,
-            child: Icon(
-              showMic ? Icons.mic : Icons.send,
-              color: Colors.white,
-              size: 18,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  color: widget.disabled ? Colors.grey : Colors.blue,
+                  shape: BoxShape.circle),
+              child: Icon(
+                showMic ? Icons.mic : Icons.send,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
           ),
         ],
