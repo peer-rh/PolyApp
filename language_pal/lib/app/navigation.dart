@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/presentation/selectScenarioPage.dart';
+import 'package:language_pal/app/loadingPage.dart';
 import 'package:language_pal/app/user/presentation/onboarding.dart';
 import 'package:language_pal/app/user/presentation/userPage.dart';
 import 'package:language_pal/app/user/userProvider.dart';
@@ -19,9 +20,9 @@ class HomePage extends StatelessWidget {
         UserProvider up = Provider.of(context);
         switch (up.status) {
           case Status.loading:
-            return const CircularProgressIndicator();
+            return const LoadingPage();
           case Status.onboarding:
-            return OnboardingPage();
+            return const OnboardingPage();
           case Status.loaded:
             return const NavWrapper();
           default:
@@ -42,7 +43,7 @@ class NavWrapper extends StatefulWidget {
 class _NavWrapperState extends State<NavWrapper> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    SelectScenarioPage(),
+    const SelectScenarioPage(),
     const UserPage(),
   ];
 

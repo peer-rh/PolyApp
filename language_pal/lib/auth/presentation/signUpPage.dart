@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:language_pal/auth/authProvider.dart';
+import 'package:language_pal/auth/components/oAuthButtons.dart';
+import 'package:language_pal/auth/components/signInButton.dart';
 import 'package:language_pal/auth/presentation/signInPage.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +42,11 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Image(
+                    image: AssetImage("assets/logo.png"),
+                    height: 100,
+                  ),
+                  const SizedBox(height: 80),
                   TextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailCont,
@@ -48,6 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       hintStyle: TextStyle(color: Colors.black54),
                     ),
                   ),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: passCont,
                     obscureText: true,
@@ -56,34 +64,31 @@ class _SignUpPageState extends State<SignUpPage> {
                       hintStyle: TextStyle(color: Colors.black54),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   if (errorMsg != null)
                     Text(
                       errorMsg!,
-                      style: const TextStyle(color: Colors.red),
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error),
                     ),
-                  ElevatedButton(
-                      onPressed: () {
-                        runAuth(() => ap.signUpWithEmailAndPassword(
-                            emailCont.text, passCont.text));
-                      },
-                      child: const Text("Sign Up")),
+                  const SizedBox(
+                      height:
+                          35), // NOTE: covers the space which Forgot Password button would take, may not be universal
+                  CustomAuthButton(
+                    onPressed: () {
+                      runAuth(() => ap.signUpWithEmailAndPassword(
+                          emailCont.text, passCont.text));
+                    },
+                    text: "Sign Up",
+                  ),
+                  const SizedBox(height: 10),
                   TextButton(
                       onPressed: () {
                         widget.changeChild(SignInPage(widget.changeChild));
                       },
-                      child: const Text("Already have an account? Sign in.")),
-                  ElevatedButton(
-                    onPressed: () {
-                      runAuth(ap.signInWithGoogle);
-                    },
-                    child: const Text("Sign In With Google"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      runAuth(ap.signInWithApple);
-                    },
-                    child: const Text("Sign In With Apple"),
-                  ),
+                      child: const Text("Already have an Account? Sign In!")),
+                  const SizedBox(height: 20),
+                  OAuthButtons(ap),
                   const SizedBox(
                     height: 50,
                   ),

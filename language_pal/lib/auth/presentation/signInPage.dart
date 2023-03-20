@@ -47,6 +47,7 @@ class _SignInPageState extends State<SignInPage> {
                   image: AssetImage("assets/logo.png"),
                   height: 100,
                 ),
+                SizedBox(height: 80),
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: emailCont,
@@ -55,6 +56,7 @@ class _SignInPageState extends State<SignInPage> {
                     hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
+                SizedBox(height: 10),
                 TextField(
                   controller: passCont,
                   obscureText: true,
@@ -63,17 +65,35 @@ class _SignInPageState extends State<SignInPage> {
                     hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
-                TextButton(
-                    onPressed: () {
-                      widget
-                          .changeChild(ForgotPasswordPage(widget.changeChild));
+                SizedBox(height: 5),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTapUp: (_) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPasswordPage()));
+                      // widget
+                      //     .changeChild(ForgotPasswordPage(widget.changeChild));
                     },
-                    child: const Text("Forgot Password?")),
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
                 if (errorMsg != null)
                   Text(
                     errorMsg!,
-                    style: const TextStyle(color: Colors.red),
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error),
                   ),
+                SizedBox(height: 10),
                 CustomAuthButton(
                   onPressed: () {
                     runAuth(() => ap.signInWithEmailAndPassword(
@@ -81,11 +101,13 @@ class _SignInPageState extends State<SignInPage> {
                   },
                   text: "Sign In",
                 ),
+                SizedBox(height: 10),
                 TextButton(
                     onPressed: () {
                       widget.changeChild(SignUpPage(widget.changeChild));
                     },
                     child: const Text("Don't have an Account yet? Sign Up!")),
+                SizedBox(height: 20),
                 OAuthButtons(ap),
                 const SizedBox(
                   height: 50,
