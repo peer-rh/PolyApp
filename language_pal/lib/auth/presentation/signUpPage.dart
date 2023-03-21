@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/auth/authProvider.dart';
 import 'package:language_pal/auth/components/oAuthButtons.dart';
 import 'package:language_pal/auth/components/signInButton.dart';
@@ -42,11 +43,25 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Image(
-                    image: AssetImage("assets/logo.png"),
-                    height: 100,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Language",
+                          style: GoogleFonts.nunito(
+                            fontSize: 56,
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontWeight: FontWeight.w700,
+                          )),
+                      Text("Pal",
+                          style: GoogleFonts.nunito(
+                            fontSize: 56,
+                            fontWeight: FontWeight.w700,
+                          )),
+                    ],
                   ),
-                  const SizedBox(height: 80),
+                  const SizedBox(
+                    height: 80,
+                  ),
                   TextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailCont,

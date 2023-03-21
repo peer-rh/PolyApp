@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/auth/authProvider.dart';
-import 'package:language_pal/auth/components/buttons.dart';
 import 'package:language_pal/auth/components/oAuthButtons.dart';
 import 'package:language_pal/auth/components/signInButton.dart';
 import 'package:language_pal/auth/presentation/forgotPassword.dart';
@@ -43,11 +43,23 @@ class _SignInPageState extends State<SignInPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Image(
-                  image: AssetImage("assets/logo.png"),
-                  height: 100,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Language",
+                        style: GoogleFonts.nunito(
+                          fontSize: 56,
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.w700,
+                        )),
+                    Text("Pal",
+                        style: GoogleFonts.nunito(
+                          fontSize: 56,
+                          fontWeight: FontWeight.w700,
+                        )),
+                  ],
                 ),
-                SizedBox(height: 80),
+                const SizedBox(height: 80),
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: emailCont,
@@ -56,7 +68,7 @@ class _SignInPageState extends State<SignInPage> {
                     hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   controller: passCont,
                   obscureText: true,
@@ -65,7 +77,7 @@ class _SignInPageState extends State<SignInPage> {
                     hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.topRight,
                   child: GestureDetector(
@@ -73,7 +85,8 @@ class _SignInPageState extends State<SignInPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgotPasswordPage()));
+                              builder: (context) =>
+                                  const ForgotPasswordPage()));
                       // widget
                       //     .changeChild(ForgotPasswordPage(widget.changeChild));
                     },
@@ -86,14 +99,14 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 if (errorMsg != null)
                   Text(
                     errorMsg!,
                     style:
                         TextStyle(color: Theme.of(context).colorScheme.error),
                   ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 CustomAuthButton(
                   onPressed: () {
                     runAuth(() => ap.signInWithEmailAndPassword(
@@ -101,13 +114,13 @@ class _SignInPageState extends State<SignInPage> {
                   },
                   text: "Sign In",
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextButton(
                     onPressed: () {
                       widget.changeChild(SignUpPage(widget.changeChild));
                     },
                     child: const Text("Don't have an Account yet? Sign Up!")),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 OAuthButtons(ap),
                 const SizedBox(
                   height: 50,

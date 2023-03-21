@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/chat/models/scenariosModel.dart';
 import 'package:language_pal/app/chat/presentation/chatPage.dart';
@@ -34,6 +33,10 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
 
   @override
   Widget build(BuildContext context) {
+    String ownLang =
+        Provider.of<UserProvider>(context, listen: false).u!.ownLang;
+    String learnLang =
+        Provider.of<UserProvider>(context, listen: false).u!.ownLang;
     return Container(
         padding: const EdgeInsets.all(16),
         child: SafeArea(
@@ -46,11 +49,60 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                 textAlign: TextAlign.center,
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             Expanded(
-                child: ListView(
-              children:
-                  scenarios.map((e) => PersonChatButton(aiBot: e)).toList(),
-            )),
+                child: MasonryGridView.builder(
+                    gridDelegate:
+                        const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        elevation: 0,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                          scenario: scenarios[index],
+                                          ownLang: ownLang,
+                                          learnLang: learnLang,
+                                        )));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  scenarios[index].emoji,
+                                  style: TextStyle(fontSize: 80),
+                                ),
+                                Text(
+                                  scenarios[index].name,
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.nunito(
+                                      fontSize: 24,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: scenarios.length,
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics())),
           ]),
         ));
   }
