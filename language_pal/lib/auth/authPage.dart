@@ -10,7 +10,6 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-// NOTE: Very hacky way to avoid Navigator
   late Widget child;
 
   void setChild(Widget c) {

@@ -7,9 +7,10 @@ class ScenarioModel {
   String emoji;
   String avatar;
   String prompt;
+  String shortDesc;
   List<String> startMessages;
-  ScenarioModel(
-      this.name, this.prompt, this.startMessages, this.emoji, this.avatar);
+  ScenarioModel(this.name, this.prompt, this.startMessages, this.emoji,
+      this.avatar, this.shortDesc);
 }
 
 Future<List<ScenarioModel>> loadScenarioModels(String language) async {
@@ -22,11 +23,11 @@ Future<List<ScenarioModel>> loadScenarioModels(String language) async {
   List<dynamic> map = await json.decode(scenarios);
   return map.map((e) {
     return ScenarioModel(
-      e["name"],
-      scenario_prompt.replaceAll("<SCENARIO>", e["name"]),
-      e["starting_msgs"].cast<String>(),
-      e["emoji"],
-      e["avatar"],
-    );
+        e["name"],
+        scenario_prompt.replaceAll("<SCENARIO>", e["name"]),
+        e["starting_msgs"].cast<String>(),
+        e["emoji"],
+        e["avatar"],
+        e["short_desc"]);
   }).toList();
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/navigation.dart';
+import 'package:language_pal/app/loadingPage.dart';
+import 'package:language_pal/app/home_page.dart';
+import 'package:language_pal/app/user/presentation/onboarding.dart';
 import 'package:language_pal/auth/authPage.dart';
 import 'package:language_pal/auth/authProvider.dart';
 import 'package:language_pal/theme.dart';
@@ -20,15 +22,18 @@ class App extends StatelessWidget {
         darkTheme: darkTheme,
         home: Builder(
           builder: (context) {
-            AuthProvider ap = Provider.of(context);
-            if (ap.user == null) {
-              return const AuthPage();
-            } else {
-              return Overlay(
-                initialEntries: [
-                  OverlayEntry(builder: (context) => const HomePage())
-                ],
-              );
+            AuthProvider ap = context.watch();
+            switch (ap.state) {
+              case AuthState.loading:
+                return const LoadingPage();
+              case AuthState.authenticated:
+                return const HomePage();
+              case AuthState.unauthenticated:
+                return const AuthPage();
+              case AuthState.onboarding:
+                return const OnboardingPage();
+              default:
+                return const Text("Error");
             }
           },
         ),

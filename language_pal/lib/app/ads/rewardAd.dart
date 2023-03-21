@@ -11,7 +11,7 @@ void showAlertMsg(BuildContext context) {
       return AlertDialog(
         title: const Text('Get 20 Extra Messages'),
         content:
-            Text("Do you want to view a short Ad to receive 20 free Messages?"),
+            const Text("Do you want to view a short Ad to receive 20 free Messages?"),
         actions: <Widget>[
           TextButton(
             child: const Text('Yes'),

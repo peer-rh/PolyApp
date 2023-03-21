@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:language_pal/app/user/userProvider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class AuthException {
@@ -10,21 +12,59 @@ class AuthException {
   AuthException(this.msg);
 }
 
+enum AuthState {
+  loading,
+  authenticated,
+  unauthenticated,
+  onboarding,
+}
+
 class AuthProvider with ChangeNotifier {
-  User? user;
+  User? firebaseUser;
+  UserModel? user;
+  AuthState state = AuthState.loading;
+
   StreamSubscription? userAuthSub;
 
   AuthProvider() {
     userAuthSub = FirebaseAuth.instance.authStateChanges().listen((event) {
-      user = event;
-      // TODO: Perhaps seperate Logic to own File
-      // TODO: Find out if it is necessary to log out
-      if (user != null) {
-        print(user?.email);
-        Purchases.logIn((user as User).uid);
+      firebaseUser = event;
+      if (firebaseUser != null) {
+        Purchases.logIn((firebaseUser!).uid);
+        _getFirestore();
+      } else {
+        user = null;
+        setState(AuthState.unauthenticated);
       }
       notifyListeners();
     });
+  }
+
+  void _getFirestore() async {
+    if (firebaseUser == null) {
+      return;
+    }
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser!.uid)
+        .get();
+    if (!doc.exists) {
+      setState(AuthState.onboarding);
+    } else {
+      user = UserModel(doc.get("name"), doc.get("email"), doc.get("ownLang"),
+          doc.get("learnLang"), doc.get("dailyMsgCount"));
+      setState(AuthState.authenticated);
+    }
+  }
+
+  void setUserModel(UserModel newU) {
+    user = newU;
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser!.uid)
+        .set(newU.toMap());
+    setState(AuthState.authenticated);
+    notifyListeners();
   }
 
   @override
@@ -34,6 +74,11 @@ class AuthProvider with ChangeNotifier {
       userAuthSub = null;
     }
     super.dispose();
+  }
+
+  void setState(AuthState newState) {
+    state = newState;
+    notifyListeners();
   }
 
   void signInWithEmailAndPassword(String email, String password) async {
@@ -77,6 +122,7 @@ class AuthProvider with ChangeNotifier {
   void forgotPassword(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "invalid-email":
@@ -101,6 +147,7 @@ class AuthProvider with ChangeNotifier {
     );
     try {
       await FirebaseAuth.instance.signInWithCredential(credential);
+      setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "account-exists-with-different-credentials":
@@ -117,6 +164,7 @@ class AuthProvider with ChangeNotifier {
       final appleProvider = AppleAuthProvider();
       appleProvider.addScope("name");
       await FirebaseAuth.instance.signInWithProvider(appleProvider);
+      setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "user-disabled":
@@ -129,9 +177,11 @@ class AuthProvider with ChangeNotifier {
 
   void signInAnonymously() {
     FirebaseAuth.instance.signInAnonymously();
+    setState(AuthState.loading);
   }
 
   void signOut() {
     FirebaseAuth.instance.signOut();
+    setState(AuthState.loading);
   }
 }

@@ -4,6 +4,7 @@ import 'package:language_pal/auth/authProvider.dart';
 import 'package:language_pal/auth/components/oAuthButtons.dart';
 import 'package:language_pal/auth/components/signInButton.dart';
 import 'package:language_pal/auth/presentation/signInPage.dart';
+import 'package:language_pal/common/logo.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -43,22 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Language",
-                          style: GoogleFonts.nunito(
-                            fontSize: 56,
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.w700,
-                          )),
-                      Text("Pal",
-                          style: GoogleFonts.nunito(
-                            fontSize: 56,
-                            fontWeight: FontWeight.w700,
-                          )),
-                    ],
-                  ),
+                  const Logo(56),
                   const SizedBox(
                     height: 80,
                   ),

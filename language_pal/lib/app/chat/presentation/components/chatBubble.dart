@@ -1,56 +1,76 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:language_pal/auth/authProvider.dart';
+import 'package:provider/provider.dart';
 
 class OwnMsgBubble extends StatelessWidget {
   final PersonMsgModel msg;
   const OwnMsgBubble(this.msg, {super.key});
 
+  Widget rating(BuildContext context) {
+    if (msg.rating != null) {
+      return GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    content: Text(msg.rating!.details),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Close"))
+                    ],
+                  ));
+        },
+        child: Text(
+          msg.rating!.short,
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+          ),
+        ),
+      );
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    return Align(
       alignment: Alignment.centerRight,
-      margin: const EdgeInsets.all(5),
       child: Container(
-        margin: const EdgeInsets.only(left: 80),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: Colors.blue),
-        child: Column(
-          children: [
-            if (msg.relevancyScore != null)
-              Text(
-                "Relevancy Score: ${msg.relevancyScore}",
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7,
+        ),
+        child: GestureDetector(
+          onLongPress: () {
+            // TODO: Option to edit
+          },
+          child: Card(
+            elevation: 0,
+            color: Theme.of(context).colorScheme.primary,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (msg.rating != null) rating(context),
+                  Text(
+                    msg.msg,
+                    textWidthBasis: TextWidthBasis.longestLine,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ],
               ),
-            Text(
-              msg.msg,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
-            if (msg.grammarCorrection != null)
-              TextButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Is this correct?"),
-                          content: Text(msg.grammarCorrection!),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("Close"))
-                          ],
-                        );
-                      });
-                },
-                child: const Text("Grammar Correction"),
-              ),
-          ],
+          ),
         ),
       ),
     );
@@ -59,8 +79,8 @@ class OwnMsgBubble extends StatelessWidget {
 
 class AiMsgBubble extends StatelessWidget {
   final AIMsgModel msg;
-  String lang;
-  AiMsgBubble(this.msg, this.lang, {super.key});
+  final String avatar;
+  const AiMsgBubble(this.msg, this.avatar, {super.key});
 
   showTranslation(BuildContext context, String translation) {
     return showDialog(
@@ -82,31 +102,67 @@ class AiMsgBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    return Align(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.all(5),
-      child: Container(
-        margin: const EdgeInsets.only(right: 80),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: Colors.grey[500]),
-        child: Column(
-          children: [
-            Text(
-              msg.msg,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Image.asset(
+            avatar,
+            width: 40,
+            height: 40,
+          ),
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
+            child: GestureDetector(
+              onLongPress: () {
+                // TODO: Menu for Report
+              },
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                elevation: 0,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        msg.msg,
+                        textWidthBasis: TextWidthBasis.longestLine,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                      Row(mainAxisSize: MainAxisSize.min, children: [
+                        IconButton(
+                          onPressed: () {
+                            String lang =
+                                context.read<AuthProvider>().user!.learnLang;
+                            getTranslations(msg.msg, lang).then((translations) {
+                              msg.translations = translations;
+                              showTranslation(context, translations);
+                            });
+                          },
+                          icon: const Icon(Icons.translate, size: 18),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // TODO: Speak out the message
+                          },
+                          icon:
+                              const Icon(FontAwesomeIcons.volumeHigh, size: 18),
+                        ),
+                      ])
+                    ],
+                  ),
+                ),
+              ),
             ),
-            TextButton(
-                onPressed: () {
-                  getTranslations(msg.msg, lang).then((translations) {
-                    msg.translations = translations;
-                    showTranslation(context, translations);
-                  });
-                },
-                child: const Text("Translate"))
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

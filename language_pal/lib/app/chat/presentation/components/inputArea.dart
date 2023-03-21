@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class ChatInputArea extends StatefulWidget {
@@ -16,29 +17,26 @@ class ChatInputArea extends StatefulWidget {
 
 class _InputAreaState extends State<ChatInputArea> {
   final controller = TextEditingController();
-  var showMic = true;
-  stt.SpeechToText? speech;
 
   @override
   void dispose() {
-    speech = null;
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    controller.addListener(() => setState(() {
-          controller.text == "" ? showMic = true : showMic = false;
-        }));
-    return SizedBox(
-      width: double.infinity,
+    return Container(
       child: Row(
         children: <Widget>[
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 13),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30), color: Colors.white),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.surfaceVariant),
+                  color: Theme.of(context).colorScheme.surface),
               alignment: Alignment.centerLeft,
               child: TextField(
                 onSubmitted: (s) {
@@ -48,7 +46,7 @@ class _InputAreaState extends State<ChatInputArea> {
                   }
                 },
                 controller: controller,
-                textAlignVertical: TextAlignVertical.bottom,
+                textAlignVertical: TextAlignVertical.center,
                 maxLines: 5,
                 minLines: 1,
                 textInputAction: TextInputAction.send,
@@ -61,50 +59,21 @@ class _InputAreaState extends State<ChatInputArea> {
             ),
           ),
           const SizedBox(
-            width: 15,
+            width: 10,
           ),
-          GestureDetector(
-            onTapDown: (_) async {
-              if (widget.disabled) return;
-              if (showMic) {
-                print("Start listening");
-                speech = stt.SpeechToText();
-                bool available =
-                    await speech!.initialize(onStatus: (s) {}, onError: (e) {});
-                if (available) {
-                  speech!.listen(
-                      onResult: (s) {
-                        setState(() {
-                          controller.text = s.recognizedWords;
-                        });
-                      },
-                      localeId: "de-DE");
-                } else {
-                  print("The user has denied the use of speech recognition.");
-                }
-              }
+          IconButton(
+            onPressed: () async {
+              if (widget.disabled || controller.text == "") return;
+              widget.sendMsg(controller.text);
+              controller.text = "";
             },
-            onTapUp: (_) {
-              if (widget.disabled) return;
-              if (showMic && speech != null) {
-                print("Finished Listening");
-                speech!.stop();
-              } else {
-                widget.sendMsg(controller.text);
-                controller.text = "";
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: widget.disabled ? Colors.grey : Colors.blue,
-                  shape: BoxShape.circle),
-              child: Icon(
-                showMic ? Icons.mic : Icons.send,
-                color: Colors.white,
-                size: 18,
-              ),
+            color: Theme.of(context).colorScheme.onPrimary,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(widget.disabled
+                  ? Theme.of(context).colorScheme.surfaceVariant
+                  : Theme.of(context).colorScheme.primary),
             ),
+            icon: const FaIcon(FontAwesomeIcons.arrowUp),
           ),
         ],
       ),
