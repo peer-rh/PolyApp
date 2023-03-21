@@ -37,19 +37,12 @@ class _SelectOfferPageState extends State<SelectOfferPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Premium Membership"),
+        title: const Text("Premium Membership"),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 80),
         child: Row(
-          children: [
-            Container(
-              child: const Text("Monthly"),
-            ),
-            Container(
-              child: const Text("Yearly"),
-            )
-          ],
+          children: const [Text("Monthly"), Text("Yearly")],
         ),
       ),
     );

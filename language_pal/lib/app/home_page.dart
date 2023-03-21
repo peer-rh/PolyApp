@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:language_pal/app/chat/presentation/selectScenarioPage.dart';
-import 'package:language_pal/app/user/presentation/userPage.dart';
-import 'package:language_pal/common/logo.dart';
+import 'package:language_pal/app/chat/presentation/select_scenario_page.dart';
+import 'package:language_pal/app/user/presentation/user_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

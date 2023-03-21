@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/loadingPage.dart';
+import 'package:language_pal/app/loading_page.dart';
 import 'package:language_pal/app/home_page.dart';
 import 'package:language_pal/app/user/presentation/onboarding.dart';
-import 'package:language_pal/auth/authPage.dart';
-import 'package:language_pal/auth/authProvider.dart';
+import 'package:language_pal/auth/auth_page.dart';
+import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/theme.dart';
 import 'package:provider/provider.dart';
 

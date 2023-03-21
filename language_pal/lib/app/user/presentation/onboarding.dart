@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/user/userProvider.dart';
-import 'package:language_pal/auth/authProvider.dart';
+import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/auth/models/user_model.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingPage extends StatefulWidget {

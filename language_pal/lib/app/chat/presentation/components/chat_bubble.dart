@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/auth/authProvider.dart';
+import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class OwnMsgBubble extends StatelessWidget {

@@ -13,7 +13,6 @@ class BannerAdWidget extends StatefulWidget {
 
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
-  bool _isLoaded = false;
 
   final adUnitId = Platform.isAndroid
       ? dotenv.env["ADMOB_BANNER_KEY_ANDROID"]!
@@ -29,9 +28,6 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
         // Called when an ad is successfully received.
         onAdLoaded: (ad) {
           print('$ad loaded.');
-          setState(() {
-            _isLoaded = true;
-          });
         },
         // Called when an ad request failed.
         onAdFailedToLoad: (ad, err) {
