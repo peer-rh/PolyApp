@@ -14,9 +14,9 @@ class ScenarioModel {
 }
 
 Future<List<ScenarioModel>> loadScenarioModels(String language) async {
-  String scenario_prompt =
+  String scenarioPrompt =
       await rootBundle.loadString('assets/prompts/scenario.txt');
-  scenario_prompt = scenario_prompt.replaceAll("<LEANRN_LANG>", language);
+  scenarioPrompt = scenarioPrompt.replaceAll("<LEANRN_LANG>", language);
 
   final String scenarios =
       await rootBundle.loadString('assets/prompts/scenarios.json');
@@ -24,7 +24,7 @@ Future<List<ScenarioModel>> loadScenarioModels(String language) async {
   return map.map((e) {
     return ScenarioModel(
         e["name"],
-        scenario_prompt.replaceAll("<SCENARIO>", e["name"]),
+        scenarioPrompt.replaceAll("<SCENARIO>", e["name"]),
         e["starting_msgs"].cast<String>(),
         e["emoji"],
         e["avatar"],

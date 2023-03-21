@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/chat/models/scenariosModel.dart';
-import 'package:language_pal/app/chat/presentation/chatPage.dart';
-import 'package:language_pal/app/user/userProvider.dart';
-import 'package:language_pal/auth/authProvider.dart';
+import 'package:language_pal/app/chat/models/scenarios_model.dart';
+import 'package:language_pal/app/chat/presentation/chat_page.dart';
+import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class SelectScenarioPage extends StatefulWidget {
@@ -78,7 +77,7 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                               children: [
                                 Text(
                                   scenarios[index].emoji,
-                                  style: TextStyle(fontSize: 80),
+                                  style: const TextStyle(fontSize: 80),
                                 ),
                                 Text(
                                   scenarios[index].name,

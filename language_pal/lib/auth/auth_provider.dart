@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:language_pal/app/user/userProvider.dart';
+import 'package:language_pal/auth/models/user_model.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class AuthException {

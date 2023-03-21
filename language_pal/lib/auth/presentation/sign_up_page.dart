@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/auth/authProvider.dart';
-import 'package:language_pal/auth/components/oAuthButtons.dart';
-import 'package:language_pal/auth/components/signInButton.dart';
-import 'package:language_pal/auth/presentation/signInPage.dart';
+import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
+import 'package:language_pal/auth/presentation/components/o_auth_buttons.dart';
+import 'package:language_pal/auth/presentation/sign_in_page.dart';
 import 'package:language_pal/common/logo.dart';
 import 'package:provider/provider.dart';
 

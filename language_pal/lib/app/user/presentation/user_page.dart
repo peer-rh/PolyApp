@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/iap/presentation/select_offer.dart';
-import 'package:language_pal/app/user/userProvider.dart';
-import 'package:language_pal/auth/authProvider.dart';
+import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class UserPage extends StatefulWidget {
@@ -30,7 +29,7 @@ class _UserPageState extends State<UserPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SelectOfferPage()));
+                          builder: (context) => const SelectOfferPage()));
                 },
                 child: const Text("Become Premium Member")),
           TextButton(

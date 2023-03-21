@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/ads/bannerAd.dart';
-import 'package:language_pal/app/ads/rewardAd.dart';
-import 'package:language_pal/app/chat/logic/aiMsg.dart';
-import 'package:language_pal/app/chat/logic/grammar.dart';
+import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/app/chat/models/scenariosModel.dart';
-import 'package:language_pal/app/chat/presentation/components/chatBubble.dart';
-import 'package:language_pal/app/chat/presentation/components/inputArea.dart';
+import 'package:language_pal/app/chat/models/scenarios_model.dart';
+import 'package:language_pal/app/chat/presentation/components/chat_bubble.dart';
+import 'package:language_pal/app/chat/presentation/components/input_area.dart';
 
 // TODO: Add Audio out
 // TODO: Add Submit on keyboard not new line

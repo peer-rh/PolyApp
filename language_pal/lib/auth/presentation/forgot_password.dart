@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/auth/authProvider.dart';
-import 'package:language_pal/auth/components/signInButton.dart';
+import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
