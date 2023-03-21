@@ -14,13 +14,17 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(builder: (context, up, child) {
-      return Column(
+    AuthProvider ap = context.watch();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("User"),
+      ),
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Email: ${up.u?.email}"),
-          Text("Name: ${up.u?.name}"),
-          if (up.u?.email != null)
+          Text("Email: ${ap.user?.email}"),
+          Text("Name: ${ap.user?.name}"),
+          if (ap.user?.email != null)
             FilledButton(
                 onPressed: () {
                   Navigator.push(
@@ -33,11 +37,12 @@ class _UserPageState extends State<UserPage> {
             onPressed: () {
               AuthProvider ap = Provider.of(context, listen: false);
               ap.signOut();
+              Navigator.pop(context);
             },
             child: const Text("Sign Out"),
           ),
         ],
-      );
-    });
+      ),
+    );
   }
 }

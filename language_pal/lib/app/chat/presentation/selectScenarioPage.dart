@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/chat/models/scenariosModel.dart';
 import 'package:language_pal/app/chat/presentation/chatPage.dart';
 import 'package:language_pal/app/user/userProvider.dart';
+import 'package:language_pal/auth/authProvider.dart';
 import 'package:provider/provider.dart';
 
 class SelectScenarioPage extends StatefulWidget {
@@ -26,17 +27,13 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
   @override
   void initState() {
     super.initState();
-    String lang =
-        Provider.of<UserProvider>(context, listen: false).u!.learnLang;
-    loadScenarios(lang);
+    String learnLang =
+        Provider.of<AuthProvider>(context, listen: false).user!.learnLang;
+    loadScenarios(learnLang);
   }
 
   @override
   Widget build(BuildContext context) {
-    String ownLang =
-        Provider.of<UserProvider>(context, listen: false).u!.ownLang;
-    String learnLang =
-        Provider.of<UserProvider>(context, listen: false).u!.ownLang;
     return Container(
         padding: const EdgeInsets.all(16),
         child: SafeArea(
@@ -65,14 +62,13 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                         elevation: 0,
                         color: Theme.of(context).colorScheme.surfaceVariant,
                         child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ChatPage(
                                           scenario: scenarios[index],
-                                          ownLang: ownLang,
-                                          learnLang: learnLang,
                                         )));
                           },
                           child: Padding(
@@ -104,44 +100,6 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics())),
           ]),
-        ));
-  }
-}
-
-class PersonChatButton extends StatelessWidget {
-  final ScenarioModel aiBot;
-  const PersonChatButton({Key? key, required this.aiBot}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String learnLang =
-        Provider.of<UserProvider>(context, listen: false).u!.learnLang;
-    String ownLang =
-        Provider.of<UserProvider>(context, listen: false).u!.ownLang;
-    return GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ChatPage(
-                        scenario: aiBot,
-                        ownLang: ownLang,
-                        learnLang: learnLang,
-                      )));
-        },
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          color: Colors.grey[300],
-          child: Center(
-              child: Text(
-            aiBot.name,
-            style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: "nunito"),
-          )),
         ));
   }
 }

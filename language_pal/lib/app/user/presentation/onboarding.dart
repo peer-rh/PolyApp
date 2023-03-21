@@ -66,8 +66,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   void didChangeDependencies() {
     AuthProvider ap = Provider.of(context);
-    thisUser.email = ap.user?.email;
-    thisUser.name = ap.user?.displayName ?? "";
+    thisUser.email = ap.firebaseUser?.email;
+    thisUser.name = ap.firebaseUser?.displayName ?? "";
     if (thisUser.name != "") {
       setState(() {
         currentStep = 1;
@@ -97,8 +97,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
           }),
           onStepContinue: () {
             if (currentStep == 2) {
-              UserProvider up = Provider.of(context, listen: false);
-              up.setUserModel(thisUser);
+              AuthProvider ap = context.read();
+              ap.setUserModel(thisUser);
             } else {
               setState(() {
                 currentStep += 1;

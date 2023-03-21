@@ -56,59 +56,32 @@ export const getTranslation = functions.runWith({ secrets: ["OPENAI_KEY"] }).htt
     return comp.choices[0].message?.content;
 })
 
-export const getGrammarCorrection = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
+
+export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
     // Check if current user is allowed to do so
     const uid = context.auth?.uid;
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
-    let text = "SCENARIO: " + data["scenario_desc"] + "\n";
-    for (let i = 0; i < data["scenario"].length; i++) {
-        if (data["scenario"][i]["role"] == "user") {
-            text += "USER: " + data["scenario"][i]["content"] + "\n";
-        } else {
-            text += "ASSISTANT: " + data["scenario"][i]["content"] + "\n";
-        }
-    }
+    let text = "SCENARIO: " + data["scenario"] + "\n";
+    text += "ASSISTANT: " + data["assistant"] + "\n";
+    text += "ME: " + data["user"];
+
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
     });
     const openai = new OpenAIApi(configuration);
 
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         user: uid,
-        max_tokens: 400,
+        max_tokens: 200,
         messages: [
-            { role: "system", content: `After reading the dialogue, you give the user some tips on how he can improve his ability to speak. Examples include politeness, how good his answers were and how they compare to common practice` },
+            { role: "system", content: 'You will evaluate how good my answer is to the statement from ASSISTANT. Start with either "Great Answer" for very good, "Good Answer" for decent or "Poor Answer". Talk about relevance in context, grammar, and other noteworthy points. Be concise.' },
             { role: "user", content: text }
         ],
 
     })).data;
     return comp.choices[0].message?.content;
 })
-
-
-export const getFinalSummary = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
-    // Check if current user is allowed to do so
-    const uid = context.auth?.uid;
-    // TODO: Make sure User has premium tier
-    if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
-    const configuration = new Configuration({
-        apiKey: openAIKey.value(),
-    });
-    const openai = new OpenAIApi(configuration);
-    let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        user: uid,
-        max_tokens: 200,
-        messages: [
-            { role: "system", content: `You will translate this sentence into ${data["lang"]}. Give 2 Options.` },
-            { role: "user", content: data["text"] }
-        ],
-
-    })).data;
-    return comp.choices[0].message?.content;
-})
-
 
 export const resetMsgDaily = functions.pubsub.schedule("0 0 * * *").timeZone('Europe/Berlin').onRun((_) => {
     admin.firestore().collection("users").where("dailyMsgCount", '!=', 0).get().then((query) => {

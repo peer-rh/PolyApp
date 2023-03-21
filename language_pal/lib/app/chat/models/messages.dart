@@ -1,3 +1,5 @@
+import 'package:language_pal/app/chat/logic/rating.dart';
+
 abstract class MsgModel {
   Map<String, String> toMap();
 }
@@ -5,13 +7,12 @@ abstract class MsgModel {
 class AIMsgModel extends MsgModel {
   String msg;
   String? translations;
-  String actualMessage; // Is needed to keep relevancyScore
-  AIMsgModel(this.msg, this.actualMessage);
+  AIMsgModel(this.msg);
 
   @override
   Map<String, String> toMap() {
     return {
-      'content': actualMessage,
+      'content': msg,
       'role': 'assistant',
     };
   }
@@ -19,8 +20,7 @@ class AIMsgModel extends MsgModel {
 
 class PersonMsgModel extends MsgModel {
   String msg;
-  String? grammarCorrection;
-  double? relevancyScore;
+  MsgRating? rating;
   PersonMsgModel(this.msg);
 
   @override
