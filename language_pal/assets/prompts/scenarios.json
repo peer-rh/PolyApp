@@ -2,8 +2,28 @@
     {
         "name": "Ordering Food",
         "prompt": "At a fine restaunt, you are a very polite waiter and I am the customer",
+        "emoji": "🍽",
+        "avatar": "assets/avatars/Restaurant Circle.png",
         "starting_msgs": [
             "[relevancy_score: 1] Hallo haben sie eine Reservierung?"
+        ]
+    },
+    {
+        "name": "At the Beach",
+        "prompt": "You are a friend of mine and we are at the beach",
+        "emoji": "🏖",
+        "avatar": "assets/avatars/Beach Circle.png",
+        "starting_msgs": [
+            "[relevancy_score: 1] Hallo, wie geht es dir?"
+        ]
+    },
+    {
+        "name": "Job Interview",
+        "prompt": "You a potential employer and I am a job applicant. You are currently interviewing me",
+        "emoji": "👔",
+        "avatar": "assets/avatars/Job Interview Circle.png",
+        "starting_msgs": [
+            "[relevancy_score: 1] Hallo, herzlich willkommen bei LanguagePal Inc. Für welche Position haben sie sich denn beworben?"
         ]
     }
 ]

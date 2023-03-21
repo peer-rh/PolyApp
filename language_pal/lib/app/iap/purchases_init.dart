@@ -21,4 +21,4 @@ Future<void> initPlatformState() async {
 // 3 Levels
 // Lite: 3.99$ per month - Limited Messages - Ads for more messages
 // Base: 7.99$ per month - Unlimited Messages - No Ads - Whisper Input
-// Pro: 14.99$ per month - Unlimited Messages - GPT-4
+// Pro: 12.99$ per month - Unlimited Messages - GPT-4
