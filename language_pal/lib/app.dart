@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:language_pal/app/loading_page.dart';
 import 'package:language_pal/app/home_page.dart';
 import 'package:language_pal/app/user/presentation/onboarding.dart';
-import 'package:language_pal/auth/auth_page.dart';
 import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/auth/presentation/auth_page.dart';
 import 'package:language_pal/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +29,7 @@ class App extends StatelessWidget {
               case AuthState.authenticated:
                 return const HomePage();
               case AuthState.unauthenticated:
-                return const AuthPage();
+                return AuthPage();
               case AuthState.onboarding:
                 return const OnboardingPage();
               default:

@@ -1,7 +1,9 @@
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
+import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +83,7 @@ class OwnMsgBubble extends StatelessWidget {
 class AiMsgBubble extends StatelessWidget {
   final AIMsgModel msg;
   final String avatar;
-  const AiMsgBubble(this.msg, this.avatar, {super.key});
+  AiMsgBubble(this.msg, this.avatar, {super.key});
 
   showTranslation(BuildContext context, String translation) {
     return showDialog(
@@ -150,8 +152,14 @@ class AiMsgBubble extends StatelessWidget {
                           icon: const Icon(Icons.translate, size: 18),
                         ),
                         IconButton(
-                          onPressed: () {
-                            // TODO: Speak out the message
+                          onPressed: () async {
+                            // FlutterTts flutterTts = FlutterTts();
+                            // await flutterTts.setLanguage("de-DE");
+                            // await flutterTts.speak(msg.msg);
+
+                            AudioPlayer audioPlayer = AudioPlayer();
+                            await audioPlayer.play(BytesSource(
+                                await generateTextToSpeech(msg.msg)));
                           },
                           icon:
                               const Icon(FontAwesomeIcons.volumeHigh, size: 18),

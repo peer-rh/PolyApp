@@ -20,7 +20,9 @@ class _UserPageState extends State<UserPage> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Container(),
           Text("Email: ${ap.user?.email}"),
           Text("Name: ${ap.user?.name}"),
           if (ap.user?.email != null)

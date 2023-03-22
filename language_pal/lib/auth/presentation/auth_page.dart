@@ -3,22 +3,21 @@ import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/presentation/components/o_auth_buttons.dart';
 import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
 import 'package:language_pal/auth/presentation/forgot_password.dart';
-import 'package:language_pal/auth/presentation/sign_up_page.dart';
 import 'package:language_pal/common/logo.dart';
 import 'package:provider/provider.dart';
 
-class SignInPage extends StatefulWidget {
-  Function(Widget) changeChild;
-  SignInPage(this.changeChild, {Key? key}) : super(key: key);
+class AuthPage extends StatefulWidget {
+  AuthPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<AuthPage> createState() => _AuthPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _AuthPageState extends State<AuthPage> {
   final emailCont = TextEditingController();
   final passCont = TextEditingController();
   String? errorMsg = "";
+  bool signIn = true;
 
   void runAuth(Function() f) async {
     try {
@@ -35,6 +34,25 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget _forgotPassword = Align(
+      alignment: Alignment.topRight,
+      child: GestureDetector(
+        onTapUp: (_) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ForgotPasswordPage()));
+        },
+        child: Text(
+          "Forgot Password?",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      ),
+    );
+
     return Scaffold(
       body: Consumer<AuthProvider>(
         builder: (context, ap, _) {
@@ -49,8 +67,8 @@ class _SignInPageState extends State<SignInPage> {
                   keyboardType: TextInputType.emailAddress,
                   controller: emailCont,
                   decoration: const InputDecoration(
-                    hintText: "Write Email...",
-                    hintStyle: TextStyle(color: Colors.black54),
+                    border: OutlineInputBorder(),
+                    labelText: "Email",
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -58,32 +76,10 @@ class _SignInPageState extends State<SignInPage> {
                   controller: passCont,
                   obscureText: true,
                   decoration: const InputDecoration(
-                    hintText: "Write Password...",
-                    hintStyle: TextStyle(color: Colors.black54),
-                  ),
+                      border: OutlineInputBorder(), labelText: "Password"),
                 ),
                 const SizedBox(height: 5),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTapUp: (_) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const ForgotPasswordPage()));
-                      // widget
-                      //     .changeChild(ForgotPasswordPage(widget.changeChild));
-                    },
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
+                signIn ? _forgotPassword : const SizedBox(height: 20),
                 const SizedBox(height: 5),
                 if (errorMsg != null)
                   Text(
@@ -91,30 +87,31 @@ class _SignInPageState extends State<SignInPage> {
                     style:
                         TextStyle(color: Theme.of(context).colorScheme.error),
                   ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomAuthButton(
                   onPressed: () {
-                    runAuth(() => ap.signInWithEmailAndPassword(
-                        emailCont.text, passCont.text));
+                    signIn
+                        ? runAuth(() => ap.signInWithEmailAndPassword(
+                            emailCont.text, passCont.text))
+                        : runAuth(() => ap.signUpWithEmailAndPassword(
+                            emailCont.text, passCont.text));
                   },
-                  text: "Sign In",
+                  text: signIn ? "Sign In" : "Sign Up",
                 ),
-                const SizedBox(height: 10),
-                TextButton(
-                    onPressed: () {
-                      widget.changeChild(SignUpPage(widget.changeChild));
-                    },
-                    child: const Text("Don't have an Account yet? Sign Up!")),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
+                oAuthDivider(),
+                const SizedBox(height: 15),
                 OAuthButtons(ap),
-                const SizedBox(
-                  height: 50,
-                ),
+                const SizedBox(height: 25),
                 TextButton(
                     onPressed: () {
-                      ap.signInAnonymously();
+                      setState(() {
+                        signIn = !signIn;
+                      });
                     },
-                    child: const Text("Continue as Guest"))
+                    child: signIn
+                        ? const Text("Don't have an Account yet? Sign Up!")
+                        : const Text("Already have an Account? Sign In!")),
               ],
             ),
           );

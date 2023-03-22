@@ -8,9 +8,10 @@ class ScenarioModel {
   String avatar;
   String prompt;
   String shortDesc;
+  String assistantName;
   List<String> startMessages;
   ScenarioModel(this.name, this.prompt, this.startMessages, this.emoji,
-      this.avatar, this.shortDesc);
+      this.avatar, this.shortDesc, this.assistantName);
 }
 
 Future<List<ScenarioModel>> loadScenarioModels(String language) async {
@@ -28,6 +29,7 @@ Future<List<ScenarioModel>> loadScenarioModels(String language) async {
         e["starting_msgs"].cast<String>(),
         e["emoji"],
         e["avatar"],
-        e["short_desc"]);
+        e["short_desc"],
+        e["assistant_name"]);
   }).toList();
 }
