@@ -34,9 +34,9 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SafeArea(
-          child: Column(children: [
+          child: ListView(children: [
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: Text(
@@ -70,24 +70,27 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                                           scenario: scenarios[index],
                                         )));
                           },
-                          child: Padding(
+                          child: Container(
+                            constraints: const BoxConstraints(minHeight: 164),
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   scenarios[index].emoji,
                                   style: const TextStyle(fontSize: 80),
                                 ),
-                                Text(
-                                  scenarios[index].name,
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.nunito(
-                                      fontSize: 24,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                      fontWeight: FontWeight.w600),
+                                FittedBox(
+                                  child: Text(
+                                    scenarios[index].name,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.nunito(
+                                        fontSize: 24,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ],
                             ),

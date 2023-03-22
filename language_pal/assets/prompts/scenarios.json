@@ -1,35 +1,131 @@
 [
     {
-        "short_desc": "ASSISTANT is the waiter; I am the customer",
+        "short_desc": "We are at a restaurant and I am the customer",
         "name": "Ordering Food",
         "prompt": "At a fine restaunt, you are a very polite waiter and I am the customer",
         "assistant_name": "WAITER",
         "emoji": "🍽",
         "avatar": "assets/avatars/Restaurant Circle.png",
-        "starting_msgs": [
-            "Hallo haben sie eine Reservierung?"
-        ]
+        "starting_msgs": {
+            "german": [
+                "Hallo haben sie eine Reservierung?",
+                "Guten Tag. Wie geht es ihnen? Haben sie eine Reservierung?",
+                "Guten Tag. Haben sie eine Reservierung?"
+            ],
+            "english": [
+                "Hello, do you have a reservation?",
+                "Good evening. Do you have a reservation?"
+            ]
+        }
     },
     {
-        "short_desc": "ASSISTANT and I are friends; we are at the beach",
+        "short_desc": "We are at the beach",
         "name": "At the Beach",
         "prompt": "You are a friend of mine and we are at the beach",
         "assistant_name": "FRIEND",
         "emoji": "🏖",
         "avatar": "assets/avatars/Beach Circle.png",
-        "starting_msgs": [
-            "Hallo, wie geht es dir?"
-        ]
+        "starting_msgs": {
+            "german": [
+                "Hallo, wie geht es dir?",
+                "Nah, wie gehts?",
+                "Hallo! Wie geht es dir?"
+            ],
+            "english": [
+                "Hello, how are you?",
+                "Hey, how are you doing?",
+                "Hi! How are you?"
+            ]
+        }
     },
     {
-        "short_desc": "ASSISTANT is interviewing me; This is a job interview",
+        "short_desc": "This is a job interview",
         "name": "Job Interview",
         "prompt": "You a potential employer and I am a job applicant. You are currently interviewing me",
         "assistant_name": "EMPLOYER",
         "emoji": "👔",
         "avatar": "assets/avatars/Job Interview Circle.png",
-        "starting_msgs": [
-            "Hallo, herzlich willkommen bei SprachenFreund GmBH. Für welche Position haben sie sich denn beworben?"
-        ]
+        "starting_msgs": {
+            "german": [
+                "Guten Tag. Für welche Stelle haben sie sich denn beworben?",
+                "Hallo, herzlich willkommen bei SprachenFreund GmBH. Für welche Position haben sie sich denn beworben?"
+            ],
+            "english": [
+                "Good afternoon. For which position did you apply?",
+                "Hello, welcome to LanguagePal Inc. For which position did you apply?"
+            ]
+        }
+    },
+    {
+        "short_desc": "We are at a doctor's office",
+        "name": "Doctor's Office",
+        "prompt": "You are a doctor and I am a patient",
+        "assistant_name": "DOCTOR",
+        "emoji": "🏥",
+        "avatar": "assets/avatars/Doctor Circle.png",
+        "starting_msgs": {
+            "german": [
+                "Guten Tag. Was kann ich für sie tun?",
+                "Hallo, wie geht es ihnen?"
+            ],
+            "english": [
+                "Good afternoon. What can I do for you?",
+                "Hello, how are you?"
+            ]
+        }
+    },
+    {
+        "short_desc": "We are at a hotel checkin",
+        "name": "Hotel Checkin",
+        "prompt": "You are a hotel receptionist and I am a guest; I'm trying to check in",
+        "assistant_name": "RECEPTIONIST",
+        "emoji": "🏨",
+        "avatar": "assets/avatars/Women Circle.png",
+        "starting_msgs": {
+            "german": [
+                "Guten Tag. Wie kann ich ihnen helfen?",
+                "Hallo, wie kann ich ihnen helfen?"
+            ],
+            "english": [
+                "Good afternoon. How can I help you?",
+                "Hello, how can I help you?"
+            ]
+        }
+    },
+    {
+        "short_desc": "We are at a hotel checkout",
+        "name": "Hotel Checkout",
+        "prompt": "You are a hotel receptionist and I am a guest; I'm trying to check out",
+        "assistant_name": "RECEPTIONIST",
+        "emoji": "🏨",
+        "avatar": "assets/avatars/Women Circle.png",
+        "starting_msgs": {
+            "german": [
+                "Guten Tag. Wie kann ich ihnen helfen?",
+                "Hallo, wie kann ich ihnen helfen?"
+            ],
+            "english": [
+                "Good afternoon. How can I help you?",
+                "Hello, how can I help you?"
+            ]
+        }
+    },
+    {
+        "short_desc": "Ordering Delivery",
+        "name": "Ordering Delivery Food",
+        "prompt": "You are a delivery person and I am a customer",
+        "assistant_name": "DELIVERY PERSON",
+        "emoji": "🍕",
+        "avatar": "assets/avatars/Fast Food Circle.png",
+        "starting_msgs": {
+            "german": [
+                "Guten Tag. Was wollen sie denn von BurgerPrinz bestellen?",
+                "Hallo, PizzaMütze Hotline. Was wollen sie denn von uns bestellen?"
+            ],
+            "english": [
+                "Good afternoon. What would you like to order from BurgerPrince?",
+                "Hello, PizzaCap Hotline. What would you like to order from us?"
+            ]
+        }
     }
 ]
