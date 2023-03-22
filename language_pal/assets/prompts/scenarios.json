@@ -3,6 +3,7 @@
         "short_desc": "ASSISTANT is the waiter; I am the customer",
         "name": "Ordering Food",
         "prompt": "At a fine restaunt, you are a very polite waiter and I am the customer",
+        "assistant_name": "WAITER",
         "emoji": "🍽",
         "avatar": "assets/avatars/Restaurant Circle.png",
         "starting_msgs": [
@@ -13,6 +14,7 @@
         "short_desc": "ASSISTANT and I are friends; we are at the beach",
         "name": "At the Beach",
         "prompt": "You are a friend of mine and we are at the beach",
+        "assistant_name": "FRIEND",
         "emoji": "🏖",
         "avatar": "assets/avatars/Beach Circle.png",
         "starting_msgs": [
@@ -23,10 +25,11 @@
         "short_desc": "ASSISTANT is interviewing me; This is a job interview",
         "name": "Job Interview",
         "prompt": "You a potential employer and I am a job applicant. You are currently interviewing me",
+        "assistant_name": "EMPLOYER",
         "emoji": "👔",
         "avatar": "assets/avatars/Job Interview Circle.png",
         "starting_msgs": [
-            "Hallo, herzlich willkommen bei LanguagePal Inc. Für welche Position haben sie sich denn beworben?"
+            "Hallo, herzlich willkommen bei SprachenFreund GmBH. Für welche Position haben sie sich denn beworben?"
         ]
     }
 ]

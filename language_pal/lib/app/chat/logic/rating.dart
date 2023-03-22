@@ -7,13 +7,13 @@ class MsgRating {
   MsgRating(this.short, this.details);
 }
 
-Future<MsgRating> getRating(
-    String scenarioShort, String assistantMsg, String userMsg) async {
-  final response = await FirebaseFunctions.instance
-      .httpsCallable('getAnswerRating')
-      .call({
+Future<MsgRating> getRating(String scenarioShort, String assistantName,
+    String assistantMsg, String userMsg) async {
+  final response =
+      await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
     "scenario": scenarioShort,
     "assistant": assistantMsg,
+    "assistant_name": assistantName,
     "user": userMsg
   });
   String data = response.data;

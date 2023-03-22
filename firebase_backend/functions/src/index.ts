@@ -56,13 +56,12 @@ export const getTranslation = functions.runWith({ secrets: ["OPENAI_KEY"] }).htt
     return comp.choices[0].message?.content;
 })
 
-
 export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
     // Check if current user is allowed to do so
     const uid = context.auth?.uid;
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
     let text = "SCENARIO: " + data["scenario"] + "\n";
-    text += "ASSISTANT: " + data["assistant"] + "\n";
+    text += data["assistant_name"] + ": " + data["assistant"] + "\n";
     text += "ME: " + data["user"];
 
     const configuration = new Configuration({
@@ -75,13 +74,29 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
         user: uid,
         max_tokens: 200,
         messages: [
-            { role: "system", content: 'You will evaluate how good my answer is to the statement from ASSISTANT. Start with either "Great Answer" for very good, "Good Answer" for decent or "Poor Answer". Talk about relevance in context, grammar, and other noteworthy points. Be concise.' },
+            { role: "system", content: `You will evaluate how good my answer is to the statement from ${data["assistant_name"]}. Start with either "Great Answer" for very good, "Good Answer" for decent or "Poor Answer". Talk about relevance in context, grammar, and other noteworthy points. Be concise.` },
             { role: "user", content: text }
         ],
 
     })).data;
     return comp.choices[0].message?.content;
 })
+export const generateTextToSpeech = functions.https.onCall(async (data, context) => {
+    const textToSpeech = require('@google-cloud/text-to-speech');
+
+    // Check if current user is allowed to do so
+    const uid = context.auth?.uid;
+    if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
+    const client = new textToSpeech.TextToSpeechClient();
+
+    const request = {
+        input: { text: data["text"] },
+        voice: { languageCode: data["language_code"], ssmlGender: data["gender"] },
+        audioConfig: { audioEncoding: 'MP3' },
+    };
+    const [response] = await client.synthesizeSpeech(request);
+    return response.toJson();
+});
 
 export const resetMsgDaily = functions.pubsub.schedule("0 0 * * *").timeZone('Europe/Berlin').onRun((_) => {
     admin.firestore().collection("users").where("dailyMsgCount", '!=', 0).get().then((query) => {

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
@@ -22,6 +23,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late Messages msgs;
+
   final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
@@ -105,7 +107,7 @@ class _ChatPageState extends State<ChatPage> {
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
     });
-    getRating(widget.scenario.shortDesc,
+    getRating(widget.scenario.shortDesc, widget.scenario.assistantName,
             (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg, personMsg.msg)
         .then((resp) {
       setState(() {

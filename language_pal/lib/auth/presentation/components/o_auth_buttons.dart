@@ -10,23 +10,44 @@ class OAuthButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FilledButton.icon(
-          style: const ButtonStyle(
-              minimumSize: MaterialStatePropertyAll(Size.fromHeight(40))),
-          onPressed: authProvider.signInWithGoogle,
-          icon: const Icon(FontAwesomeIcons.google),
-          label: const Text("Sign in with Google"),
-        ),
-        FilledButton.icon(
-          style: const ButtonStyle(
-              minimumSize: MaterialStatePropertyAll(Size.fromHeight(40))),
+        IconButton(
+            style: ButtonStyle(
+                side: MaterialStateProperty.all(
+                    BorderSide(color: Theme.of(context).primaryColor))),
+            onPressed: authProvider.signInWithGoogle,
+            icon: const Icon(FontAwesomeIcons.google)),
+        IconButton(
+          style: ButtonStyle(
+              side: MaterialStateProperty.all(
+                  BorderSide(color: Theme.of(context).primaryColor))),
           onPressed: authProvider.signInWithApple,
           icon: const Icon(Icons.apple),
-          label: const Text("Sign in with Apple"),
         ),
       ],
     );
   }
+}
+
+Widget oAuthDivider() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: const [
+      Expanded(
+        child: Divider(),
+      ),
+      SizedBox(
+        width: 10,
+      ),
+      Text("OR"),
+      SizedBox(
+        width: 10,
+      ),
+      Expanded(
+        child: Divider(),
+      ),
+    ],
+  );
 }
