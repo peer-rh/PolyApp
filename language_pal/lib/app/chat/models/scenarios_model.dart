@@ -9,7 +9,7 @@ class ScenarioModel {
   String prompt;
   String shortDesc;
   String assistantName;
-  List<String> startMessages;
+  Map<String, List<String>> startMessages;
   ScenarioModel(this.name, this.prompt, this.startMessages, this.emoji,
       this.avatar, this.shortDesc, this.assistantName);
 }
@@ -26,7 +26,8 @@ Future<List<ScenarioModel>> loadScenarioModels(String language) async {
     return ScenarioModel(
         e["name"],
         scenarioPrompt.replaceAll("<SCENARIO>", e["name"]),
-        e["starting_msgs"].cast<String>(),
+        Map<String, List<String>>.from(e["starting_msgs"].map((key, value) =>
+            MapEntry<String, List<String>>(key, List<String>.from(value)))),
         e["emoji"],
         e["avatar"],
         e["short_desc"],

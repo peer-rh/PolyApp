@@ -95,7 +95,8 @@ export const generateTextToSpeech = functions.https.onCall(async (data, context)
         audioConfig: { audioEncoding: 'MP3' },
     };
     const [response] = await client.synthesizeSpeech(request);
-    return response.toJson();
+    // encode in base64
+    return response.audioContent.toString('base64');
 });
 
 export const resetMsgDaily = functions.pubsub.schedule("0 0 * * *").timeZone('Europe/Berlin').onRun((_) => {

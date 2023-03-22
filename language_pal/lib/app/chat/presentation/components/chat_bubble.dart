@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/logic/tts_gcp.dart';
@@ -153,13 +152,12 @@ class AiMsgBubble extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () async {
-                            // FlutterTts flutterTts = FlutterTts();
-                            // await flutterTts.setLanguage("de-DE");
-                            // await flutterTts.speak(msg.msg);
-
+                            // BUG: Does not play
                             AudioPlayer audioPlayer = AudioPlayer();
+                            await audioPlayer.setVolume(1.0);
                             await audioPlayer.play(BytesSource(
                                 await generateTextToSpeech(msg.msg)));
+                            print(audioPlayer.state);
                           },
                           icon:
                               const Icon(FontAwesomeIcons.volumeHigh, size: 18),
