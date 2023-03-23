@@ -93,8 +93,8 @@ export const generateTextToSpeech = functions.https.onCall(async (data, context)
 
     const request = {
         input: { text: data["text"] },
-        voice: { languageCode: data["language_code"], ssmlGender: data["gender"] },
-        audioConfig: { audioEncoding: 'MP3' },
+        voice: { languageCode: data["language_code"], name: data["voice_name"] },
+        audioConfig: { audioEncoding: 'MP3', speakingRate: 0.95, pitch: data["pitch"] },
     };
     const [response] = await client.synthesizeSpeech(request);
     // encode in base64

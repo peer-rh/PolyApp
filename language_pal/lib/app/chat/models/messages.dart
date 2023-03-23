@@ -7,6 +7,7 @@ abstract class MsgModel {
 class AIMsgModel extends MsgModel {
   String msg;
   String? translations;
+  String? audioPath;
   AIMsgModel(this.msg);
 
   @override

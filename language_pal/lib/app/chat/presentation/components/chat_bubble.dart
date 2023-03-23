@@ -5,6 +5,7 @@ import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -82,9 +83,11 @@ class OwnMsgBubble extends StatelessWidget {
 }
 
 class AiMsgBubble extends StatelessWidget {
+final ScenarioModel scenario;
   final AIMsgModel msg;
+  AudioPlayer audioPlayer = AudioPlayer();
   final String avatar;
-  AiMsgBubble(this.msg, this.avatar, {super.key});
+  AiMsgBubble(this.msg, this.avatar, this.scenario, {super.key});
 
   showTranslation(BuildContext context, String translation) {
     return showDialog(
@@ -155,12 +158,10 @@ class AiMsgBubble extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () async {
-                            // BUG: Does not play
-                            AudioPlayer audioPlayer = AudioPlayer();
-                            await audioPlayer.setVolume(1.0);
-                            await audioPlayer.play(BytesSource(
-                                await generateTextToSpeech(msg.msg)));
-                            print(audioPlayer.state);
+                            msg.audioPath = msg.audioPath ??
+                                await generateTextToSpeech(msg.msg, scenario);
+                            await audioPlayer
+                                .play(DeviceFileSource(msg.audioPath!));
                           },
                           icon:
                               const Icon(FontAwesomeIcons.volumeHigh, size: 18),
