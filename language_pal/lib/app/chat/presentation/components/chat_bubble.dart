@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
@@ -29,7 +30,7 @@ class OwnMsgBubble extends StatelessWidget {
                   ));
         },
         child: Text(
-          msg.rating!.short,
+          generateRatingShort(context, msg.rating!.type),
           style: TextStyle(
             fontSize: 14,
             color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
@@ -42,7 +43,8 @@ class OwnMsgBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return Container(
+      padding: const EdgeInsets.only(top: 5),
       alignment: Alignment.centerRight,
       child: Container(
         constraints: BoxConstraints(
@@ -104,7 +106,8 @@ class AiMsgBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return Container(
+      padding: const EdgeInsets.only(top: 5),
       alignment: Alignment.centerLeft,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,

@@ -74,7 +74,7 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
         user: uid,
         max_tokens: 200,
         messages: [
-            { role: "system", content: `You will evaluate how good my answer is to the statement from ${data["assistant_name"]}. Start with either "Great Answer" for very good, "Good Answer" for decent or "Poor Answer". Talk about relevance in context, grammar, and other noteworthy points. Be concise.` },
+            { role: "system", content: `You will only respond in ${data["language"]}! You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "${data["great"]}", "${data["good"]}" or "${data["poor"]}". Explain why (2-3 points) and provide perfect wording.` },
             { role: "user", content: text }
         ],
 

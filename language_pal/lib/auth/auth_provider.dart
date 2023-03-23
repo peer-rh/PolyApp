@@ -177,7 +177,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   void signOut() {
-    FirebaseAuth.instance.signOut();
     setState(AuthState.loading);
+    FirebaseAuth.instance.signOut();
   }
 }
