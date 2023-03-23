@@ -23,8 +23,7 @@ class _UserPageState extends State<UserPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(),
-          Text("Email: ${ap.user?.email}"),
-          Text("Name: ${ap.user?.name}"),
+          Text("Email: ${ap.user!.email}"),
           if (ap.user?.email != null)
             FilledButton(
                 onPressed: () {
