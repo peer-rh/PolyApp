@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/chat_page.dart';
+import 'package:language_pal/app/user/presentation/user_page.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,7 +21,6 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
 
   void loadScenarios() async {
     String ownLang = AppLocalizations.of(context)!.localeName;
-    print('ownLang: $ownLang');
     var tmp = await loadScenarioModels(
         context.read<AuthProvider>().user!.learnLang, ownLang);
     setState(() {
@@ -40,10 +41,23 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      appBar: AppBar(actions: [
+        IconButton(
+            icon: const Icon(FontAwesomeIcons.circleUser),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserPage(),
+                ),
+              );
+            })
+      ]),
+      body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: SafeArea(
-          child: ListView(children: [
+        child: ListView(
+          children: [
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: Text(
@@ -108,7 +122,9 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                     itemCount: scenarios.length,
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics())),
-          ]),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }

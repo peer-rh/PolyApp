@@ -20,7 +20,7 @@ Future<MsgRating> getRating(
     String poor) async {
   final response =
       await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
-    "scenario": scenarioShort,
+    "environment": scenarioShort,
     "assistant": assistantMsg,
     "assistant_name": assistantName,
     "user": userMsg,

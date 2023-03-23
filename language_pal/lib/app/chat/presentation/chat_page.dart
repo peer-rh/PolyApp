@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
@@ -40,7 +41,10 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.scenario.emoji} ${widget.scenario.name}"),
+        title: Text(
+          "${widget.scenario.emoji} ${widget.scenario.name}",
+          style: GoogleFonts.nunito(fontSize: 20),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -68,7 +72,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               ChatInputArea(
