@@ -51,7 +51,7 @@ class AuthProvider with ChangeNotifier {
     if (!doc.exists) {
       setState(AuthState.onboarding);
     } else {
-      user = UserModel(doc.get("name"), doc.get("email"), doc.get("ownLang"),
+      user = UserModel(doc.get("email"), doc.get("ownLang"),
           doc.get("learnLang"), doc.get("dailyMsgCount"));
       setState(AuthState.authenticated);
     }
@@ -85,8 +85,8 @@ class AuthProvider with ChangeNotifier {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       switch (e.code) {
         case "invalid-email":
           throw AuthException("Please enter a valid Email");
@@ -105,6 +105,7 @@ class AuthProvider with ChangeNotifier {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "email-already-in-use":
@@ -120,9 +121,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   void forgotPassword(String email) async {
+    // TODO: Success Feedback
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "invalid-email":
@@ -173,11 +174,6 @@ class AuthProvider with ChangeNotifier {
           throw AuthException("Something went wrong. Please try again.");
       }
     }
-  }
-
-  void signInAnonymously() {
-    FirebaseAuth.instance.signInAnonymously();
-    setState(AuthState.loading);
   }
 
   void signOut() {

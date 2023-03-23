@@ -1,15 +1,12 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/app/chat/models/scenarios_model.dart';
+import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/components/chat_bubble.dart';
 import 'package:language_pal/app/chat/presentation/components/input_area.dart';
-import 'package:language_pal/auth/auth_provider.dart';
-import 'package:provider/provider.dart';
 
 // TODO: Add Audio out
 // TODO: Add Submit on keyboard not new line
@@ -89,13 +86,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void initalFetchAIMsg() async {
-    String learnLang = Provider.of<AuthProvider>(context, listen: false)
-        .user!
-        .learnLang
-        .toLowerCase();
-    print(widget.scenario.startMessages);
-    List<String> startingMessages = widget.scenario.startMessages[learnLang]!;
-    String msg = startingMessages[Random().nextInt(startingMessages.length)];
+    String msg = widget.scenario
+        .startMessages[Random().nextInt(widget.scenario.startMessages.length)];
     setState(() {
       msgs.addMsg(AIMsgModel(msg));
       disabled = false;
@@ -117,7 +109,7 @@ class _ChatPageState extends State<ChatPage> {
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
     });
-    getRating(widget.scenario.shortDesc, widget.scenario.assistantName,
+    getRating(widget.scenario.ratingDesc, widget.scenario.ratingName,
             (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg, personMsg.msg)
         .then((resp) {
       setState(() {

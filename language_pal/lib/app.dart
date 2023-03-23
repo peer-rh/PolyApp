@@ -6,6 +6,7 @@ import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/presentation/auth_page.dart';
 import 'package:language_pal/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -20,6 +21,8 @@ class App extends StatelessWidget {
         title: "LanguagePal",
         theme: lightTheme,
         darkTheme: darkTheme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
           builder: (context) {
             AuthProvider ap = context.watch();

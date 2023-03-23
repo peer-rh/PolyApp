@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/chat/models/scenarios_model.dart';
+import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/chat_page.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectScenarioPage extends StatefulWidget {
   const SelectScenarioPage({Key? key}) : super(key: key);
@@ -16,8 +17,11 @@ class SelectScenarioPage extends StatefulWidget {
 class _SelectScenarioPageState extends State<SelectScenarioPage> {
   List<ScenarioModel> scenarios = [];
 
-  void loadScenarios(String language) async {
-    var tmp = await loadScenarioModels(language);
+  void loadScenarios() async {
+    String ownLang = AppLocalizations.of(context)!.localeName;
+    print('ownLang: $ownLang');
+    var tmp = await loadScenarioModels(
+        context.read<AuthProvider>().user!.learnLang, ownLang);
     setState(() {
       scenarios = tmp;
     });
@@ -26,9 +30,12 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
   @override
   void initState() {
     super.initState();
-    String learnLang =
-        Provider.of<AuthProvider>(context, listen: false).user!.learnLang;
-    loadScenarios(learnLang);
+  }
+
+  @override
+  void didChangeDependencies() {
+    loadScenarios();
+    super.didChangeDependencies();
   }
 
   @override
@@ -40,7 +47,7 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: Text(
-                "What Scenario do you want to practice?",
+                AppLocalizations.of(context)!.whatScenario,
                 style: GoogleFonts.nunito(fontSize: 32),
                 textAlign: TextAlign.center,
               ),
