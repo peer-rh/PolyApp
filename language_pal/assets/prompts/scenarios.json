@@ -19,6 +19,18 @@
                 "Hello, do you have a reservation?",
                 "Good evening. Do you have a reservation?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-B",
+                "language_code": "de-DE",
+                "pitch": -4.0
+            },
+            "en": {
+                "name": "en-US-Neural2-A",
+                "language_code": "en-US",
+                "pitch": -4.0
+            }
         }
     },
     {
@@ -42,6 +54,18 @@
                 "Hey, how are you doing?",
                 "Hi! How are you?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-F",
+                "language_code": "de-DE",
+                "pitch": 0.0
+            },
+            "en": {
+                "name": "en-US-Neural2-F",
+                "language_code": "en-US",
+                "pitch": 0.0
+            }
         }
     },
     {
@@ -63,6 +87,18 @@
                 "Good afternoon. For which position did you apply?",
                 "Hello, welcome to LanguagePal Inc. For which position did you apply?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-B",
+                "language_code": "de-DE",
+                "pitch": -3.0
+            },
+            "en": {
+                "name": "en-US-Neural2-D",
+                "language_code": "en-US",
+                "pitch": -2.0
+            }
         }
     },
     {
@@ -84,10 +120,22 @@
                 "Good afternoon. What can I do for you?",
                 "Hello, how are you?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-D",
+                "language_code": "de-DE",
+                "pitch": -4.0
+            },
+            "en": {
+                "name": "en-US-Neural2-D",
+                "language_code": "en-US",
+                "pitch": -4.0
+            }
         }
     },
     {
-        "avatar": "assets/avatars/Women Circle.png",
+        "avatar": "assets/avatars/Man Circle.png",
         "emoji": "🏨",
         "name": {
             "de": "Hotel Checkin",
@@ -105,6 +153,18 @@
                 "Good afternoon. How can I help you?",
                 "Hello, how can I help you?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-D",
+                "language_code": "de-DE",
+                "pitch": 0.0
+            },
+            "en": {
+                "name": "en-US-Neural2-I",
+                "language_code": "en-US",
+                "pitch": 0.0
+            }
         }
     },
     {
@@ -126,6 +186,18 @@
                 "Good afternoon. How can I help you?",
                 "Hello, how can I help you?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-C",
+                "language_code": "de-DE",
+                "pitch": 0.0
+            },
+            "en": {
+                "name": "en-US-Neural2-H",
+                "language_code": "en-US",
+                "pitch": 0.0
+            }
         }
     },
     {
@@ -147,6 +219,18 @@
                 "Good afternoon. What would you like to order from BurgerPrince?",
                 "Hello, PizzaCap Hotline. What would you like to order from us?"
             ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-B",
+                "language_code": "de-DE",
+                "pitch": 0.0
+            },
+            "en": {
+                "name": "en-US-Neural2-J",
+                "language_code": "en-US",
+                "pitch": -6.0
+            }
         }
     }
 ]

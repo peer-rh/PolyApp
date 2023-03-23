@@ -51,7 +51,6 @@ class _ChatPageState extends State<ChatPage> {
           padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
           child: Column(
             children: [
-              // BannerAdWidget(),
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
@@ -62,6 +61,7 @@ class _ChatPageState extends State<ChatPage> {
                         return AiMsgBubble(
                           e,
                           widget.scenario.avatar,
+                          widget.scenario,
                         );
                       } else if (e is PersonMsgModel) {
                         return OwnMsgBubble(e);
