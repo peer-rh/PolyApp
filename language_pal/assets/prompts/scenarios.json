@@ -7,7 +7,7 @@
             "en": "Ordering Food"
         },
         "prompt_desc": "At a fine restaunt, you are a very polite waiter and I am the customer",
-        "rating_desc": "We are at a restaurant and I am the customer",
+        "rating_desc": "Polite, fairly formal",
         "rating_name": "WAITER",
         "starting_msgs": {
             "de": [
@@ -29,7 +29,7 @@
             "en": "At the Beach"
         },
         "prompt_desc": "You are a friend of mine and we are at the beach",
-        "rating_desc": "We are at the beach",
+        "rating_desc": "friendly, casual",
         "rating_name": "FRIEND",
         "starting_msgs": {
             "de": [
@@ -52,7 +52,7 @@
             "en": "Job Interview"
         },
         "prompt_desc": "You a potential employer and I am a job applicant. You are currently interviewing me",
-        "rating_desc": "This is a job interview",
+        "rating_desc": "formal, professional",
         "rating_name": "EMPLOYER",
         "starting_msgs": {
             "de": [
@@ -73,7 +73,7 @@
             "en": "Doctor's Office"
         },
         "prompt_desc": "You are a doctor and I am a patient",
-        "rating_desc": "We are at a doctor's office",
+        "rating_desc": "polite, formal, professional",
         "rating_name": "DOCTOR",
         "starting_msgs": {
             "de": [
@@ -94,7 +94,7 @@
             "en": "Hotel Checkin"
         },
         "prompt_desc": "You are a hotel receptionist and I am a guest; I'm trying to check in",
-        "rating_desc": "We are at a hotel checkin",
+        "rating_desc": "polite, fairly formal",
         "rating_name": "RECEPTIONIST",
         "starting_msgs": {
             "de": [
@@ -115,7 +115,7 @@
             "en": "Hotel Checkout"
         },
         "prompt_desc": "You are a hotel receptionist and I am a guest; I'm trying to check out",
-        "rating_desc": "We are at a hotel checkout",
+        "rating_desc": "polite, fairly formal",
         "rating_name": "RECEPTIONIST",
         "starting_msgs": {
             "de": [
@@ -136,7 +136,7 @@
             "en": "Ordering Delivery"
         },
         "prompt_desc": "You are a delivery person and I am a customer",
-        "rating_desc": "Ordering Delivery",
+        "rating_desc": "friendly, fairly casual",
         "rating_name": "DELIVERY PERSON",
         "starting_msgs": {
             "de": [

@@ -60,7 +60,7 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     // Check if current user is allowed to do so
     const uid = context.auth?.uid;
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
-    let text = "SCENARIO: " + data["scenario"] + "\n";
+    let text = "ENVIRONMENT: " + data["environment"] + "\n";
     text += data["assistant_name"] + ": " + data["assistant"] + "\n";
     text += "ME: " + data["user"];
 
@@ -81,6 +81,8 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     })).data;
     return comp.choices[0].message?.content;
 })
+
+
 export const generateTextToSpeech = functions.https.onCall(async (data, context) => {
     const textToSpeech = require('@google-cloud/text-to-speech');
 
