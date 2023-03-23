@@ -27,7 +27,9 @@ Future<List<ScenarioModel>> loadScenarioModels(
     return ScenarioModel(
         e["name"][ownLang],
         scenarioPrompt.replaceAll("<SCENARIO>", e["prompt_desc"]),
-        e["starting_msgs"][learnLang].cast<String>(),
+        (e["starting_msgs"][learnLang] != null)
+            ? e["starting_msgs"][learnLang].cast<String>()
+            : [],
         e["emoji"],
         e["avatar"],
         e["rating_desc"],

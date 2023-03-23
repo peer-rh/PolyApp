@@ -7,6 +7,10 @@ import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/components/chat_bubble.dart';
 import 'package:language_pal/app/chat/presentation/components/input_area.dart';
+import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/common/lang_convert.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // TODO: Add Audio out
 // TODO: Add Submit on keyboard not new line
@@ -36,7 +40,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.scenario.name),
+        title: Text("${widget.scenario.emoji} ${widget.scenario.name}"),
       ),
       body: SafeArea(
         child: Padding(
@@ -109,9 +113,16 @@ class _ChatPageState extends State<ChatPage> {
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
     });
-    getRating(widget.scenario.ratingDesc, widget.scenario.ratingName,
-            (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg, personMsg.msg)
-        .then((resp) {
+    getRating(
+      widget.scenario.ratingDesc,
+      widget.scenario.ratingName,
+      (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg,
+      personMsg.msg,
+      convertLangCode(context.read<AuthProvider>().user!.ownLang),
+      AppLocalizations.of(context)!.msg_rating_great,
+      AppLocalizations.of(context)!.msg_rating_good,
+      AppLocalizations.of(context)!.msg_rating_poor,
+    ).then((resp) {
       setState(() {
         personMsg.rating = resp;
       });

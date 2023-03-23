@@ -1,5 +1,9 @@
 {
     "onboarding_title": "Onboarding",
     "onboarding_learn_lang_question": "Welche Sprache würden sie gerne üben?",
-    "whatScenario": "Welches Szenario würden sie gerne üben?"
+    "whatScenario": "Welches Szenario würden sie gerne üben?",
+    "msg_rating_great": "Super Antwort",
+    "msg_rating_good": "Gute Antwort",
+    "msg_rating_poor": "Schlechte Antwort",
+    "msg_rating_not_parse": "Nicht geparsed"
 }
