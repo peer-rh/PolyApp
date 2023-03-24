@@ -25,9 +25,6 @@ Future<MsgRating> getRating(
     "assistant_name": assistantName,
     "user": userMsg,
     "language": lang,
-    "great": great,
-    "good": good,
-    "poor": poor,
   });
   String data = response.data;
   MsgRatingType type = MsgRatingType.notParse;

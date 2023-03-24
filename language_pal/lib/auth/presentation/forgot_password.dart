@@ -46,14 +46,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     controller: emailCont,
                     decoration: const InputDecoration(
                       hintText: "Write Email...",
-                      hintStyle: TextStyle(color: Colors.black54),
                     ),
                   ),
                   const SizedBox(height: 5),
                   if (errorMsg != null)
                     Text(
                       errorMsg!,
-                      style: const TextStyle(color: Colors.red),
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error),
                     ),
                   const SizedBox(height: 5),
                   CustomAuthButton(

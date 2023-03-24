@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
+import 'package:language_pal/app/chat/logic/total_rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:language_pal/app/chat/presentation/chat_summary_page.dart';
+import 'package:language_pal/app/chat/presentation/components/chat_bubble_scroll.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
-import 'package:language_pal/app/chat/presentation/components/chat_bubble.dart';
 import 'package:language_pal/app/chat/presentation/components/input_area.dart';
+import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/auth/auth_provider.dart';
-import 'package:language_pal/common/lang_convert.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-// TODO: Add Audio out
-// TODO: Add Submit on keyboard not new line
 
 class ChatPage extends StatefulWidget {
   final ScenarioModel scenario;
@@ -51,25 +50,16 @@ class _ChatPageState extends State<ChatPage> {
           padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
           child: Column(
             children: [
+              FilledButton(
+                  onPressed: () {
+                    getSummary();
+                  },
+                  child: const Text("Summary")),
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   reverse: true,
-                  child: Column(
-                    children: msgs.msgs.map((e) {
-                      if (e is AIMsgModel) {
-                        return AiMsgBubble(
-                          e,
-                          widget.scenario.avatar,
-                          widget.scenario,
-                        );
-                      } else if (e is PersonMsgModel) {
-                        return OwnMsgBubble(e);
-                      } else {
-                        return Container();
-                      }
-                    }).toList(),
-                  ),
+                  child: ChatBubbleColumn(msgs: msgs),
                 ),
               ),
               const SizedBox(
@@ -89,7 +79,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    msgs = Messages(SystemMessage(widget.scenario.prompt));
+
+    msgs = Messages(widget.scenario);
     initalFetchAIMsg();
   }
 
@@ -111,18 +102,24 @@ class _ChatPageState extends State<ChatPage> {
     getAIRespone(msgs.getLastMsgs()).then((resp) {
       setState(() {
         msgs.addMsg(AIMsgModel(resp.message));
-        disabled = false;
+        if (!resp.endOfConversation) {
+          disabled = false;
+        }
       });
       _scrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
+      if (resp.endOfConversation) {
+        print("End of conversation");
+        getSummary();
+      }
     });
     getRating(
       widget.scenario.ratingDesc,
       widget.scenario.ratingName,
       (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg,
       personMsg.msg,
-      convertLangCode(context.read<AuthProvider>().user!.ownLang),
+      context.read<AuthProvider>().user!.ownLang,
       AppLocalizations.of(context)!.msg_rating_great,
       AppLocalizations.of(context)!.msg_rating_good,
       AppLocalizations.of(context)!.msg_rating_poor,
@@ -131,5 +128,21 @@ class _ChatPageState extends State<ChatPage> {
         personMsg.rating = resp;
       });
     });
+  }
+
+  void getSummary() async {
+    final rating = await getConversationRating(
+        widget.scenario.ratingDesc,
+        widget.scenario.ratingName,
+        AppLocalizations.of(context)!.localeName,
+        msgs);
+    setState(() {
+      msgs.rating = rating;
+    });
+
+    addConversationToFirestore(
+        msgs, context.read<AuthProvider>().firebaseUser!.uid);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ChatSummaryPage(rating)));
   }
 }
