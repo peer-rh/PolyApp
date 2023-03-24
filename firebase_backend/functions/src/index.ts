@@ -29,7 +29,8 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
         messages: data,
         user: uid,
     })).data
-    user_doc.update({ "dailyMsgCount": dM + 1 });
+    // TODO: Enable when necessary
+    // user_doc.update({ "dailyMsgCount": dM + 1 });
     functions.logger.info("Returning response");
     return comp.choices[0].message?.content;
 
@@ -64,6 +65,10 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     text += data["assistant_name"] + ": " + data["assistant"] + "\n";
     text += "ME: " + data["user"];
 
+    let system_prompt = `You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "Great Answer", "Good Answer" or "Poor Answer". Explain why (2-3 points) and provide perfect wording.`;
+    if (data["language"] == "de") {
+        system_prompt = `Du wirst bewerten, wie gut meine Antwort auf die ${data["assistant_name"]} Aussage ist. Beginnen Sie mit "Super Antwort", "Gute Antwort" oder "Schlechte Antwort". Erkläre warum (2-3 Punkte) und gib perfekte Formulierung an.`;
+    }
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
     });
@@ -74,13 +79,51 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
         user: uid,
         max_tokens: 200,
         messages: [
-            { role: "system", content: `You will only respond in ${data["language"]}! You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "${data["great"]}", "${data["good"]}" or "${data["poor"]}". Explain why (2-3 points) and provide perfect wording.` },
+            { role: "system", content: system_prompt },
             { role: "user", content: text }
         ],
 
     })).data;
     return comp.choices[0].message?.content;
 })
+
+export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
+    // Check if current user is allowed to do so
+    const uid = context.auth?.uid;
+    if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
+    let text = "ENVIRONMENT: " + data["environment"] + "\n";
+    for (let i = 0; i < data["messages"].length; i++) {
+        if (data["messages"][i]["role"] == "assistant") {
+            text += data["assistant_name"] + ": " + data["messages"][i]["content"] + "\n";
+        } else {
+            text += "ME: " + data["messages"][i]["content"] + "\n";
+        }
+    }
+    functions.logger.info(text);
+
+    let system_prompt = `You will rate how good I performed in this conversation. Give 4-5 Tips in Bulletpoints. End with "Rating: (1-100)".`;
+    if (data["language"] == "de") {
+        system_prompt = `Du wirst bewerten wie gut ich in diesem Gespräch performt habe. Gib 4-5 Tipps in Stichpunkten. Ende mit "Bewertung: (1-100)".`;
+    }
+    const configuration = new Configuration({
+        apiKey: openAIKey.value(),
+    });
+    const openai = new OpenAIApi(configuration);
+
+    let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
+        model: "gpt-4",
+        user: uid,
+        max_tokens: 200,
+        messages: [
+            { role: "system", content: system_prompt },
+            { role: "user", content: text }
+        ],
+
+    })).data;
+    return comp.choices[0].message?.content;
+})
+
+
 
 
 export const generateTextToSpeech = functions.https.onCall(async (data, context) => {
@@ -114,3 +157,4 @@ export const resetMsgDaily = functions.pubsub.schedule("0 0 * * *").timeZone('Eu
         return;
     })
 })
+

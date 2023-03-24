@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
+import 'package:language_pal/app/chat/logic/total_rating.dart';
+import 'package:language_pal/app/scenario/scenarios_model.dart';
 
 abstract class MsgModel {
   Map<String, String> toMap();
@@ -47,10 +50,14 @@ class SystemMessage extends MsgModel {
 }
 
 class Messages {
-  SystemMessage systemMessage;
+  ScenarioModel scenario;
+  late SystemMessage systemMessage;
   List<MsgModel> msgs = [];
+  ConversationRating? rating;
 
-  Messages(this.systemMessage);
+  Messages(this.scenario) {
+    systemMessage = SystemMessage(scenario.prompt);
+  }
 
   void addMsg(dynamic msg) {
     msgs.add(msg);
@@ -64,5 +71,33 @@ class Messages {
       msgs.addAll(this.msgs);
     }
     return msgs.map((e) => e.toMap()).toList();
+  }
+
+  Map<String, dynamic> toFirestore() {
+    // TODO: Remember each rating of each message
+    List<MsgModel> msgs = [systemMessage];
+    msgs.addAll(this.msgs);
+    return {
+      "rating": rating!.toMap(),
+      "messages": msgs.map((e) => e.toMap()).toList(),
+      "scenario": scenario.uniqueId,
+    };
+  }
+
+  factory Messages.fromFirestore(
+      Map<String, dynamic> data, ScenarioModel scenario) {
+    List<dynamic> msgs = data['messages'];
+    List<MsgModel> msgModels = msgs.map((e) {
+      if (e['role'] == 'assistant') {
+        return AIMsgModel(e['content']);
+      } else if (e['role'] == 'user') {
+        return PersonMsgModel(e['content']);
+      } else {
+        return SystemMessage(e['content']);
+      }
+    }).toList();
+    return Messages(scenario)
+      ..msgs = msgModels
+      ..rating = ConversationRating.fromMap(data['rating']);
   }
 }

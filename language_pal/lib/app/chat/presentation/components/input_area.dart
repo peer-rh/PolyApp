@@ -14,11 +14,16 @@ class ChatInputArea extends StatefulWidget {
 
 class _InputAreaState extends State<ChatInputArea> {
   final controller = TextEditingController();
-
   @override
   void dispose() {
     controller.dispose();
+
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -48,7 +53,6 @@ class _InputAreaState extends State<ChatInputArea> {
               textInputAction: TextInputAction.send,
               decoration: const InputDecoration(
                 hintText: "Write message...",
-                hintStyle: TextStyle(color: Colors.black54),
                 border: InputBorder.none,
               ),
             ),
@@ -57,20 +61,27 @@ class _InputAreaState extends State<ChatInputArea> {
         const SizedBox(
           width: 10,
         ),
-        IconButton(
-          onPressed: () async {
-            if (widget.disabled || controller.text == "") return;
+        GestureDetector(
+          onTap: () async {
+            if (widget.disabled) return;
             widget.sendMsg(controller.text);
             controller.text = "";
           },
-          color: Theme.of(context).colorScheme.onPrimary,
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(widget.disabled
-                ? Theme.of(context).colorScheme.surfaceVariant
-                : Theme.of(context).colorScheme.primary),
+          child: Container(
+            height: 50,
+            width: 50,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: widget.disabled
+                    ? Theme.of(context).colorScheme.surfaceVariant
+                    : Theme.of(context).colorScheme.primary),
+            child: FaIcon(
+              FontAwesomeIcons.arrowUp,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
-          icon: const FaIcon(FontAwesomeIcons.arrowUp),
-        ),
+        )
       ],
     );
   }
