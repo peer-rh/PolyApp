@@ -31,20 +31,27 @@ class ChatBubbleColumn extends StatelessWidget {
           }).toList(),
         ),
         if (msgs.rating != null)
-          Center(
+          Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: GestureDetector(
-            child: const Text("This Conversation is Over. View your summary"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatSummaryPage(
-                    msgs.rating!,
-                  ),
+                child: Text(
+                  "This Conversation is Over. View your summary",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      decoration: TextDecoration.underline),
                 ),
-              );
-            },
-          ))
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatSummaryPage(
+                        msgs.rating!,
+                      ),
+                    ),
+                  );
+                },
+              ))
       ],
     );
   }

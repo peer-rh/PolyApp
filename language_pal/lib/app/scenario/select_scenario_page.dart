@@ -69,59 +69,59 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
             const SizedBox(
               height: 20,
             ),
-            Expanded(
-                child: MasonryGridView.builder(
-                    gridDelegate:
-                        const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 0,
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatPage(
-                                          scenario: scenarios[index],
-                                        )));
-                          },
-                          child: Container(
-                            constraints: const BoxConstraints(minHeight: 164),
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  scenarios[index].emoji,
-                                  style: const TextStyle(fontSize: 80),
-                                ),
-                                FittedBox(
-                                  child: Text(
-                                    scenarios[index].name,
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                        fontSize: 24,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ],
+            MasonryGridView.builder(
+              gridDelegate:
+                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 0,
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                                    scenario: scenarios[index],
+                                  )));
+                    },
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: 164),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            scenarios[index].emoji,
+                            style: const TextStyle(fontSize: 80),
+                          ),
+                          FittedBox(
+                            child: Text(
+                              scenarios[index].name,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.nunito(
+                                  fontSize: 24,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                    itemCount: scenarios.length,
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics())),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              itemCount: scenarios.length,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+            ),
           ],
         ),
       ),

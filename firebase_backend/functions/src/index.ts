@@ -65,9 +65,9 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     text += data["assistant_name"] + ": " + data["assistant"] + "\n";
     text += "ME: " + data["user"];
 
-    let system_prompt = `You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "Great Answer", "Good Answer" or "Poor Answer". Explain why (2-3 points) and provide perfect wording.`;
+    let system_prompt = `You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "Great Answer", "Good Answer" or "Poor Answer". Explain why (2-3 points) and provide perfect wording in the langauge of the conversation.`;
     if (data["language"] == "de") {
-        system_prompt = `Du wirst bewerten, wie gut meine Antwort auf die ${data["assistant_name"]} Aussage ist. Beginnen Sie mit "Super Antwort", "Gute Antwort" oder "Schlechte Antwort". Erkläre warum (2-3 Punkte) und gib perfekte Formulierung an.`;
+        system_prompt = `Du wirst bewerten, wie gut meine Antwort auf die ${data["assistant_name"]} Aussage ist. Beginnen Sie mit "Super Antwort", "Gute Antwort" oder "Schlechte Antwort". Erkläre warum (2-3 Punkte) und gib perfekte Formulierung in der Sprache des Dialoges an.`;
     }
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
@@ -111,7 +111,7 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
     const openai = new OpenAIApi(configuration);
 
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         user: uid,
         max_tokens: 200,
         messages: [

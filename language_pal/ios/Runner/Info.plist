@@ -266,6 +266,12 @@
         <key>SKAdNetworkIdentifier</key>
         <string>3qcr597p9d.skadnetwork</string>
       </dict>
+      <key>NSAppTransportSecurity</key>
+      <dict>
+        <!--Include to allow all connections (DANGER)-->
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
     </array>
 </dict>
 </plist>
