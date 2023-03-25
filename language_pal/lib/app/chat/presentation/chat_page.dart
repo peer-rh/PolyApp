@@ -50,11 +50,6 @@ class _ChatPageState extends State<ChatPage> {
           padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
           child: Column(
             children: [
-              FilledButton(
-                  onPressed: () {
-                    getSummary();
-                  },
-                  child: const Text("Summary")),
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,

@@ -33,7 +33,6 @@ Future<ConversationRating> getConversationRating(String scenarioShort,
     "language": lang,
   });
   String data = response.data;
-  print(data);
   int? rating;
   if (lang == "en") {
     int startPos = data.indexOf("Rating: ") + 8;
