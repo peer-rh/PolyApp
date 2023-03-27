@@ -5,9 +5,10 @@ import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
 import 'package:language_pal/auth/presentation/forgot_password.dart';
 import 'package:language_pal/common/logo.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AuthPage extends StatefulWidget {
-  AuthPage({Key? key}) : super(key: key);
+  const AuthPage({Key? key}) : super(key: key);
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -34,7 +35,7 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _forgotPassword = Align(
+    Widget forgotPassword = Align(
       alignment: Alignment.topRight,
       child: GestureDetector(
         onTapUp: (_) {
@@ -44,7 +45,7 @@ class _AuthPageState extends State<AuthPage> {
                   builder: (context) => const ForgotPasswordPage()));
         },
         child: Text(
-          "Forgot Password?",
+          AppLocalizations.of(context)!.forgot_password_link,
           style: TextStyle(
             color: Theme.of(context).colorScheme.secondary,
             decoration: TextDecoration.underline,
@@ -66,20 +67,21 @@ class _AuthPageState extends State<AuthPage> {
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: emailCont,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Email",
+                    labelText: AppLocalizations.of(context)!.auth_email,
                   ),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: passCont,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Password"),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context)!.auth_password),
                 ),
                 const SizedBox(height: 5),
-                signIn ? _forgotPassword : const SizedBox(height: 20),
+                signIn ? forgotPassword : const SizedBox(height: 20),
                 const SizedBox(height: 5),
                 if (errorMsg != null)
                   Text(
@@ -96,7 +98,9 @@ class _AuthPageState extends State<AuthPage> {
                         : runAuth(() => ap.signUpWithEmailAndPassword(
                             emailCont.text, passCont.text));
                   },
-                  text: signIn ? "Sign In" : "Sign Up",
+                  text: signIn
+                      ? AppLocalizations.of(context)!.auth_sign_in
+                      : AppLocalizations.of(context)!.auth_sign_up,
                 ),
                 const SizedBox(height: 15),
                 oAuthDivider(),
@@ -110,8 +114,9 @@ class _AuthPageState extends State<AuthPage> {
                       });
                     },
                     child: signIn
-                        ? const Text("Don't have an Account yet? Sign Up!")
-                        : const Text("Already have an Account? Sign In!")),
+                        ? Text(AppLocalizations.of(context)!.auth_sign_up_link)
+                        : Text(
+                            AppLocalizations.of(context)!.auth_sign_in_link)),
               ],
             ),
           );

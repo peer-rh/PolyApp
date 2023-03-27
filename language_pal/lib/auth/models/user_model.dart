@@ -3,16 +3,16 @@ class UserModel {
   bool premiumCustomer = false; // TODO
   String ownLang;
   String learnLang;
-  int dailyMsgCount;
+  String useCase;
 
-  UserModel(this.email, this.ownLang, this.learnLang, this.dailyMsgCount);
+  UserModel(this.email, this.ownLang, this.learnLang, this.useCase);
 
   Map<String, dynamic> toMap() {
     return {
       "email": email,
       "ownLang": ownLang,
       "learnLang": learnLang,
-      "dailyMsgCount": dailyMsgCount
+      "useCase": useCase
     };
   }
 }

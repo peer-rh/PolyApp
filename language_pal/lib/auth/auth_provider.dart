@@ -52,7 +52,7 @@ class AuthProvider with ChangeNotifier {
       setState(AuthState.onboarding);
     } else {
       user = UserModel(doc.get("email"), doc.get("ownLang"),
-          doc.get("learnLang"), doc.get("dailyMsgCount"));
+          doc.get("learnLang"), doc.get("useCase"));
       setState(AuthState.authenticated);
     }
   }
