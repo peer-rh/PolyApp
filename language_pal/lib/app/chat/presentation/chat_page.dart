@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/components/input_area.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/common/fade_route.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -94,18 +96,16 @@ class _ChatPageState extends State<ChatPage> {
       msgs.addMsg(personMsg);
       disabled = true;
     });
+    if (msgs.rating != null) return;
     getAIRespone(msgs.getLastMsgs()).then((resp) {
       setState(() {
         msgs.addMsg(AIMsgModel(resp.message));
-        if (!resp.endOfConversation) {
-          disabled = false;
-        }
+        disabled = false;
       });
       _scrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
       if (resp.endOfConversation) {
-        print("End of conversation");
         getSummary();
       }
     });
@@ -126,6 +126,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getSummary() async {
+    sleep(const Duration(seconds: 8));
     final rating = await getConversationRating(
         widget.scenario.ratingDesc,
         widget.scenario.ratingName,
@@ -137,7 +138,6 @@ class _ChatPageState extends State<ChatPage> {
 
     addConversationToFirestore(
         msgs, context.read<AuthProvider>().firebaseUser!.uid);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ChatSummaryPage(rating)));
+    Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
   }
 }

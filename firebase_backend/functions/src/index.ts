@@ -101,9 +101,9 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
     }
     functions.logger.info(text);
 
-    let system_prompt = `You will rate how good I performed in this conversation. Give 4-5 Tips in Bulletpoints. End with "Rating: (1-100)".`;
+    let system_prompt = `You will rate how good I performed in this conversation. Give 4-5 Tips in Bulletpoints. End with "Rating: .../100" where you will give a final performance rating from 1 to 100. 100 means perfect fluency.`;
     if (data["language"] == "de") {
-        system_prompt = `Du wirst bewerten wie gut ich in diesem Gespräch performt habe. Gib 4-5 Tipps in Stichpunkten. Ende mit "Bewertung: (1-100)".`;
+        system_prompt = `Du wirst bewerten wie gut ich in diesem Gespräch performt habe. Gib 4-5 Tipps in Stichpunkten. Ende mit "Bewertung: .../100" wo du eine finale Bewertung von 1 bis 100 gibst. 100 bedeutet perfektes Verständins.`;
     }
     const configuration = new Configuration({
         apiKey: openAIKey.value(),

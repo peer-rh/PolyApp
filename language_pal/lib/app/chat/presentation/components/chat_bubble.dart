@@ -8,6 +8,7 @@ import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OwnMsgBubble extends StatelessWidget {
   final PersonMsgModel msg;
@@ -26,7 +27,7 @@ class OwnMsgBubble extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text("Close"))
+                          child: Text(AppLocalizations.of(context)!.close))
                     ],
                   ));
         },
@@ -83,7 +84,7 @@ class OwnMsgBubble extends StatelessWidget {
 }
 
 class AiMsgBubble extends StatelessWidget {
-final ScenarioModel scenario;
+  final ScenarioModel scenario;
   final AIMsgModel msg;
   AudioPlayer audioPlayer = AudioPlayer();
   final String avatar;
@@ -94,14 +95,14 @@ final ScenarioModel scenario;
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Translation"),
+            title: Text(AppLocalizations.of(context)!.translation_title),
             content: Text(translation),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Close"))
+                  child: Text(AppLocalizations.of(context)!.close))
             ],
           );
         });
@@ -158,6 +159,7 @@ final ScenarioModel scenario;
                         ),
                         IconButton(
                           onPressed: () async {
+                            print(msg.audioPath);
                             msg.audioPath = msg.audioPath ??
                                 await generateTextToSpeech(msg.msg, scenario);
                             await audioPlayer

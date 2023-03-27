@@ -1,0 +1,41 @@
+[
+    {
+        "id": "travel",
+        "emoji": "🧳",
+        "name": {
+            "en": "Travel",
+            "de": "Reisen"
+        },
+        "recommended": [
+            "HOTEL_CHECKIN",
+            "HOTEL_CHECKOUT",
+            "RESTAURANT",
+            "BEACH"
+        ]
+    },
+    {
+        "id": "work",
+        "emoji": "👔",
+        "name": {
+            "en": "Work",
+            "de": "Arbeit"
+        },
+        "recommended": [
+            "JOB_INTERVIEW",
+            "RESTAURANT"
+        ]
+    },
+    {
+        "id": "student",
+        "emoji": "🎓",
+        "name": {
+            "en": "Semester Abroad",
+            "de": "Auslandssemester"
+        },
+        "recommended": [
+            "ORDERING_DELIVERY",
+            "RESTAURANT",
+            "DOCTOR"
+        ]
+    }
+]

@@ -40,7 +40,7 @@ Future<void> addConversationToFirestore(
     if (value.exists) {
       final data = value.data();
       final oldRating = data!['rating']!['rating'];
-      if (oldRating < conversation.rating!.rating) {
+      if (oldRating < conversation.rating!.score) {
         FirebaseFirestore.instance
             .collection('user')
             .doc(uid)

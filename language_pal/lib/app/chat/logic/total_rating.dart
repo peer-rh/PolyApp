@@ -2,14 +2,14 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 
 class ConversationRating {
-  final int? rating;
+  final int? score;
   final String details;
 
-  ConversationRating(this.rating, this.details);
+  ConversationRating(this.score, this.details);
 
   Map<String, dynamic> toMap() {
     return {
-      "rating": rating,
+      "rating": score,
       "details": details,
     };
   }
@@ -37,9 +37,11 @@ Future<ConversationRating> getConversationRating(String scenarioShort,
   if (lang == "en") {
     int startPos = data.indexOf("Rating: ") + 8;
     rating = int.parse(data.substring(startPos, data.length - 1));
+    data = data.substring(0, startPos - 8);
   } else if (lang == "de") {
     int startPos = data.indexOf("Bewertung: ") + 11;
     rating = int.parse(data.substring(startPos, data.length - 1));
+    data = data.substring(0, startPos - 11);
   }
 
   return ConversationRating(rating, data);

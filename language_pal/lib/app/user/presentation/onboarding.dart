@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:language_pal/app/user/logic/use_cases.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/models/user_model.dart';
 import 'package:provider/provider.dart';
@@ -12,64 +14,168 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", "de", 0);
+  UserModel thisUser = UserModel("", "", "", "");
   final learnCont = TextEditingController();
+  int currentStep = 0;
+  List<UseCaseModel> useCases = [];
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     AuthProvider ap = Provider.of(context);
     thisUser.email = ap.firebaseUser!.email!;
     thisUser.ownLang = AppLocalizations.of(context)!.localeName;
     super.didChangeDependencies();
-  }
 
-  @override
-  void initState() {
-    super.initState();
+    useCases =
+        await loadUseCaseModels(AppLocalizations.of(context)!.localeName);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.onboarding_title),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Provider.of<AuthProvider>(context, listen: false)
-                .setUserModel(thisUser);
-          },
-          child: const Icon(Icons.arrow_forward),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Text(
-                  AppLocalizations.of(context)!.onboarding_learn_lang_question),
-              const SizedBox(
-                width: 10,
-              ),
-              DropdownButton<String>(
-                value: thisUser.learnLang,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    thisUser.learnLang = newValue!;
+    List<Widget> steps = [
+      Column(
+        children: [
+          Text(AppLocalizations.of(context)!.use_case_title_full,
+              style: Theme.of(context).textTheme.headlineLarge),
+          const SizedBox(height: 30),
+          Expanded(
+            child: ListView.builder(
+                itemCount: useCases.length,
+                itemBuilder: (context, i) {
+                  return CustomCard(thisUser.useCase == useCases[i].uniqueId,
+                      useCases[i].emoji, useCases[i].title, () {
+                    setState(() {
+                      thisUser.useCase = useCases[i].uniqueId;
+                    });
                   });
-                },
-                items: const [
-                  DropdownMenuItem<String>(
-                    value: "en",
-                    child: Text("English"),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: "de",
-                    child: Text("German"),
-                  ),
-                ],
-              ),
-            ],
+                }),
           ),
-        ));
+        ],
+      ),
+      Column(
+        children: [
+          Text(AppLocalizations.of(context)!.use_case_title_full,
+              style: Theme.of(context).textTheme.headlineLarge),
+          const SizedBox(height: 30),
+          Expanded(
+            child: ListView(
+              children: [
+                CustomCard(thisUser.learnLang == "de", "🇩🇪",
+                    AppLocalizations.of(context)!.german, () {
+                  setState(() {
+                    thisUser.learnLang = "de";
+                  });
+                }),
+                CustomCard(thisUser.learnLang == "en", "🇬🇧",
+                    AppLocalizations.of(context)!.english, () {
+                  setState(() {
+                    thisUser.learnLang = "en";
+                  });
+                }),
+              ],
+            ),
+          ),
+        ],
+      )
+    ];
+    return Scaffold(
+      body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Stack(children: [
+                steps[currentStep],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FloatingActionButton(
+                        child: (currentStep == 0)
+                            ? const Icon(Icons.close)
+                            : const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          if (currentStep == 0) {
+                            context.read<AuthProvider>().signOut();
+                          } else {
+                            setState(() {
+                              currentStep--;
+                            });
+                          }
+                        },
+                      ),
+                      FloatingActionButton(
+                        child: (currentStep == steps.length - 1)
+                            ? const Icon(Icons.check)
+                            : const Icon(Icons.arrow_forward),
+                        onPressed: () {
+                          if (currentStep == 0 && thisUser.useCase == "") {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(AppLocalizations.of(context)!
+                                    .onboarding_must_select_option)));
+                          } else if (currentStep == 1 &&
+                              thisUser.learnLang == "") {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(AppLocalizations.of(context)!
+                                    .onboarding_must_select_option)));
+                          } else {
+                            if (currentStep == steps.length - 1) {
+                              context
+                                  .read<AuthProvider>()
+                                  .setUserModel(thisUser);
+                            } else {
+                              setState(() {
+                                currentStep++;
+                              });
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              ]))),
+    );
+  }
+}
+
+class CustomCard extends StatelessWidget {
+  bool selected;
+  String emoji;
+  String title;
+  void Function() onTap;
+  CustomCard(this.selected, this.emoji, this.title, this.onTap, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          elevation: 1,
+          color: selected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).cardColor,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(emoji, style: const TextStyle(fontSize: 60)),
+                const SizedBox(width: 16),
+                Text(title,
+                    style: GoogleFonts.nunito(
+                        fontSize: 30,
+                        color: selected
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.onSurface)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

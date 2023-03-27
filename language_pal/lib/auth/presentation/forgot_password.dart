@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Forgot Password"),
+        title:  Text(AppLocalizations.of(context)!.forgot_password_title),
       ),
       body: Consumer<AuthProvider>(
         builder: (context, ap, _) {
@@ -44,8 +45,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   TextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailCont,
-                    decoration: const InputDecoration(
-                      hintText: "Write Email...",
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.auth_email,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -60,7 +61,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       onPressed: () {
                         runAuth(() => ap.forgotPassword(emailCont.text));
                       },
-                      text: "Send Reset Email"),
+                      text: AppLocalizations.of(context)!.forgot_password_button),
                 ],
               ),
             ),
