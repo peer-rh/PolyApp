@@ -10,7 +10,7 @@ class ChatSummaryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.conv_summary_title),
+        title: Text(AppLocalizations.of(context)!.conversation_summary_title),
       ),
       body: Center(
         child: Container(

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/user/logic/use_cases.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/models/user_model.dart';
+import 'package:language_pal/common/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -36,7 +37,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     List<Widget> steps = [
       Column(
         children: [
-          Text(AppLocalizations.of(context)!.use_case_title_full,
+          Text(AppLocalizations.of(context)!.onboarding_use_case_question,
               style: Theme.of(context).textTheme.headlineLarge),
           const SizedBox(height: 30),
           Expanded(
@@ -55,25 +56,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
       Column(
         children: [
-          Text(AppLocalizations.of(context)!.use_case_title_full,
+          Text(AppLocalizations.of(context)!.onboarding_learn_lang_question,
               style: Theme.of(context).textTheme.headlineLarge),
           const SizedBox(height: 30),
           Expanded(
             child: ListView(
-              children: [
-                CustomCard(thisUser.learnLang == "de", "🇩🇪",
-                    AppLocalizations.of(context)!.german, () {
-                  setState(() {
-                    thisUser.learnLang = "de";
-                  });
-                }),
-                CustomCard(thisUser.learnLang == "en", "🇬🇧",
-                    AppLocalizations.of(context)!.english, () {
-                  setState(() {
-                    thisUser.learnLang = "en";
-                  });
-                }),
-              ],
+              children: supportedLearnLanguages()
+                  .map((lang) => CustomCard(thisUser.learnLang == lang.code,
+                          lang.emoji, lang.getName(context), () {
+                        setState(() {
+                          thisUser.learnLang = lang.code;
+                        });
+                      }))
+                  .toList(),
             ),
           ),
         ],

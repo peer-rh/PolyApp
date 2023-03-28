@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:language_pal/common/lang_convert.dart';
+import 'package:language_pal/common/languages.dart';
 
 const int scoreCompletedCutoff = 80;
 
@@ -34,8 +34,8 @@ Future<List<ScenarioModel>> loadScenarioModels(String learnLang, String ownLang,
     Map<String, int> userScores, List<String> useCaseRecommended) async {
   String scenarioPrompt =
       await rootBundle.loadString('assets/prompts/scenario.txt');
-  scenarioPrompt =
-      scenarioPrompt.replaceAll("<LEANRN_LANG>", convertLangCode(learnLang));
+  scenarioPrompt = scenarioPrompt.replaceAll(
+      "<LEANRN_LANG>", convertLangCode(learnLang).getEnglishName());
 
   final String scenariosFile =
       await rootBundle.loadString('assets/prompts/scenarios.json');

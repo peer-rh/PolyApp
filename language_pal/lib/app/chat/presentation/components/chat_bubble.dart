@@ -95,7 +95,7 @@ class AiMsgBubble extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.translation_title),
+            title: Text(AppLocalizations.of(context)!.msg_translation_title),
             content: Text(translation),
             actions: [
               TextButton(
@@ -159,7 +159,6 @@ class AiMsgBubble extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () async {
-                            print(msg.audioPath);
                             msg.audioPath = msg.audioPath ??
                                 await generateTextToSpeech(msg.msg, scenario);
                             await audioPlayer

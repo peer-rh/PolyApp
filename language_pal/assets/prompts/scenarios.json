@@ -5,7 +5,8 @@
         "emoji": "🍽",
         "name": {
             "de": "Essen Bestellen",
-            "en": "Ordering Food"
+            "en": "Ordering Food",
+            "es": "Ordenando comida"
         },
         "prompt_desc": "At a fine restaunt, you are a very polite waiter and I am the customer",
         "rating_desc": "Polite, fairly formal",
@@ -19,6 +20,10 @@
             "en": [
                 "Hello, do you have a reservation?",
                 "Good evening. Do you have a reservation?"
+            ],
+            "es": [
+                "Hola, ¿tienes una reserva?",
+                "Buenas noches. ¿Tienes una reserva?"
             ]
         },
         "voice_info": {
@@ -31,6 +36,11 @@
                 "name": "en-US-Neural2-A",
                 "language_code": "en-US",
                 "pitch": -4.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-B",
+                "language_code": "es-ES",
+                "pitch": -4.0
             }
         }
     },
@@ -40,7 +50,8 @@
         "emoji": "🏖",
         "name": {
             "de": "Am Strand",
-            "en": "At the Beach"
+            "en": "At the Beach",
+            "es": "En la playa"
         },
         "prompt_desc": "You are a friend of mine and we are at the beach",
         "rating_desc": "friendly, casual",
@@ -55,6 +66,10 @@
                 "Hello, how are you?",
                 "Hey, how are you doing?",
                 "Hi! How are you?"
+            ],
+            "es": [
+                "Hola, ¿cómo estás?",
+                "¡Hola! ¿Cómo estás?"
             ]
         },
         "voice_info": {
@@ -67,6 +82,11 @@
                 "name": "en-US-Neural2-F",
                 "language_code": "en-US",
                 "pitch": 0.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-D",
+                "language_code": "es-ES",
+                "pitch": 0.0
             }
         }
     },
@@ -76,7 +96,8 @@
         "emoji": "👔",
         "name": {
             "de": "Vorstellungsgespräch",
-            "en": "Job Interview"
+            "en": "Job Interview",
+            "es": "Entrevista de trabajo"
         },
         "prompt_desc": "You a potential employer and I am a job applicant. You are currently interviewing me",
         "rating_desc": "formal, professional",
@@ -89,6 +110,10 @@
             "en": [
                 "Good afternoon. For which position did you apply?",
                 "Hello, welcome to LanguagePal Inc. For which position did you apply?"
+            ],
+            "es": [
+                "Buenas tardes. ¿Para qué posición se postuló?",
+                "Hola, bienvenido a LanguagePal Inc. ¿Para qué posición se postuló?"
             ]
         },
         "voice_info": {
@@ -101,6 +126,11 @@
                 "name": "en-US-Neural2-D",
                 "language_code": "en-US",
                 "pitch": -2.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-B",
+                "language_code": "es-ES",
+                "pitch": -3.0
             }
         }
     },
@@ -110,7 +140,8 @@
         "emoji": "🏥",
         "name": {
             "de": "Arztbesuch",
-            "en": "Doctor's Office"
+            "en": "Doctor's Office",
+            "es": "Oficina del médico"
         },
         "prompt_desc": "You are a doctor and I am a patient",
         "rating_desc": "polite, formal, professional",
@@ -123,6 +154,10 @@
             "en": [
                 "Good afternoon. What can I do for you?",
                 "Hello, how are you?"
+            ],
+            "es": [
+                "Buenas tardes. ¿En qué puedo ayudarle?",
+                "Hola, ¿cómo estás?"
             ]
         },
         "voice_info": {
@@ -135,6 +170,11 @@
                 "name": "en-US-Neural2-D",
                 "language_code": "en-US",
                 "pitch": -4.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-B",
+                "language_code": "es-ES",
+                "pitch": -4.0
             }
         }
     },
@@ -144,7 +184,8 @@
         "emoji": "🏨",
         "name": {
             "de": "Hotel Checkin",
-            "en": "Hotel Checkin"
+            "en": "Hotel Checkin",
+            "es": "Checkin del hotel"
         },
         "prompt_desc": "You are a hotel receptionist and I am a guest; I'm trying to check in",
         "rating_desc": "polite, fairly formal",
@@ -157,6 +198,10 @@
             "en": [
                 "Good afternoon. How can I help you?",
                 "Hello, how can I help you?"
+            ],
+            "es": [
+                "Buenas tardes. ¿En qué puedo ayudarle?",
+                "Hola, ¿En qué puedo ayudarle?"
             ]
         },
         "voice_info": {
@@ -169,6 +214,11 @@
                 "name": "en-US-Neural2-I",
                 "language_code": "en-US",
                 "pitch": 0.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-B",
+                "language_code": "es-ES",
+                "pitch": 0.0
             }
         }
     },
@@ -178,7 +228,8 @@
         "emoji": "🏨",
         "name": {
             "de": "Hotel Checkout",
-            "en": "Hotel Checkout"
+            "en": "Hotel Checkout",
+            "es": "Checkout del hotel"
         },
         "prompt_desc": "You are a hotel receptionist and I am a guest; I'm trying to check out",
         "rating_desc": "polite, fairly formal",
@@ -191,6 +242,10 @@
             "en": [
                 "Good afternoon. How can I help you?",
                 "Hello, how can I help you?"
+            ],
+            "es": [
+                "Buenas tardes. ¿En qué puedo ayudarle?",
+                "Hola, ¿En qué puedo ayudarle?"
             ]
         },
         "voice_info": {
@@ -203,6 +258,11 @@
                 "name": "en-US-Neural2-H",
                 "language_code": "en-US",
                 "pitch": 0.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-A",
+                "language_code": "es-ES",
+                "pitch": 0.0
             }
         }
     },
@@ -212,7 +272,8 @@
         "emoji": "🍕",
         "name": {
             "de": "Essen Liefern lassen",
-            "en": "Ordering Delivery"
+            "en": "Ordering Delivery",
+            "es": "Ordenar entrega"
         },
         "prompt_desc": "You are a delivery person and I am a customer",
         "rating_desc": "friendly, fairly casual",
@@ -225,6 +286,10 @@
             "en": [
                 "Good afternoon. What would you like to order from BurgerPrince?",
                 "Hello, PizzaCap Hotline. What would you like to order from us?"
+            ],
+            "es": [
+                "Buenas tardes. ¿Qué le gustaría pedir de BurgerPrincipe?",
+                "Hola, PizzaGorro Hotline. ¿Qué le gustaría pedir de nosotros?"
             ]
         },
         "voice_info": {
@@ -237,6 +302,11 @@
                 "name": "en-US-Neural2-J",
                 "language_code": "en-US",
                 "pitch": -6.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-F",
+                "language_code": "es-ES",
+                "pitch": 0.0
             }
         }
     }
