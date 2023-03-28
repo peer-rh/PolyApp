@@ -26,7 +26,7 @@ void main() async {
       webRecaptchaSiteKey: 'recaptcha-v3-site-key',
       appleProvider: AppleProvider.appAttest);
   if (kDebugMode) {
-    FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
+    FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8079);
     FirebaseFunctions.instance.useFunctionsEmulator("localhost", 5001);
   }
   if (kReleaseMode) {
