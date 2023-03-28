@@ -149,7 +149,7 @@ class AiMsgBubble extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             String lang =
-                                context.read<AuthProvider>().user!.learnLang;
+                                context.read<AuthProvider>().user!.appLang;
                             getTranslations(msg.msg, lang).then((translations) {
                               msg.translations = translations;
                               showTranslation(context, translations);
