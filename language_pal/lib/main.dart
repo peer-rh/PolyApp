@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -23,14 +25,20 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
       webRecaptchaSiteKey: 'recaptcha-v3-site-key',
       appleProvider: AppleProvider.appAttest);
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+  if (kDebugMode) {
+    FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
+    FirebaseFunctions.instance.useFunctionsEmulator("localhost", 5001);
+  }
+  if (kReleaseMode) {
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
 
   await initPlatformState();
 
