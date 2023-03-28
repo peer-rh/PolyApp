@@ -1,7 +1,7 @@
 [
     {
         "id": "RESTAURANT",
-        "avatar": "assets/avatars/Restaurant Circle.png",
+        "avatar": "assets/avatars/Restaurant.png",
         "emoji": "🍽",
         "name": {
             "de": "Essen Bestellen",
@@ -46,7 +46,7 @@
     },
     {
         "id": "BEACH",
-        "avatar": "assets/avatars/Beach Circle.png",
+        "avatar": "assets/avatars/Beach.png",
         "emoji": "🏖",
         "name": {
             "de": "Am Strand",
@@ -92,7 +92,7 @@
     },
     {
         "id": "JOB_INTERVIEW",
-        "avatar": "assets/avatars/Job Interview Circle.png",
+        "avatar": "assets/avatars/Job Interview.png",
         "emoji": "👔",
         "name": {
             "de": "Vorstellungsgespräch",
@@ -136,7 +136,7 @@
     },
     {
         "id": "DOCTOR",
-        "avatar": "assets/avatars/Doctor Circle.png",
+        "avatar": "assets/avatars/Doctor.png",
         "emoji": "🏥",
         "name": {
             "de": "Arztbesuch",
@@ -180,7 +180,7 @@
     },
     {
         "id": "HOTEL_CHECKIN",
-        "avatar": "assets/avatars/Man Circle.png",
+        "avatar": "assets/avatars/Man.png",
         "emoji": "🏨",
         "name": {
             "de": "Hotel Checkin",
@@ -224,7 +224,7 @@
     },
     {
         "id": "HOTEL_CHECKOUT",
-        "avatar": "assets/avatars/Women Circle.png",
+        "avatar": "assets/avatars/Women.png",
         "emoji": "🏨",
         "name": {
             "de": "Hotel Checkout",
@@ -268,7 +268,7 @@
     },
     {
         "id": "ORDERING_DELIVERY",
-        "avatar": "assets/avatars/Fast Food Circle.png",
+        "avatar": "assets/avatars/Fast Food.png",
         "emoji": "🍕",
         "name": {
             "de": "Essen Liefern lassen",

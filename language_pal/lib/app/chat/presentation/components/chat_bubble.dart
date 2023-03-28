@@ -5,6 +5,7 @@ import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:language_pal/app/chat/presentation/components/ai_avatar.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -116,11 +117,7 @@ class AiMsgBubble extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Image.asset(
-            avatar,
-            width: 40,
-            height: 40,
-          ),
+          AIAvatar(avatar),
           Container(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.6),
