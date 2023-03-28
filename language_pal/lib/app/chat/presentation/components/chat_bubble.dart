@@ -158,6 +158,15 @@ class AiMsgBubble extends StatelessWidget {
                           onPressed: () async {
                             msg.audioPath = msg.audioPath ??
                                 await generateTextToSpeech(msg.msg, scenario);
+                            await AudioPlayer.global
+                                .setGlobalAudioContext(const AudioContext(
+                                    iOS: AudioContextIOS(options: [
+                                      AVAudioSessionOptions.allowBluetooth,
+                                      AVAudioSessionOptions.allowBluetoothA2DP,
+                                      AVAudioSessionOptions.allowAirPlay,
+                                      AVAudioSessionOptions.duckOthers,
+                                    ]),
+                                    android: AudioContextAndroid()));
                             await audioPlayer
                                 .play(DeviceFileSource(msg.audioPath!));
                           },
