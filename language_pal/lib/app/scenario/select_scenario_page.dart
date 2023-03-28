@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/scenario/scenario_provider.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/chat_page.dart';
 import 'package:language_pal/app/user/logic/use_cases.dart';
@@ -48,8 +47,7 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
           Container(
             margin: const EdgeInsets.only(bottom: 30),
             child: Text(
-              AppLocalizations.of(context)!
-                  .select_scenario_question,
+              AppLocalizations.of(context)!.select_scenario_question,
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             ),

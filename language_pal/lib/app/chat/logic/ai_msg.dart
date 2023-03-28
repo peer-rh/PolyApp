@@ -25,9 +25,9 @@ ParserResult parseAIMsg(String msg) {
   bool end = false;
   if (msg.toLowerCase().contains("end_of_conversation")) {
     end = true;
-    msg = msg.replaceAll("END_OF_CONVERSATION", "");
-    msg = msg.replaceAll("End_Of_Conversation", "");
-    msg = msg.replaceAll("end_of_conversation", "").trim();
+    msg = msg
+        .substring(0, msg.toLowerCase().indexOf("end_of_conversation"))
+        .trim();
   }
   return ParserResult(msg.trim(), end);
 }

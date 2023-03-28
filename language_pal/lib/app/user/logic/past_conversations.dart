@@ -10,8 +10,8 @@ Future<List<Messages>> loadPastConversations(
   // For each doc, get the scenario and the messages
   // Return a list of Messages
   List<Messages> conversations = [];
-  FirebaseFirestore.instance
-      .collection('user')
+  await FirebaseFirestore.instance
+      .collection('users')
       .doc(uid)
       .collection('conversations')
       .get()
@@ -28,7 +28,7 @@ Future<List<Messages>> loadPastConversations(
 
 Future<void> addConversationToFirestore(
     Messages conversation, AuthProvider ap) async {
-  if (ap.user!.scenarioScores.containsKey(conversation.scenario.uniqueId) &&
+  if (!ap.user!.scenarioScores.containsKey(conversation.scenario.uniqueId) ||
       ap.user!.scenarioScores[conversation.scenario.uniqueId]! <=
           conversation.rating!.score!) {
     UserModel newUser = ap.user!;
@@ -40,7 +40,7 @@ Future<void> addConversationToFirestore(
   final uid = ap.firebaseUser!.uid;
 
   FirebaseFirestore.instance
-      .collection('user')
+      .collection('users')
       .doc(uid)
       .collection('conversations')
       .add(conversation.toFirestore());

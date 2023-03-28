@@ -36,11 +36,13 @@ Future<ConversationRating> getConversationRating(String scenarioShort,
   int? rating;
   if (lang == "en") {
     int startPos = data.indexOf("Rating: ") + 8;
-    rating = int.parse(data.substring(startPos, data.length - 1));
+    String a = data.substring(startPos, data.length - 1);
+    rating = int.tryParse(a.substring(0, a.indexOf("/")));
     data = data.substring(0, startPos - 8);
   } else if (lang == "de") {
     int startPos = data.indexOf("Bewertung: ") + 11;
-    rating = int.parse(data.substring(startPos, data.length - 1));
+    String a = data.substring(startPos, data.length - 1);
+    rating = int.tryParse(a.substring(0, a.indexOf("/")));
     data = data.substring(0, startPos - 11);
   }
 
