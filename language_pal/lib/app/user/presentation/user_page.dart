@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:language_pal/app/scenario/scenario_provider.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/app/user/logic/use_cases.dart';
@@ -20,11 +21,24 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   List<Messages> conversations = [];
   List<UseCaseModel> useCases = [];
+  List<ScenarioModel> scenarios = [];
+
+  Future<void> loadScenarios() async {
+    AuthProvider ap = context.read();
+    final tmp = await loadScenarioModels(
+      ap.user!.learnLang,
+      ap.user!.appLang,
+      ap.user!.scenarioScores,
+      (await loadUseCaseModel(ap.user!.useCase, ap.user!.appLang))!.recommended,
+    );
+    setState(() {
+      scenarios = tmp;
+    });
+  }
 
   void loadConversations() async {
     AuthProvider ap = context.read<AuthProvider>();
-    var tmp = await loadPastConversations(
-        context.read<List<ScenarioModel>>(), ap.firebaseUser!.uid);
+    var tmp = await loadPastConversations(scenarios, ap.firebaseUser!.uid);
     setState(() {
       conversations = tmp;
     });
@@ -39,10 +53,12 @@ class _UserPageState extends State<UserPage> {
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() async {
+    await loadScenarios();
     loadConversations();
     loadUseCases();
-    super.initState();
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -155,8 +171,9 @@ class _UserPageState extends State<UserPage> {
                                   value: e.uniqueId,
                                   child: Text(
                                     e.emoji + e.title,
+                                    softWrap: false,
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: TextOverflow.fade,
                                   )))
                               .toList(),
                           onChanged: (e) {
