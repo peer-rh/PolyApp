@@ -26,7 +26,7 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
               Container(
                 margin: const EdgeInsets.only(bottom: 30),
                 child: Text(
-                  AppLocalizations.of(context)!.whatScenario,
+                  AppLocalizations.of(context)!.select_scenario_question,
                   style: Theme.of(context).textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 ),

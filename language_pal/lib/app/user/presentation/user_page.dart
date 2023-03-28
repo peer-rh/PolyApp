@@ -3,8 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
+import 'package:language_pal/app/user/logic/use_cases.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/models/user_model.dart';
+import 'package:language_pal/common/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -17,6 +19,7 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   List<Messages> conversations = [];
+  List<UseCaseModel> useCases = [];
 
   void loadConversations() async {
     AuthProvider ap = context.read<AuthProvider>();
@@ -27,9 +30,18 @@ class _UserPageState extends State<UserPage> {
     });
   }
 
+  void loadUseCases() async {
+    AuthProvider ap = context.read<AuthProvider>();
+    var tmp = await loadUseCaseModels(ap.user!.appLang);
+    setState(() {
+      useCases = tmp;
+    });
+  }
+
   @override
   void initState() {
-    super.didChangeDependencies();
+    loadConversations();
+    loadUseCases();
     super.initState();
   }
 
@@ -92,16 +104,11 @@ class _UserPageState extends State<UserPage> {
                         ),
                         DropdownButton(
                           value: ap.user!.appLang,
-                          items: [
-                            DropdownMenuItem(
-                                value: "en",
-                                child: Text(
-                                    "🇬🇧${AppLocalizations.of(context)!.english}")),
-                            DropdownMenuItem(
-                                value: "de",
-                                child: Text(
-                                    "🇩🇪${AppLocalizations.of(context)!.german}")),
-                          ],
+                          items: supportedAppLanguages().map((e) {
+                            return DropdownMenuItem(
+                                value: e.code,
+                                child: Text("${e.emoji}${e.getName(context)}"));
+                          }).toList(),
                           onChanged: (e) {
                             UserModel newUser = ap.user!;
                             newUser.appLang = e!;
@@ -120,19 +127,41 @@ class _UserPageState extends State<UserPage> {
                         ),
                         DropdownButton(
                           value: ap.user!.learnLang,
-                          items: [
-                            DropdownMenuItem(
-                                value: "en",
-                                child: Text(
-                                    "🇬🇧${AppLocalizations.of(context)!.english}")),
-                            DropdownMenuItem(
-                                value: "de",
-                                child: Text(
-                                    "🇩🇪${AppLocalizations.of(context)!.german}")),
-                          ],
+                          items: supportedLearnLanguages().map((e) {
+                            return DropdownMenuItem(
+                                value: e.code,
+                                child: Text("${e.emoji}${e.getName(context)}"));
+                          }).toList(),
                           onChanged: (e) {
                             UserModel newUser = ap.user!;
                             newUser.learnLang = e!;
+                            ap.setUserModel(newUser);
+                          },
+                        )
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(
+                              AppLocalizations.of(context)!.user_page_use_case,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        ),
+                        DropdownButton(
+                          isExpanded: true,
+                          value: ap.user!.useCase,
+                          items: useCases
+                              .map((e) => DropdownMenuItem(
+                                  value: e.uniqueId,
+                                  child: Text(
+                                    e.emoji + e.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )))
+                              .toList(),
+                          onChanged: (e) {
+                            UserModel newUser = ap.user!;
+                            newUser.useCase = e!;
                             ap.setUserModel(newUser);
                           },
                         )
@@ -145,10 +174,10 @@ class _UserPageState extends State<UserPage> {
             const SizedBox(height: 16),
             const Divider(),
             const SizedBox(height: 16),
-            Text(AppLocalizations.of(context)!.conversations_title,
+            Text(AppLocalizations.of(context)!.user_page_conversations_title,
                 style: Theme.of(context).textTheme.headlineSmall),
             if (conversations.isEmpty)
-              Text(AppLocalizations.of(context)!.no_conversations),
+              Text(AppLocalizations.of(context)!.user_page_no_conversations),
             Expanded(
                 child: ListView.builder(
               itemBuilder: (context, index) {

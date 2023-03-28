@@ -10,13 +10,12 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  Future<List<ScenarioModel>> loadScn(BuildContext context) async {
-    String ownLang = context.read<AuthProvider>().user!.appLang;
-    AuthProvider ap = context.read<AuthProvider>();
-    UseCaseModel useCase = (await loadUseCaseModel(ap.user!.useCase, ownLang))!;
+  Future<List<ScenarioModel>> loadScn(AuthProvider ap) async {
+    String appLang = ap.user!.appLang;
+    UseCaseModel useCase = (await loadUseCaseModel(ap.user!.useCase, appLang))!;
     return await loadScenarioModels(
       ap.user!.learnLang,
-      ownLang,
+      appLang,
       ap.user!.scenarioScores,
       useCase.recommended,
     );
@@ -24,9 +23,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider ap = context.read(); // TODO: Make reload when changed
     return FutureProvider<List<ScenarioModel>>(
       initialData: [],
-      create: (context) => loadScn(context),
+      create: (context) => loadScn(ap),
       builder: (context, _) => Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(

@@ -16,35 +16,36 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-      ],
-      builder: (context, _) => MaterialApp(
-        title: "LanguagePal",
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        locale: Locale(
-            context.watch<AuthProvider>().user?.appLang ?? Platform.localeName),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) {
-            AuthProvider ap = context.watch();
-            switch (ap.state) {
-              case AuthState.loading:
-                return const LoadingPage();
-              case AuthState.authenticated:
-                return const HomePage();
-              case AuthState.unauthenticated:
-                return AuthPage();
-              case AuthState.onboarding:
-                return const OnboardingPage();
-              default:
-                return const Text("Error");
-            }
-          },
-        ),
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ],
+        builder: (context, _) {
+          return MaterialApp(
+            title: "LanguagePal",
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            locale: Locale(context.watch<AuthProvider>().user?.appLang ??
+                Platform.localeName),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (context) {
+                AuthProvider ap = context.watch();
+                switch (ap.state) {
+                  case AuthState.loading:
+                    return const LoadingPage();
+                  case AuthState.authenticated:
+                    return const HomePage();
+                  case AuthState.unauthenticated:
+                    return AuthPage();
+                  case AuthState.onboarding:
+                    return const OnboardingPage();
+                  default:
+                    return const Text("Error");
+                }
+              },
+            ),
+          );
+        });
   }
 }
