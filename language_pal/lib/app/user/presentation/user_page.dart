@@ -19,7 +19,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  List<Messages> conversations = [];
+  List<Messages>? conversations = [];
   List<UseCaseModel> useCases = [];
   List<ScenarioModel> scenarios = [];
 
@@ -37,7 +37,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   void loadConversations() async {
-    if (conversations.isNotEmpty) return;
+    if (conversations != null) return;
     AuthProvider ap = context.read<AuthProvider>();
     var tmp = await loadPastConversations(scenarios, ap.firebaseUser!.uid);
     setState(() {
@@ -77,7 +77,7 @@ class _UserPageState extends State<UserPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(FontAwesomeIcons.circleUser, size: 54),
+                const Icon(Icons.account_circle_outlined, size: 54, fill: 0.0),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +194,9 @@ class _UserPageState extends State<UserPage> {
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context)!.user_page_conversations_title,
                 style: Theme.of(context).textTheme.headlineSmall),
-            if (conversations.isEmpty)
+            if (conversations == null)
+              const Center(child: CircularProgressIndicator())
+            else if (conversations!.isEmpty)
               Text(AppLocalizations.of(context)!.user_page_no_conversations),
             Expanded(
                 child: ListView.builder(
@@ -205,7 +207,7 @@ class _UserPageState extends State<UserPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                PastConversationPage(conversations[index])));
+                                PastConversationPage(conversations![index])));
                   },
                   child: Card(
                     child: ListTile(
@@ -213,14 +215,14 @@ class _UserPageState extends State<UserPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(conversations[index].scenario.emoji),
+                            Text(conversations![index].scenario.emoji),
                             const SizedBox(width: 12),
                             SizedBox(
                               width: 14,
                               height: 14,
                               child: CircularProgressIndicator(
                                 value:
-                                    (conversations[index].rating?.score ?? 0) /
+                                    (conversations![index].rating?.score ?? 0) /
                                         100,
                                 strokeWidth: 3,
                                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -228,13 +230,13 @@ class _UserPageState extends State<UserPage> {
                               ),
                             ),
                           ]),
-                      title: Text(conversations[index].scenario.name),
+                      title: Text(conversations![index].scenario.name),
                       trailing: const Icon(Icons.chevron_right),
                     ),
                   ),
                 );
               },
-              itemCount: conversations.length,
+              itemCount: conversations!.length,
             ))
           ],
         ),
