@@ -96,6 +96,7 @@ class _ChatPageState extends State<ChatPage> {
       disabled = true;
     });
     if (msgs.rating != null) return;
+    print("Get Msg");
     getAIRespone(msgs.getLastMsgs()).then((resp) {
       setState(() {
         msgs.addMsg(AIMsgModel(resp.message));
@@ -108,6 +109,7 @@ class _ChatPageState extends State<ChatPage> {
         getSummary();
       }
     });
+    print("Get Rating");
     getRating(
       widget.scenario.ratingDesc,
       widget.scenario.ratingName,

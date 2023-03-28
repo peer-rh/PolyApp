@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/app/scenario/scenario_provider.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/app/user/logic/use_cases.dart';
+import 'package:language_pal/app/user/presentation/past_conversation.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/models/user_model.dart';
 import 'package:language_pal/common/languages.dart';
@@ -37,6 +37,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   void loadConversations() async {
+    if (conversations.isNotEmpty) return;
     AuthProvider ap = context.read<AuthProvider>();
     var tmp = await loadPastConversations(scenarios, ap.firebaseUser!.uid);
     setState(() {
@@ -198,10 +199,39 @@ class _UserPageState extends State<UserPage> {
             Expanded(
                 child: ListView.builder(
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Text(conversations[index].scenario.emoji),
-                  title: Text(conversations[index].scenario.name),
-                  trailing: const Icon(Icons.chevron_right),
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PastConversationPage(conversations[index])));
+                  },
+                  child: Card(
+                    child: ListTile(
+                      leading: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(conversations[index].scenario.emoji),
+                            const SizedBox(width: 12),
+                            SizedBox(
+                              width: 14,
+                              height: 14,
+                              child: CircularProgressIndicator(
+                                value:
+                                    (conversations[index].rating?.score ?? 0) /
+                                        100,
+                                strokeWidth: 3,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).colorScheme.primary),
+                              ),
+                            ),
+                          ]),
+                      title: Text(conversations[index].scenario.name),
+                      trailing: const Icon(Icons.chevron_right),
+                    ),
+                  ),
                 );
               },
               itemCount: conversations.length,
