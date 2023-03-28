@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
+import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/auth/models/user_model.dart';
 
 Future<List<Messages>> loadPastConversations(
     List<ScenarioModel> scenarios, String uid) async {
@@ -17,7 +19,7 @@ Future<List<Messages>> loadPastConversations(
     for (var element in value.docs) {
       final data = element.data();
       final scenario = scenarios
-          .firstWhere((element) => element.uniqueId == data['scenario_id']);
+          .firstWhere((element) => element.uniqueId == data['scenario']);
       conversations.add(Messages.fromFirestore(data, scenario));
     }
   });
@@ -25,36 +27,21 @@ Future<List<Messages>> loadPastConversations(
 }
 
 Future<void> addConversationToFirestore(
-    Messages conversation, String uid) async {
-  // First check if already conv with id exists
-  // Then check for the better rating and update
-  // If no better rating, do nothing
+    Messages conversation, AuthProvider ap) async {
+  if (ap.user!.scenarioScores.containsKey(conversation.scenario.uniqueId) &&
+      ap.user!.scenarioScores[conversation.scenario.uniqueId]! <=
+          conversation.rating!.score!) {
+    UserModel newUser = ap.user!;
+    newUser.scenarioScores[conversation.scenario.uniqueId] =
+        conversation.rating!.score!;
+    ap.setUserModel(newUser);
+  }
+
+  final uid = ap.firebaseUser!.uid;
 
   FirebaseFirestore.instance
-      .collection('users')
+      .collection('user')
       .doc(uid)
       .collection('conversations')
-      .doc(conversation.scenario.uniqueId)
-      .get()
-      .then((value) {
-    if (value.exists) {
-      final data = value.data();
-      final oldRating = data!['rating']!['rating'];
-      if (oldRating < conversation.rating!.score) {
-        FirebaseFirestore.instance
-            .collection('user')
-            .doc(uid)
-            .collection('conversations')
-            .doc(conversation.scenario.uniqueId)
-            .set(conversation.toFirestore());
-      }
-    } else {
-      FirebaseFirestore.instance
-          .collection('user')
-          .doc(uid)
-          .collection('conversations')
-          .doc(conversation.scenario.uniqueId)
-          .set(conversation.toFirestore());
-    }
-  });
+      .add(conversation.toFirestore());
 }

@@ -44,7 +44,6 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         title: Text(
           "${widget.scenario.emoji} ${widget.scenario.name}",
-          style: GoogleFonts.nunito(fontSize: 20),
         ),
       ),
       body: SafeArea(
@@ -114,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
       widget.scenario.ratingName,
       (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg,
       personMsg.msg,
-      context.read<AuthProvider>().user!.ownLang,
+      context.read<AuthProvider>().user!.appLang,
       AppLocalizations.of(context)!.msg_rating_great,
       AppLocalizations.of(context)!.msg_rating_good,
       AppLocalizations.of(context)!.msg_rating_poor,
@@ -136,8 +135,7 @@ class _ChatPageState extends State<ChatPage> {
       msgs.rating = rating;
     });
 
-    addConversationToFirestore(
-        msgs, context.read<AuthProvider>().firebaseUser!.uid);
+    addConversationToFirestore(msgs, context.read<AuthProvider>());
     Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
   }
 }

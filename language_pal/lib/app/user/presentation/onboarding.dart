@@ -14,7 +14,7 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", "", "");
+  UserModel thisUser = UserModel("", "", "", "", {});
   final learnCont = TextEditingController();
   int currentStep = 0;
   List<UseCaseModel> useCases = [];
@@ -23,7 +23,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void didChangeDependencies() async {
     AuthProvider ap = Provider.of(context);
     thisUser.email = ap.firebaseUser!.email!;
-    thisUser.ownLang = AppLocalizations.of(context)!.localeName;
+    thisUser.appLang = AppLocalizations.of(context)!.localeName;
     super.didChangeDependencies();
 
     useCases =

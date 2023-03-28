@@ -1,6 +1,5 @@
 {
     "onboarding_title": "Onboarding",
-    "onboarding_learn_lang_question": "Welche Sprache würden sie gerne üben?",
     "whatScenario": "Welches Szenario würden sie gerne üben?",
     "msg_rating_great": "Super Antwort",
     "msg_rating_good": "Gute Antwort",
@@ -18,11 +17,15 @@
     "auth_sign_up_link": "Hast du noch keinen Account? JETZT REGISTIEREN",
     "translation_title": "Übersetzung",
     "close": "Schließen",
-    "use_case_title": "Wieso?",
     "use_case_title_full": "Wieso möchtest du eine neue Sprache lernen?",
-    "learn_language_title": "Was?",
     "learn_language_title_full": "Was für eine Sprache möchtest du lernen?",
     "german": "Deutsch",
     "english": "Englisch",
-    "onboarding_must_select_option": "Sie müssen eine Option auswählen"
+    "onboarding_must_select_option": "Sie müssen eine Option auswählen",
+    "premium_plan": "Premium Plan",
+    "base_plan": "Basis Plan",
+    "conversations_title": "Gespräche",
+    "no_conversations": "Noch keine vollendente Gespräche.",
+    "user_page_learn_lang": "Zu lernende Sprache",
+    "user_page_app_lang": "App Sprache"
 }

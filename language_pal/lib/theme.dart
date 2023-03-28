@@ -1,13 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   colorScheme: lightColorScheme,
+  textTheme: TextTheme(
+    headlineLarge: GoogleFonts.nunito(
+      fontSize: 32,
+      fontWeight: FontWeight.w400,
+    ),
+    headlineMedium: GoogleFonts.nunito(
+      fontSize: 28,
+      fontWeight: FontWeight.w400,
+    ),
+    headlineSmall: GoogleFonts.nunito(
+      fontSize: 24,
+      fontWeight: FontWeight.w300,
+    ),
+  ),
 );
 
 ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   colorScheme: darkColorScheme,
+  textTheme: TextTheme(
+    headlineLarge: GoogleFonts.nunito(
+      fontSize: 32,
+      fontWeight: FontWeight.w400,
+    ),
+    headlineMedium: GoogleFonts.nunito(
+      fontSize: 28,
+      fontWeight: FontWeight.w400,
+    ),
+    headlineSmall: GoogleFonts.nunito(
+      fontSize: 24,
+      fontWeight: FontWeight.w300,
+    ),
+    titleMedium: GoogleFonts.nunito(
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+    ),
+  ),
 );
 
 const lightColorScheme = ColorScheme(
