@@ -1,6 +1,5 @@
 {
     "onboarding_title": "Onboarding",
-    "onboarding_learn_lang_question": "What language would you like to practice",
     "whatScenario": "What Scenario do you want to practice?",
     "msg_rating_great": "Great Answer",
     "msg_rating_good": "Good Answer",
@@ -18,11 +17,15 @@
     "auth_sign_up_link": "Don't have an Account yet? SIGN UP",
     "translation_title": "Translation",
     "close": "Close",
-    "use_case_title": "Why?",
     "use_case_title_full": "Why do you want to learn a new language?",
-    "learn_language_title": "What?",
     "learn_language_title_full": "What language do you want to learn",
     "german": "German",
     "english": "English",
-    "onboarding_must_select_option": "You must select an option"
+    "onboarding_must_select_option": "You must select an option",
+    "premium_plan": "Premium Plan",
+    "base_plan": "Base Plan",
+    "conversations_title": "Conversations",
+    "no_conversations": "No finished Conversations yet.",
+    "user_page_learn_lang": "Language to learn",
+    "user_page_app_lang": "App Language"
 }

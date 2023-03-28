@@ -51,8 +51,12 @@ class AuthProvider with ChangeNotifier {
     if (!doc.exists) {
       setState(AuthState.onboarding);
     } else {
-      user = UserModel(doc.get("email"), doc.get("ownLang"),
-          doc.get("learnLang"), doc.get("useCase"));
+      user = UserModel(
+          doc.get("email"),
+          doc.get("appLang"),
+          doc.get("learnLang"),
+          doc.get("useCase"),
+          doc.get("scenarioScores").cast<String, int>());
       setState(AuthState.authenticated);
     }
   }

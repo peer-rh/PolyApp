@@ -23,3 +23,8 @@ Future<List<UseCaseModel>> loadUseCaseModels(String ownLang) async {
     );
   }).toList();
 }
+
+Future<UseCaseModel?> loadUseCaseModel(String uniqueId, String ownLang) async {
+  final List<UseCaseModel> useCases = await loadUseCaseModels(ownLang);
+  return useCases.firstWhere((element) => element.uniqueId == uniqueId);
+}
