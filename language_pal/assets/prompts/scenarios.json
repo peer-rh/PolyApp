@@ -309,5 +309,93 @@
                 "pitch": 0.0
             }
         }
+    },
+    {
+        "id": "ASKING_FOR_DIRECTIONS",
+        "avatar": "assets/avatars/Man.png",
+        "emoji": "🧭",
+        "name": {
+            "de": "Nach dem Weg fragen",
+            "en": "Asking for Directions",
+            "es": "Preguntar por la dirección"
+        },
+        "prompt_desc": "You are a local and I am a tourist; I'm trying to find a place",
+        "rating_desc": "friendly, fairly casual",
+        "rating_name": "LOCAL",
+        "starting_msgs": {
+            "de": [
+                "Guten Tag. Wie kann ich ihnen helfen?",
+                "Hallo, wie kann ich ihnen helfen?"
+            ],
+            "en": [
+                "Good afternoon. How can I help you?",
+                "Hello, how can I help you?"
+            ],
+            "es": [
+                "Buenas tardes. ¿En qué puedo ayudarle?",
+                "Hola, ¿En qué puedo ayudarle?"
+            ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-B",
+                "language_code": "de-DE",
+                "pitch": 0.0
+            },
+            "en": {
+                "name": "en-US-Neural2-J",
+                "language_code": "en-US",
+                "pitch": -6.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-F",
+                "language_code": "es-ES",
+                "pitch": 0.0
+            }
+        }
+    },
+    {
+        "id": "COFFEESHOP_CONVERSATION",
+        "avatar": "assets/avatars/Man.png",
+        "emoji": "☕",
+        "name": {
+            "de": "Treffen mit Freund",
+            "en": "Meeting a Friend",
+            "es": "Reunión con un amigo"
+        },
+        "prompt_desc": "You are a friend and I am a friend; we're meeting for coffee",
+        "rating_desc": "friendly, casual",
+        "rating_name": "FRIEND",
+        "starting_msgs": {
+            "de": [
+                "Hallo, wie geht es dir?",
+                "Guten morgen, wie geht es dir?"
+            ],
+            "en": [
+                "Hello, how are you?",
+                "Good morning, how are you?"
+            ],
+            "es": [
+                "Hola, ¿cómo estás?",
+                "Buenos días, ¿cómo estás?"
+            ]
+        },
+        "voice_info": {
+            "de": {
+                "name": "de-DE-Neural2-B",
+                "language_code": "de-DE",
+                "pitch": 0.0
+            },
+            "en": {
+                "name": "en-US-Neural2-J",
+                "language_code": "en-US",
+                "pitch": -6.0
+            },
+            "es": {
+                "name": "es-ES-Neural2-F",
+                "language_code": "es-ES",
+                "pitch": 0.0
+            }
+        }
     }
 ]

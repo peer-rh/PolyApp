@@ -10,7 +10,8 @@
             "HOTEL_CHECKIN",
             "HOTEL_CHECKOUT",
             "RESTAURANT",
-            "BEACH"
+            "BEACH",
+            "ASKING_FOR_DIRECTIONS"
         ]
     },
     {
@@ -22,7 +23,9 @@
         },
         "recommended": [
             "JOB_INTERVIEW",
-            "RESTAURANT"
+            "RESTAURANT",
+            "DOCTOR",
+            "COFFEESHOP_CONVERSATION"
         ]
     },
     {
@@ -35,7 +38,8 @@
         "recommended": [
             "ORDERING_DELIVERY",
             "RESTAURANT",
-            "DOCTOR"
+            "DOCTOR",
+            "COFFEESHOP_CONVERSATION"
         ]
     }
 ]
