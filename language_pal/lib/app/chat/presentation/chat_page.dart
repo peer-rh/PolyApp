@@ -131,7 +131,7 @@ class _ChatPageState extends State<ChatPage> {
     final rating = await getConversationRating(
         widget.scenario.ratingDesc,
         widget.scenario.ratingName,
-        AppLocalizations.of(context)!.localeName,
+        context.read<AuthProvider>().user!.appLang,
         msgs);
     setState(() {
       msgs.rating = rating;

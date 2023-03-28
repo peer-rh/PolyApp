@@ -13,7 +13,7 @@ class Logo extends StatelessWidget {
         Text("Language",
             style: GoogleFonts.nunito(
               fontSize: size,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.w700,
             )),
         Text("Pal",
