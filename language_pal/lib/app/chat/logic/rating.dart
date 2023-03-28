@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/app/chat/models/messages.dart';
 
 class MsgRating {
   final MsgRatingType type;
@@ -9,21 +10,15 @@ class MsgRating {
   MsgRating(this.type, this.details);
 }
 
-Future<MsgRating> getRating(
-    String scenarioShort,
-    String assistantName,
-    String assistantMsg,
-    String userMsg,
-    String lang,
-    String great,
-    String good,
-    String poor) async {
+Future<MsgRating> getRating(String scenarioShort, String assistantName,
+    Messages msgs, String lang, String great, String good, String poor) async {
   final response =
       await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
     "environment": scenarioShort,
-    "assistant": assistantMsg,
     "assistant_name": assistantName,
-    "user": userMsg,
+    "messages": (msgs.msgs.length >= 4)
+        ? msgs.msgs.sublist(msgs.msgs.length - 4).map((e) => e.toMap()).toList()
+        : msgs.msgs.map((e) => e.toMap()).toList(),
     "language": lang,
   });
   String data = response.data;
