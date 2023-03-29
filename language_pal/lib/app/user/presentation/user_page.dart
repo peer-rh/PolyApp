@@ -84,21 +84,24 @@ class _UserPageState extends State<UserPage> {
                       const Icon(Icons.account_circle_outlined,
                           size: 54, fill: 0.0),
                       const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              ap.firebaseUser!.displayName ??
-                                  ap.firebaseUser!.email ??
-                                  "No Email provided",
-                              style: Theme.of(context).textTheme.headlineSmall),
-                          const SizedBox(height: 4),
-                          if (ap.firebaseUser!.displayName != null)
-                            Text(ap.firebaseUser!.email ?? ""),
-                        ],
-                      ),
-                      const Expanded(
-                        child: SizedBox(),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                ap.firebaseUser!.displayName ??
+                                    ap.firebaseUser!.email ??
+                                    "No Email provided",
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
+                            const SizedBox(height: 4),
+                            if (ap.firebaseUser!.displayName != null)
+                              Text(ap.firebaseUser!.email ?? ""),
+                          ],
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.logout),
