@@ -56,8 +56,14 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     const uid = context.auth?.uid;
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
     let text = "ENVIRONMENT: " + data["environment"] + "\n";
-    text += data["assistant_name"] + ": " + data["assistant"] + "\n";
-    text += "ME: " + data["user"];
+    for (let i = 0; i < data["messages"].length; i++) {
+        if (data["messages"][i]["role"] == "assistant") {
+            text += data["assistant_name"] + ": " + data["messages"][i]["content"] + "\n";
+        } else {
+            text += "ME: " + data["messages"][i]["content"] + "\n";
+        }
+    }
+    functions.logger.info("Text: " + text);
 
     let system_prompt = `You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "Great Answer", "Good Answer" or "Poor Answer". Explain why (2-3 points) and provide perfect wording in the langauge of the conversation.`;
     if (data["language"] == "de") {
@@ -93,7 +99,6 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
             text += "ME: " + data["messages"][i]["content"] + "\n";
         }
     }
-    functions.logger.info(text);
 
     let system_prompt = `You will rate how good I performed in this conversation. Give 4-5 Tips in Bulletpoints. End with "Rating: .../100" where you will give a final performance rating from 1 to 100. 100 means perfect fluency.`;
     if (data["language"] == "de") {

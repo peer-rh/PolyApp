@@ -89,11 +89,12 @@ class _UserPageState extends State<UserPage> {
                         children: [
                           Text(
                               ap.firebaseUser!.displayName ??
-                                  ap.firebaseUser!.email!,
+                                  ap.firebaseUser!.email ??
+                                  "No Email provided",
                               style: Theme.of(context).textTheme.headlineSmall),
                           const SizedBox(height: 4),
                           if (ap.firebaseUser!.displayName != null)
-                            Text(ap.firebaseUser!.email!),
+                            Text(ap.firebaseUser!.email ?? ""),
                         ],
                       ),
                       const Expanded(

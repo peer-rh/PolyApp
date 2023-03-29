@@ -1,3 +1,5 @@
+import 'dart:math' as math show sin, pi;
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,12 +34,22 @@ class OwnMsgBubble extends StatelessWidget {
                     ],
                   ));
         },
-        child: Text(
-          generateRatingShort(context, msg.rating!.type),
-          style: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              generateRatingShort(context, msg.rating!.type),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: 14,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            ),
+          ],
         ),
       );
     }
@@ -87,27 +99,10 @@ class OwnMsgBubble extends StatelessWidget {
 class AiMsgBubble extends StatelessWidget {
   final ScenarioModel scenario;
   final AIMsgModel msg;
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayer;
   final String avatar;
-  AiMsgBubble(this.msg, this.avatar, this.scenario, {super.key});
-
-  showTranslation(BuildContext context, String translation) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.msg_translation_title),
-            content: Text(translation),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context)!.close))
-            ],
-          );
-        });
-  }
+  AiMsgBubble(this.msg, this.avatar, this.scenario, this.audioPlayer,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -131,51 +126,26 @@ class AiMsgBubble extends StatelessWidget {
                 color: Theme.of(context).colorScheme.surfaceVariant,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        msg.msg,
-                        textWidthBasis: TextWidthBasis.longestLine,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.onSurface),
-                      ),
-                      Row(mainAxisSize: MainAxisSize.min, children: [
-                        IconButton(
-                          onPressed: () {
-                            String lang =
-                                context.read<AuthProvider>().user!.appLang;
-                            getTranslations(msg.msg, lang).then((translations) {
-                              msg.translations = translations;
-                              showTranslation(context, translations);
-                            });
-                          },
-                          icon: const Icon(Icons.translate, size: 18),
+                  child: !msg.loaded
+                      ? const AnimatedThinking()
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              msg.msg,
+                              textWidthBasis: TextWidthBasis.longestLine,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ),
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              TranslationButton(msg),
+                              TTSButton(msg, audioPlayer, scenario),
+                            ])
+                          ],
                         ),
-                        IconButton(
-                          onPressed: () async {
-                            msg.audioPath = msg.audioPath ??
-                                await generateTextToSpeech(msg.msg, scenario);
-                            await AudioPlayer.global
-                                .setGlobalAudioContext(const AudioContext(
-                                    iOS: AudioContextIOS(options: [
-                                      AVAudioSessionOptions.allowBluetooth,
-                                      AVAudioSessionOptions.allowBluetoothA2DP,
-                                      AVAudioSessionOptions.allowAirPlay,
-                                      AVAudioSessionOptions.duckOthers,
-                                    ]),
-                                    android: AudioContextAndroid()));
-                            await audioPlayer
-                                .play(DeviceFileSource(msg.audioPath!));
-                          },
-                          icon:
-                              const Icon(FontAwesomeIcons.volumeHigh, size: 18),
-                        ),
-                      ])
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -184,4 +154,67 @@ class AiMsgBubble extends StatelessWidget {
       ),
     );
   }
+}
+
+class AnimatedThinking extends StatefulWidget {
+  const AnimatedThinking({super.key});
+
+  @override
+  State<AnimatedThinking> createState() => _AnimatedThinkingState();
+}
+
+class _AnimatedThinkingState extends State<AnimatedThinking>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.repeat();
+  }
+
+  @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(3, (i) {
+        return ScaleTransition(
+          scale: DelayTween(begin: 0.0, end: 1.0, delay: i * .2)
+              .animate(_controller),
+          child: SizedBox.fromSize(
+              size: const Size.square(12),
+              child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      shape: BoxShape.circle))),
+        );
+      }),
+    );
+  }
+}
+
+class DelayTween extends Tween<double> {
+  DelayTween({double? begin, double? end, required this.delay})
+      : super(begin: begin, end: end);
+
+  final double delay;
+
+  @override
+  double lerp(double t) =>
+      super.lerp((math.sin((t - delay) * 2 * math.pi) + 1) / 2);
+
+  @override
+  double evaluate(Animation<double> animation) => lerp(animation.value);
 }

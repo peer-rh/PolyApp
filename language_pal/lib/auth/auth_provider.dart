@@ -167,7 +167,7 @@ class AuthProvider with ChangeNotifier {
   void signInWithApple() async {
     try {
       final appleProvider = AppleAuthProvider();
-      appleProvider.addScope("name");
+      appleProvider.addScope("email");
       await FirebaseAuth.instance.signInWithProvider(appleProvider);
       setState(AuthState.loading);
     } on FirebaseAuthException catch (e) {

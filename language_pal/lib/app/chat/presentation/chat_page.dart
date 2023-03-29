@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/logic/total_rating.dart';
@@ -96,10 +96,9 @@ class _ChatPageState extends State<ChatPage> {
       disabled = true;
     });
     if (msgs.rating != null) return;
-    print("Get Msg");
     getAIRespone(msgs.getLastMsgs()).then((resp) {
       setState(() {
-        msgs.addMsg(AIMsgModel(resp.message));
+        msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
         disabled = false;
       });
       _scrollController.animateTo(0.0,
@@ -109,12 +108,10 @@ class _ChatPageState extends State<ChatPage> {
         getSummary();
       }
     });
-    print("Get Rating");
     getRating(
       widget.scenario.ratingDesc,
       widget.scenario.ratingName,
-      (msgs.msgs[msgs.msgs.length - 2] as AIMsgModel).msg,
-      personMsg.msg,
+      msgs,
       context.read<AuthProvider>().user!.appLang,
       AppLocalizations.of(context)!.msg_rating_great,
       AppLocalizations.of(context)!.msg_rating_good,
@@ -123,6 +120,9 @@ class _ChatPageState extends State<ChatPage> {
       setState(() {
         personMsg.rating = resp;
       });
+    });
+    setState(() {
+      msgs.addMsg(AIMsgModel("")..loaded = false);
     });
   }
 
