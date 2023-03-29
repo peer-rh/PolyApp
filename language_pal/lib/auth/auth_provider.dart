@@ -30,7 +30,7 @@ class AuthProvider with ChangeNotifier {
     userAuthSub = FirebaseAuth.instance.authStateChanges().listen((event) {
       firebaseUser = event;
       if (firebaseUser != null) {
-        Purchases.logIn((firebaseUser!).uid);
+//        Purchases.logIn((firebaseUser!).uid);
         _getFirestore();
       } else {
         user = null;

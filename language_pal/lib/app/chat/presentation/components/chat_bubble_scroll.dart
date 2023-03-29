@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/chat_summary_page.dart';
 import 'package:language_pal/app/chat/presentation/components/chat_bubble.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatBubbleColumn extends StatelessWidget {
   AudioPlayer audioPlayer = AudioPlayer();
@@ -27,6 +28,7 @@ class ChatBubbleColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initAudio();
+    bool displayedHint = false;
     return Column(
       children: [
         Column(
@@ -39,7 +41,27 @@ class ChatBubbleColumn extends StatelessWidget {
                 audioPlayer,
               );
             } else if (e is PersonMsgModel) {
-              return OwnMsgBubble(e);
+              if (!displayedHint && e.rating != null) {
+                displayedHint = true;
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    OwnMsgBubble(e),
+                    Text(
+                      AppLocalizations.of(context)!.chat_page_hint,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.8)),
+                    ),
+                  ],
+                );
+              } else {
+                return OwnMsgBubble(e);
+              }
             } else {
               return Container();
             }
@@ -51,7 +73,7 @@ class ChatBubbleColumn extends StatelessWidget {
               padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: GestureDetector(
                 child: Text(
-                  "This Conversation is Over. View your summary",
+                  AppLocalizations.of(context)!.chat_page_end,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                       decoration: TextDecoration.underline),

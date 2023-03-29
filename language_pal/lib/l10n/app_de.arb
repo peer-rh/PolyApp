@@ -5,6 +5,8 @@
   "auth_sign_in_link": "Hast du bereits einen Account? LOG IN",
   "auth_sign_up": "Registrieren",
   "auth_sign_up_link": "Hast du noch keinen Account? JETZT REGISTIEREN",
+  "chat_page_hint": "Tippe für mehr info",
+  "chat_page_end": "Dieses Gespräch ist zu ende. CHATMENTOR anschauen",
   "close": "Schließen",
   "conversation_summary_title": "Chat Mentor",
   "forgot_password_button": "Passwort-Reset Emaill senden",

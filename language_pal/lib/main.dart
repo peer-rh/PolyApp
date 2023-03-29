@@ -40,7 +40,7 @@ void main() async {
     };
   }
 
-  await initPlatformState();
+  // await initPlatformState();
 
   runApp(App());
 }

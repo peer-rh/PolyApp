@@ -5,6 +5,8 @@
   "auth_sign_in_link": "Already have an Account? SIGN IN",
   "auth_sign_up": "Sign Up",
   "auth_sign_up_link": "Don't have an Account yet? SIGN UP",
+  "chat_page_hint": "Tap for more Info",
+  "chat_page_end": "This Conversation is over. VIEW CHATMENTOR",
   "close": "Close",
   "conversation_summary_title": "Chat Mentor",
   "language": "{code, select, de{German} en{English} es{Spanish} other{Error}}",
