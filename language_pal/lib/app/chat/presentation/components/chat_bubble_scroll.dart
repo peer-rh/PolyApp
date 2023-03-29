@@ -1,18 +1,32 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/chat_summary_page.dart';
 import 'package:language_pal/app/chat/presentation/components/chat_bubble.dart';
 
 class ChatBubbleColumn extends StatelessWidget {
-  const ChatBubbleColumn({
+  AudioPlayer audioPlayer = AudioPlayer();
+  ChatBubbleColumn({
     super.key,
     required this.msgs,
   });
 
   final Messages msgs;
 
+  void initAudio() async {
+    await AudioPlayer.global.setGlobalAudioContext(const AudioContext(
+        iOS: AudioContextIOS(options: [
+          AVAudioSessionOptions.allowBluetooth,
+          AVAudioSessionOptions.allowBluetoothA2DP,
+          AVAudioSessionOptions.allowAirPlay,
+          AVAudioSessionOptions.duckOthers,
+        ]),
+        android: AudioContextAndroid()));
+  }
+
   @override
   Widget build(BuildContext context) {
+    initAudio();
     return Column(
       children: [
         Column(
@@ -22,6 +36,7 @@ class ChatBubbleColumn extends StatelessWidget {
                 e,
                 msgs.scenario.avatar,
                 msgs.scenario,
+                audioPlayer,
               );
             } else if (e is PersonMsgModel) {
               return OwnMsgBubble(e);

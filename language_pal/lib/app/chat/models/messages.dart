@@ -8,6 +8,7 @@ abstract class MsgModel {
 }
 
 class AIMsgModel extends MsgModel {
+  bool loaded = true;
   String msg;
   String? translations;
   String? audioPath;
