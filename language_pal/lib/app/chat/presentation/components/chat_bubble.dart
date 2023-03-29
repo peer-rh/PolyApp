@@ -34,12 +34,22 @@ class OwnMsgBubble extends StatelessWidget {
                     ],
                   ));
         },
-        child: Text(
-          generateRatingShort(context, msg.rating!.type),
-          style: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              generateRatingShort(context, msg.rating!.type),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: 14,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            ),
+          ],
         ),
       );
     }
@@ -117,7 +127,7 @@ class AiMsgBubble extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: !msg.loaded
-                      ? AnimatedThinking()
+                      ? const AnimatedThinking()
                       : Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +194,7 @@ class _AnimatedThinkingState extends State<AnimatedThinking>
           scale: DelayTween(begin: 0.0, end: 1.0, delay: i * .2)
               .animate(_controller),
           child: SizedBox.fromSize(
-              size: Size.square(14),
+              size: const Size.square(12),
               child: DecoratedBox(
                   decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
