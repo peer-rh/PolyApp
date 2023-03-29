@@ -87,9 +87,10 @@ class OwnMsgBubble extends StatelessWidget {
 class AiMsgBubble extends StatelessWidget {
   final ScenarioModel scenario;
   final AIMsgModel msg;
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayer;
   final String avatar;
-  AiMsgBubble(this.msg, this.avatar, this.scenario, {super.key});
+  AiMsgBubble(this.msg, this.avatar, this.scenario, this.audioPlayer,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -126,25 +127,7 @@ class AiMsgBubble extends StatelessWidget {
                       ),
                       Row(mainAxisSize: MainAxisSize.min, children: [
                         TranslationButton(msg),
-                        IconButton(
-                          onPressed: () async {
-                            msg.audioPath = msg.audioPath ??
-                                await generateTextToSpeech(msg.msg, scenario);
-                            await AudioPlayer.global
-                                .setGlobalAudioContext(const AudioContext(
-                                    iOS: AudioContextIOS(options: [
-                                      AVAudioSessionOptions.allowBluetooth,
-                                      AVAudioSessionOptions.allowBluetoothA2DP,
-                                      AVAudioSessionOptions.allowAirPlay,
-                                      AVAudioSessionOptions.duckOthers,
-                                    ]),
-                                    android: AudioContextAndroid()));
-                            await audioPlayer
-                                .play(DeviceFileSource(msg.audioPath!));
-                          },
-                          icon:
-                              const Icon(FontAwesomeIcons.volumeHigh, size: 18),
-                        ),
+                        TTSButton(msg, audioPlayer, scenario),
                       ])
                     ],
                   ),
