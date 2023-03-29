@@ -91,24 +91,6 @@ class AiMsgBubble extends StatelessWidget {
   final String avatar;
   AiMsgBubble(this.msg, this.avatar, this.scenario, {super.key});
 
-  showTranslation(BuildContext context, String translation) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.msg_translation_title),
-            content: Text(translation),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context)!.close))
-            ],
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -143,17 +125,7 @@ class AiMsgBubble extends StatelessWidget {
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
                       Row(mainAxisSize: MainAxisSize.min, children: [
-                        IconButton(
-                          onPressed: () {
-                            String lang =
-                                context.read<AuthProvider>().user!.appLang;
-                            getTranslations(msg.msg, lang).then((translations) {
-                              msg.translations = translations;
-                              showTranslation(context, translations);
-                            });
-                          },
-                          icon: const Icon(Icons.translate, size: 18),
-                        ),
+                        TranslationButton(msg),
                         IconButton(
                           onPressed: () async {
                             msg.audioPath = msg.audioPath ??
