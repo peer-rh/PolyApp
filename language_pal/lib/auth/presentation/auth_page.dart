@@ -57,67 +57,75 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(
       body: Consumer<AuthProvider>(
         builder: (context, ap, _) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Logo(56),
-                const SizedBox(height: 80),
-                TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: emailCont,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: AppLocalizations.of(context)!.auth_email,
+          return SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 80),
+                  const Logo(56),
+                  const SizedBox(height: 80),
+                  TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    autofillHints: const [AutofillHints.email],
+                    controller: emailCont,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context)!.auth_email,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: passCont,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: AppLocalizations.of(context)!.auth_password),
-                ),
-                const SizedBox(height: 5),
-                signIn ? forgotPassword : const SizedBox(height: 20),
-                const SizedBox(height: 5),
-                if (errorMsg != null)
-                  Text(
-                    errorMsg!,
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.error),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: passCont,
+                    autofillHints: const [AutofillHints.password],
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        labelText: AppLocalizations.of(context)!.auth_password),
                   ),
-                const SizedBox(height: 5),
-                CustomAuthButton(
-                  onPressed: () {
-                    signIn
-                        ? runAuth(() => ap.signInWithEmailAndPassword(
-                            emailCont.text, passCont.text))
-                        : runAuth(() => ap.signUpWithEmailAndPassword(
-                            emailCont.text, passCont.text));
-                  },
-                  text: signIn
-                      ? AppLocalizations.of(context)!.auth_sign_in
-                      : AppLocalizations.of(context)!.auth_sign_up,
-                ),
-                const SizedBox(height: 15),
-                oAuthDivider(),
-                const SizedBox(height: 15),
-                OAuthButtons(ap),
-                const SizedBox(height: 25),
-                TextButton(
+                  const SizedBox(height: 5),
+                  signIn ? forgotPassword : const SizedBox(height: 20),
+                  const SizedBox(height: 5),
+                  if (errorMsg != null)
+                    Text(
+                      errorMsg!,
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error),
+                    ),
+                  const SizedBox(height: 5),
+                  CustomAuthButton(
                     onPressed: () {
-                      setState(() {
-                        signIn = !signIn;
-                      });
+                      signIn
+                          ? runAuth(() => ap.signInWithEmailAndPassword(
+                              emailCont.text, passCont.text))
+                          : runAuth(() => ap.signUpWithEmailAndPassword(
+                              emailCont.text, passCont.text));
                     },
-                    child: signIn
-                        ? Text(AppLocalizations.of(context)!.auth_sign_up_link)
-                        : Text(
-                            AppLocalizations.of(context)!.auth_sign_in_link)),
-              ],
+                    text: signIn
+                        ? AppLocalizations.of(context)!.auth_sign_in
+                        : AppLocalizations.of(context)!.auth_sign_up,
+                  ),
+                  ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 15)),
+                  oAuthDivider(),
+                  ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 15)),
+                  OAuthButtons(ap),
+                  const SizedBox(height: 25),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          signIn = !signIn;
+                        });
+                      },
+                      child: signIn
+                          ? Text(
+                              AppLocalizations.of(context)!.auth_sign_up_link)
+                          : Text(
+                              AppLocalizations.of(context)!.auth_sign_in_link)),
+                ],
+              ),
             ),
           );
         },
