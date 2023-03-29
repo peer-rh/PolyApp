@@ -1,5 +1,5 @@
 class UserModel {
-  String email;
+  String? email;
   bool premiumCustomer = false; // TODO
   String appLang;
   String learnLang;
