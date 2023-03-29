@@ -37,7 +37,7 @@ class App extends StatelessWidget {
                   case AuthState.authenticated:
                     return const HomePage();
                   case AuthState.unauthenticated:
-                    return AuthPage();
+                    return const AuthPage();
                   case AuthState.onboarding:
                     return const OnboardingPage();
                   default:
