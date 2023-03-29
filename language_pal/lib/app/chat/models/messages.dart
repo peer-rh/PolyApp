@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/logic/total_rating.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
