@@ -98,7 +98,7 @@ class _ChatPageState extends State<ChatPage> {
     if (msgs.rating != null) return;
     getAIRespone(msgs.getLastMsgs()).then((resp) {
       setState(() {
-        msgs.addMsg(AIMsgModel(resp.message));
+        msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
         disabled = false;
       });
       _scrollController.animateTo(0.0,
@@ -120,6 +120,9 @@ class _ChatPageState extends State<ChatPage> {
       setState(() {
         personMsg.rating = resp;
       });
+    });
+    setState(() {
+      msgs.addMsg(AIMsgModel("")..loaded = false);
     });
   }
 

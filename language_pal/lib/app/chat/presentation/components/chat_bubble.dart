@@ -1,3 +1,5 @@
+import 'dart:math' as math show sin, pi;
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -114,23 +116,26 @@ class AiMsgBubble extends StatelessWidget {
                 color: Theme.of(context).colorScheme.surfaceVariant,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        msg.msg,
-                        textWidthBasis: TextWidthBasis.longestLine,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.onSurface),
-                      ),
-                      Row(mainAxisSize: MainAxisSize.min, children: [
-                        TranslationButton(msg),
-                        TTSButton(msg, audioPlayer, scenario),
-                      ])
-                    ],
-                  ),
+                  child: !msg.loaded
+                      ? AnimatedThinking()
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              msg.msg,
+                              textWidthBasis: TextWidthBasis.longestLine,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ),
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              TranslationButton(msg),
+                              TTSButton(msg, audioPlayer, scenario),
+                            ])
+                          ],
+                        ),
                 ),
               ),
             ),
@@ -139,4 +144,67 @@ class AiMsgBubble extends StatelessWidget {
       ),
     );
   }
+}
+
+class AnimatedThinking extends StatefulWidget {
+  const AnimatedThinking({super.key});
+
+  @override
+  State<AnimatedThinking> createState() => _AnimatedThinkingState();
+}
+
+class _AnimatedThinkingState extends State<AnimatedThinking>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.repeat();
+  }
+
+  @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(3, (i) {
+        return ScaleTransition(
+          scale: DelayTween(begin: 0.0, end: 1.0, delay: i * .2)
+              .animate(_controller),
+          child: SizedBox.fromSize(
+              size: Size.square(14),
+              child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      shape: BoxShape.circle))),
+        );
+      }),
+    );
+  }
+}
+
+class DelayTween extends Tween<double> {
+  DelayTween({double? begin, double? end, required this.delay})
+      : super(begin: begin, end: end);
+
+  final double delay;
+
+  @override
+  double lerp(double t) =>
+      super.lerp((math.sin((t - delay) * 2 * math.pi) + 1) / 2);
+
+  @override
+  double evaluate(Animation<double> animation) => lerp(animation.value);
 }
