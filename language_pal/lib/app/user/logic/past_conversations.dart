@@ -4,12 +4,12 @@ import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/models/user_model.dart';
 
-Future<List<Messages>> loadPastConversations(
+Future<List<Conversation>> loadPastConversations(
     List<ScenarioModel> scenarios, String uid) async {
   // Get all docs in user/${uid}/conversations
   // For each doc, get the scenario and the messages
   // Return a list of Messages
-  List<Messages> conversations = [];
+  List<Conversation> conversations = [];
   await FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
@@ -20,14 +20,14 @@ Future<List<Messages>> loadPastConversations(
       final data = element.data();
       final scenario = scenarios
           .firstWhere((element) => element.uniqueId == data['scenario']);
-      conversations.add(Messages.fromFirestore(data, scenario));
+      conversations.add(Conversation.fromFirestore(data, scenario));
     }
   });
   return conversations;
 }
 
 Future<void> addConversationToFirestore(
-    Messages conversation, AuthProvider ap) async {
+    Conversation conversation, AuthProvider ap) async {
   if (!ap.user!.scenarioScores.containsKey(conversation.scenario.uniqueId) ||
       ap.user!.scenarioScores[conversation.scenario.uniqueId]! <=
           conversation.rating!.score!) {

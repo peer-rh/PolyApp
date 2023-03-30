@@ -14,7 +14,7 @@ class ChatBubbleColumn extends StatelessWidget {
     this.sendAnyways,
   });
 
-  final Messages msgs;
+  final Conversation msgs;
 
   void initAudio() async {
     await AudioPlayer.global.setGlobalAudioContext(const AudioContext(

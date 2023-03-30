@@ -56,17 +56,20 @@ class PersonMsgModel extends MsgModel {
   @override
   Map<String, dynamic> toFirestore() {
     return {
-      'content':
-          msgs.map((e) => {"content": e.msg, "rating": e.rating}).toList(),
+      'content': msgs
+          .map((e) => {"content": e.msg, "rating": e.rating?.toMap()})
+          .toList(),
       'type': 'person',
     };
   }
 
   factory PersonMsgModel.fromFirestore(Map<String, dynamic> data) {
     List<dynamic> msgs = data['content'];
-    PersonMsgModel model = PersonMsgModel(msgs.first['content']);
+    PersonMsgModel model = PersonMsgModel([]);
     model.msgs = msgs.map((e) {
-      return SingularPersonMsgModel(e['content'])..rating = e['rating'];
+      return SingularPersonMsgModel(e['content'])
+        ..rating =
+            e["rating"] == null ? null : MsgRating.fromFirestore(e["rating"]);
     }).toList();
     return model;
   }
@@ -93,13 +96,21 @@ class SystemMessage extends MsgModel {
   }
 }
 
-class Messages {
+enum ConversationState {
+  finished,
+  waitingForRating,
+  waitingForAIMsg,
+  waitingForUserMsg,
+}
+
+class Conversation {
+  ConversationState state = ConversationState.waitingForUserMsg;
   ScenarioModel scenario;
   late SystemMessage systemMessage;
   List<MsgModel> msgs = [];
   ConversationRating? rating;
 
-  Messages(this.scenario) {
+  Conversation(this.scenario) {
     systemMessage = SystemMessage(scenario.prompt);
   }
 
@@ -118,29 +129,35 @@ class Messages {
   }
 
   Map<String, dynamic> toFirestore() {
-    List<MsgModel> msgs = [systemMessage];
-    msgs.addAll(this.msgs);
     return {
-      "rating": rating!.toMap(),
-      "messages": msgs.map((e) => e.toFirestore()).toList(),
+      "state": state.index,
+      "rating": rating?.toMap(),
+      "systemMessage": systemMessage.msg,
+      "messages": this.msgs.map((e) => e.toFirestore()).toList(),
       "scenario": scenario.uniqueId,
     };
   }
 
-  factory Messages.fromFirestore(
+  factory Conversation.fromFirestore(
       Map<String, dynamic> data, ScenarioModel scenario) {
-    List<dynamic> msgs = data['messages'];
-    List<MsgModel> msgModels = msgs.map((e) {
+    // print(data);
+    List<dynamic> msgs_data = data['messages'];
+    List<MsgModel> msgModels = msgs_data.map((e) {
+      print(e);
       if (e['type'] == 'ai') {
         return AIMsgModel.fromFirestore(e);
-      } else if (e['type'] == 'user') {
+      } else if (e['type'] == 'person') {
         return PersonMsgModel.fromFirestore(e);
       } else {
-        return SystemMessage(e['content']);
+        throw Exception("Unknown message type");
       }
     }).toList();
-    return Messages(scenario)
+    return Conversation(scenario)
+      ..systemMessage = SystemMessage(data['systemMessage'])
+      ..state = ConversationState.values[data['state']]
       ..msgs = msgModels
-      ..rating = ConversationRating.fromMap(data['rating']);
+      ..rating = data["rating"] != null
+          ? ConversationRating.fromMap(data['rating'])
+          : null;
   }
 }
