@@ -65,10 +65,10 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     }
     functions.logger.info("Text: " + text);
 
-    let system_prompt = `You will rate how good my response to the ${data["assistant_name"]} statement is. Start with either "Great Answer", "Good Answer" or "Poor Answer". Explain why (2-3 points) and provide perfect wording in the langauge of the conversation.`;
-    if (data["language"] == "de") {
-        system_prompt = `Du wirst bewerten, wie gut meine Antwort auf die ${data["assistant_name"]} Aussage ist. Beginnen Sie mit "Super Antwort", "Gute Antwort" oder "Schlechte Antwort". Erkläre warum (2-3 Punkte) und gib perfekte Formulierung in der Sprache des Dialoges an.`;
-    }
+
+
+    let system_prompt = `Rate my previous last response based on the following criteria: accuracy, grammar (Ignore punctuation and capital letters), conventions, clarity, conciseness and politeness. The result is only "correct" if it meets all these criteria. Provide an explanation,  suggestion (how I can improve), and one word from the result list. Use this format: "EXPLANATION:...(2 Sentences; Max 18 words) \n SUGGESTION: ...(1 Sentence; ; Max 10 words) \n SUGGESTION_TRANSLATED: ...(1 Sentence; Max 10 words; in ${data["language"]}) RESULT:grammar_error/incomplete/unclear/impolite/correct (1 Word)"`;
+
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
     });
@@ -77,14 +77,50 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         user: uid,
-        max_tokens: 200,
+        max_tokens: 120,
         messages: [
             { role: "system", content: system_prompt },
             { role: "user", content: text }
         ],
 
     })).data;
-    return comp.choices[0].message?.content;
+
+    functions.logger.info("Response: " + comp.choices[0].message?.content.split("\n"));
+    let ans: string[] | undefined = comp.choices[0].message?.content.split("\n");
+    if (ans == undefined) {
+        throw new functions.https.HttpsError('internal', "Error while splitting answer");
+    }
+    // Find the Line with EXPLANATION and parse its content
+    let explanation = "";
+    let suggestion = null;
+    let suggestion_translated = null;
+    let result = "";
+
+    for (let i = 0; i < ans.length; i++) {
+        if (ans[i].startsWith("EXPLANATION:"))
+            explanation = ans[i].substring(12).trim();
+        else if (ans[i].startsWith("SUGGESTION:"))
+            suggestion = ans[i].substring(11).trim();
+        else if (ans[i].startsWith("SUGGESTION_TRANSLATED:"))
+            suggestion_translated = ans[i].substring(22).trim();
+        else if (ans[i].startsWith("RESULT:"))
+            result = ans[i].substring(7).trim().replace(".", "").toLowerCase();
+    }
+    if (suggestion?.toLowerCase().replace(".", "") === "none") {
+        suggestion_translated = null;
+        suggestion = null;
+    }
+
+    if (data["language"] == "english") {
+        suggestion_translated = suggestion;
+    }
+
+    return {
+        explanation: explanation,
+        suggestion: suggestion,
+        suggestion_translated: suggestion_translated,
+        result: result
+    };
 })
 
 export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
@@ -121,9 +157,6 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
     })).data;
     return comp.choices[0].message?.content;
 })
-
-
-
 
 export const generateTextToSpeech = functions.https.onCall(async (data, context) => {
     const textToSpeech = require('@google-cloud/text-to-speech');
