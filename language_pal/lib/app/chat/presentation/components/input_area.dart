@@ -46,6 +46,7 @@ class _InputAreaState extends State<ChatInputArea> {
             alignment: Alignment.centerLeft,
             child: TextField(
               onSubmitted: (s) {
+                if (widget.disabled) return;
                 if (s != "") {
                   widget.sendMsg(controller.text);
                   controller.text = "";

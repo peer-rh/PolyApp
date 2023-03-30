@@ -15,6 +15,8 @@ class PastConversationPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
         child: Container(
           padding: const EdgeInsets.all(16),
           child: ChatBubbleColumn(msgs: msgs),
