@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
@@ -57,6 +58,8 @@ class _ChatPageState extends State<ChatPage> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   reverse: true,
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
                   child: ChatBubbleColumn(
                     msgs: msgs,
                     sendAnyways: tryAgain ? sendAnyways : null,
