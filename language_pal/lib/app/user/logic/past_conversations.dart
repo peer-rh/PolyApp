@@ -30,10 +30,10 @@ Future<void> addConversationToFirestore(
     Conversation conversation, AuthProvider ap) async {
   if (!ap.user!.scenarioScores.containsKey(conversation.scenario.uniqueId) ||
       ap.user!.scenarioScores[conversation.scenario.uniqueId]! <=
-          conversation.rating!.score!) {
+          conversation.rating!.totalScore) {
     UserModel newUser = ap.user!;
     newUser.scenarioScores[conversation.scenario.uniqueId] =
-        conversation.rating!.score!;
+        conversation.rating!.totalScore;
     ap.setUserModel(newUser);
   }
 

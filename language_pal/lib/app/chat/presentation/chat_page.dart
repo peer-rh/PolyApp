@@ -151,7 +151,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _addMsg(String msg) async {
-    if (msgs.rating != null) return;
+    if (msgs.msgs.last is! PersonMsgModel) {
+      msgs.addMsg(PersonMsgModel([]));
+    }
     PersonMsgModel personMsg = msgs.msgs.last as PersonMsgModel;
     setState(() {
       personMsg.msgs.add(SingularPersonMsgModel(msg));
@@ -162,8 +164,6 @@ class _ChatPageState extends State<ChatPage> {
 
   void getMsgRating(PersonMsgModel personMsg) {
     getRating(
-      widget.scenario.ratingDesc,
-      widget.scenario.ratingName,
       msgs,
       convertLangCode(context.read<AuthProvider>().user!.appLang)
           .getEnglishName(),
@@ -194,7 +194,6 @@ class _ChatPageState extends State<ChatPage> {
     getAIResponse(msgs.getLastMsgs(10)).then((resp) {
       setState(() {
         msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
-        msgs.addMsg(PersonMsgModel([]));
         msgs.state = ConversationState.waitingForUserMsg;
       });
       _scrollController.animateTo(0.0,
@@ -211,16 +210,13 @@ class _ChatPageState extends State<ChatPage> {
 
   void getSummary() async {
     final rating = await getConversationRating(
-        widget.scenario.ratingDesc,
-        widget.scenario.ratingName,
-        context.read<AuthProvider>().user!.appLang,
-        msgs);
-    sleep(const Duration(seconds: 8));
+        context.read<AuthProvider>().user!.appLang, msgs);
     setState(() {
       msgs.rating = rating;
     });
 
     addConversationToFirestore(msgs, context.read<AuthProvider>());
+    deleteConv(widget.scenario);
     Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
   }
 }

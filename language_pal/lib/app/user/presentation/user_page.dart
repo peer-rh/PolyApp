@@ -245,7 +245,7 @@ class _UserPageState extends State<UserPage> {
                                       child: CircularProgressIndicator(
                                         value: (conversations![index]
                                                     .rating
-                                                    ?.score ??
+                                                    ?.totalScore ??
                                                 0) /
                                             100,
                                         strokeWidth: 3,
