@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
@@ -12,10 +13,29 @@ class MsgRating {
 
   MsgRating(
       this.type, this.suggestion, this.suggestionTranslated, this.explanation);
+
+  Map<String, dynamic> toMap() {
+
+    return {
+      "type": type.index,
+      "suggestion": suggestion,
+      "suggestion_translated": suggestionTranslated,
+      "explanation": explanation,
+    };
+  }
+
+  factory MsgRating.fromFirestore(Map<String, dynamic> data) {
+    return MsgRating(
+      MsgRatingType.values[data["type"]],
+      data["suggestion"],
+      data["suggestion_translated"],
+      data["explanation"],
+    );
+  }
 }
 
 Future<MsgRating> getRating(String scenarioShort, String assistantName,
-    Messages msgs, String lang) async {
+    Conversation msgs, String lang) async {
   final response =
       await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
     "environment": scenarioShort,

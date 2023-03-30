@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
+import 'package:language_pal/app/chat/logic/store_conv.dart';
 import 'package:language_pal/app/chat/logic/total_rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/chat_summary_page.dart';
@@ -30,7 +31,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  late Messages msgs;
+  late Conversation msgs;
 
   bool tryAgain = false;
 
@@ -39,15 +40,36 @@ class _ChatPageState extends State<ChatPage> {
     keepScrollOffset: true,
   );
 
-  bool disabled = true;
-
   @override
   Widget build(BuildContext context) {
+    bool disabled = msgs.state != ConversationState.waitingForUserMsg;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "${widget.scenario.emoji} ${widget.scenario.name}",
         ),
+        actions: [
+          PopupMenuButton(
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                        onTap: () async {
+                          await deleteConv(widget.scenario);
+                          setState(() {
+                            msgs = Conversation(widget.scenario);
+                          });
+                          initChat();
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.refresh),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(AppLocalizations.of(context)!.chat_reset),
+                          ],
+                        ))
+                  ])
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -84,11 +106,19 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    storeConv(msgs);
+
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 
-    msgs = Messages(widget.scenario);
-    initalFetchAIMsg();
+    msgs = Conversation(widget.scenario);
+    initChat();
   }
 
   void sendAnyways() {
@@ -98,14 +128,26 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void initalFetchAIMsg() async {
-    String msg = widget.scenario
-        .startMessages[Random().nextInt(widget.scenario.startMessages.length)];
-    setState(() {
-      msgs.addMsg(AIMsgModel(msg));
-      msgs.addMsg(PersonMsgModel([]));
-      disabled = false;
-    });
+  void initChat() async {
+    Conversation? storedConv = await loadConv(widget.scenario);
+    if (storedConv != null) {
+      msgs = storedConv;
+      if (msgs.state == ConversationState.waitingForAIMsg) {
+        msgs.msgs.removeLast();
+        getAIMsg();
+      } else if (msgs.state == ConversationState.waitingForRating) {
+        getMsgRating(msgs.msgs.last as PersonMsgModel);
+      }
+      setState(() {});
+    } else {
+      String msg = widget.scenario.startMessages[
+          Random().nextInt(widget.scenario.startMessages.length)];
+      setState(() {
+        msgs.addMsg(AIMsgModel(msg));
+        msgs.addMsg(PersonMsgModel([]));
+        msgs.state = ConversationState.waitingForUserMsg;
+      });
+    }
   }
 
   void _addMsg(String msg) async {
@@ -113,8 +155,12 @@ class _ChatPageState extends State<ChatPage> {
     PersonMsgModel personMsg = msgs.msgs.last as PersonMsgModel;
     setState(() {
       personMsg.msgs.add(SingularPersonMsgModel(msg));
-      disabled = true;
+      msgs.state = ConversationState.waitingForRating;
     });
+    getMsgRating(personMsg);
+  }
+
+  void getMsgRating(PersonMsgModel personMsg) {
     getRating(
       widget.scenario.ratingDesc,
       widget.scenario.ratingName,
@@ -126,13 +172,14 @@ class _ChatPageState extends State<ChatPage> {
         personMsg.msgs.last.rating = resp;
       });
       if (resp.type == MsgRatingType.correct) {
-        getAIMsg();
         setState(() {
+          msgs.state = ConversationState.waitingForAIMsg;
           tryAgain = false;
         });
+        getAIMsg();
       } else {
         setState(() {
-          disabled = false;
+          msgs.state = ConversationState.waitingForUserMsg;
           tryAgain = true;
         });
       }
@@ -142,20 +189,21 @@ class _ChatPageState extends State<ChatPage> {
   void getAIMsg() async {
     if (msgs.rating != null) return;
     setState(() {
-      disabled = true;
       msgs.addMsg(AIMsgModel("")..loaded = false);
     });
-    print(msgs.getLastMsgs(10));
     getAIResponse(msgs.getLastMsgs(10)).then((resp) {
       setState(() {
         msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
         msgs.addMsg(PersonMsgModel([]));
-        disabled = false;
+        msgs.state = ConversationState.waitingForUserMsg;
       });
       _scrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
       if (resp.endOfConversation) {
+        setState(() {
+          msgs.state = ConversationState.finished;
+        });
         getSummary();
       }
     });

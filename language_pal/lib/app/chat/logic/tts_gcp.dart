@@ -11,7 +11,6 @@ import 'package:uuid/uuid.dart';
 
 Future<String> generateTextToSpeech(String msg, ScenarioModel scenario) async {
   // Make post request to Google Cloud Text-to-Speech API
-  print(scenario.voiceSettings);
   final data = (await FirebaseFunctions.instance
           .httpsCallable('generateTextToSpeech')
           .call({

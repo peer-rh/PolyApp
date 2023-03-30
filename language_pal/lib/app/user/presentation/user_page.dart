@@ -18,7 +18,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  List<Messages>? conversations;
+  List<Conversation>? conversations;
   List<UseCaseModel> useCases = [];
   List<ScenarioModel> scenarios = [];
 

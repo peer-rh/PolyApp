@@ -23,7 +23,7 @@ class ConversationRating {
 }
 
 Future<ConversationRating> getConversationRating(String scenarioShort,
-    String assistantName, String lang, Messages msgs) async {
+    String assistantName, String lang, Conversation msgs) async {
   final response = await FirebaseFunctions.instance
       .httpsCallable('getConversationRating')
       .call({
