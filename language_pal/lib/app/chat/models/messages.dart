@@ -4,6 +4,7 @@ import 'package:language_pal/app/scenario/scenarios_model.dart';
 
 abstract class MsgModel {
   Map<String, String> toMap();
+  Map<String, dynamic> toFirestore();
 }
 
 class AIMsgModel extends MsgModel {
@@ -20,19 +21,54 @@ class AIMsgModel extends MsgModel {
       'role': 'assistant',
     };
   }
+
+  @override
+  Map<String, dynamic> toFirestore() {
+    return {
+      'content': msg,
+      'type': 'ai',
+    };
+  }
+
+  factory AIMsgModel.fromFirestore(Map<String, dynamic> data) {
+    return AIMsgModel(data['content']);
+  }
+}
+
+class SingularPersonMsgModel {
+  String msg;
+  MsgRating? rating;
+  SingularPersonMsgModel(this.msg);
 }
 
 class PersonMsgModel extends MsgModel {
-  String msg;
-  MsgRating? rating;
-  PersonMsgModel(this.msg);
+  late List<SingularPersonMsgModel> msgs;
+  PersonMsgModel(this.msgs);
 
   @override
   Map<String, String> toMap() {
     return {
-      'content': msg,
+      'content': msgs.last.msg,
       'role': 'user',
     };
+  }
+
+  @override
+  Map<String, dynamic> toFirestore() {
+    return {
+      'content':
+          msgs.map((e) => {"content": e.msg, "rating": e.rating}).toList(),
+      'type': 'person',
+    };
+  }
+
+  factory PersonMsgModel.fromFirestore(Map<String, dynamic> data) {
+    List<dynamic> msgs = data['content'];
+    PersonMsgModel model = PersonMsgModel(msgs.first['content']);
+    model.msgs = msgs.map((e) {
+      return SingularPersonMsgModel(e['content'])..rating = e['rating'];
+    }).toList();
+    return model;
   }
 }
 
@@ -45,6 +81,14 @@ class SystemMessage extends MsgModel {
     return {
       'content': msg,
       'role': 'system',
+    };
+  }
+
+  @override
+  Map<String, dynamic> toFirestore() {
+    return {
+      'content': msg,
+      'type': 'system',
     };
   }
 }
@@ -63,10 +107,10 @@ class Messages {
     msgs.add(msg);
   }
 
-  List<Map<String, String>> getLastMsgs() {
+  List<Map<String, String>> getLastMsgs(int n) {
     List<MsgModel> msgs = [systemMessage];
-    if (this.msgs.length > 10) {
-      msgs.addAll(this.msgs.sublist(this.msgs.length - 10));
+    if (this.msgs.length > n) {
+      msgs.addAll(this.msgs.sublist(this.msgs.length - n));
     } else {
       msgs.addAll(this.msgs);
     }
@@ -74,12 +118,11 @@ class Messages {
   }
 
   Map<String, dynamic> toFirestore() {
-    // TODO: Remember each rating of each message
     List<MsgModel> msgs = [systemMessage];
     msgs.addAll(this.msgs);
     return {
       "rating": rating!.toMap(),
-      "messages": msgs.map((e) => e.toMap()).toList(),
+      "messages": msgs.map((e) => e.toFirestore()).toList(),
       "scenario": scenario.uniqueId,
     };
   }
@@ -88,10 +131,10 @@ class Messages {
       Map<String, dynamic> data, ScenarioModel scenario) {
     List<dynamic> msgs = data['messages'];
     List<MsgModel> msgModels = msgs.map((e) {
-      if (e['role'] == 'assistant') {
-        return AIMsgModel(e['content']);
-      } else if (e['role'] == 'user') {
-        return PersonMsgModel(e['content']);
+      if (e['type'] == 'ai') {
+        return AIMsgModel.fromFirestore(e);
+      } else if (e['type'] == 'user') {
+        return PersonMsgModel.fromFirestore(e);
       } else {
         return SystemMessage(e['content']);
       }

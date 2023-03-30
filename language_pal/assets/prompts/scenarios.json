@@ -148,16 +148,13 @@
         "rating_name": "DOCTOR",
         "starting_msgs": {
             "de": [
-                "Guten Tag. Was kann ich für sie tun?",
-                "Hallo, wie geht es ihnen?"
+                "Guten Tag. Was kann ich für sie tun?"
             ],
             "en": [
-                "Good afternoon. What can I do for you?",
-                "Hello, how are you?"
+                "Good afternoon. What can I do for you?"
             ],
             "es": [
-                "Buenas tardes. ¿En qué puedo ayudarle?",
-                "Hola, ¿cómo estás?"
+                "Buenas tardes. ¿En qué puedo ayudarle?"
             ]
         },
         "voice_info": {

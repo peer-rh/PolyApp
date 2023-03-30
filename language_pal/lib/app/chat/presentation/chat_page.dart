@@ -13,6 +13,7 @@ import 'package:language_pal/app/chat/presentation/components/input_area.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/common/fade_route.dart';
+import 'package:language_pal/common/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -29,6 +30,8 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late Messages msgs;
+
+  bool tryAgain = false;
 
   final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,
@@ -54,13 +57,19 @@ class _ChatPageState extends State<ChatPage> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   reverse: true,
-                  child: ChatBubbleColumn(msgs: msgs),
+                  child: ChatBubbleColumn(
+                    msgs: msgs,
+                    sendAnyways: tryAgain ? sendAnyways : null,
+                  ),
                 ),
               ),
               const SizedBox(
                 height: 10,
               ),
               ChatInputArea(
+                hint: tryAgain
+                    ? AppLocalizations.of(context)!.chat_input_hint_try_again
+                    : AppLocalizations.of(context)!.chat_input_hint_reg,
                 sendMsg: _addMsg,
                 disabled: disabled,
               ),
@@ -79,25 +88,65 @@ class _ChatPageState extends State<ChatPage> {
     initalFetchAIMsg();
   }
 
+  void sendAnyways() {
+    getAIMsg();
+    setState(() {
+      tryAgain = false;
+    });
+  }
+
   void initalFetchAIMsg() async {
     String msg = widget.scenario
         .startMessages[Random().nextInt(widget.scenario.startMessages.length)];
     setState(() {
       msgs.addMsg(AIMsgModel(msg));
+      msgs.addMsg(PersonMsgModel([]));
       disabled = false;
     });
   }
 
   void _addMsg(String msg) async {
-    PersonMsgModel personMsg = PersonMsgModel(msg);
+    if (msgs.rating != null) return;
+    PersonMsgModel personMsg = msgs.msgs.last as PersonMsgModel;
     setState(() {
-      msgs.addMsg(personMsg);
+      personMsg.msgs.add(SingularPersonMsgModel(msg));
       disabled = true;
     });
+    getRating(
+      widget.scenario.ratingDesc,
+      widget.scenario.ratingName,
+      msgs,
+      convertLangCode(context.read<AuthProvider>().user!.appLang)
+          .getEnglishName(),
+    ).then((resp) {
+      setState(() {
+        personMsg.msgs.last.rating = resp;
+      });
+      if (resp.type == MsgRatingType.correct) {
+        getAIMsg();
+        setState(() {
+          tryAgain = false;
+        });
+      } else {
+        setState(() {
+          disabled = false;
+          tryAgain = true;
+        });
+      }
+    });
+  }
+
+  void getAIMsg() async {
     if (msgs.rating != null) return;
-    getAIRespone(msgs.getLastMsgs()).then((resp) {
+    setState(() {
+      disabled = true;
+      msgs.addMsg(AIMsgModel("")..loaded = false);
+    });
+    print(msgs.getLastMsgs(10));
+    getAIResponse(msgs.getLastMsgs(10)).then((resp) {
       setState(() {
         msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
+        msgs.addMsg(PersonMsgModel([]));
         disabled = false;
       });
       _scrollController.animateTo(0.0,
@@ -107,31 +156,15 @@ class _ChatPageState extends State<ChatPage> {
         getSummary();
       }
     });
-    getRating(
-      widget.scenario.ratingDesc,
-      widget.scenario.ratingName,
-      msgs,
-      context.read<AuthProvider>().user!.appLang,
-      AppLocalizations.of(context)!.msg_rating_great,
-      AppLocalizations.of(context)!.msg_rating_good,
-      AppLocalizations.of(context)!.msg_rating_poor,
-    ).then((resp) {
-      setState(() {
-        personMsg.rating = resp;
-      });
-    });
-    setState(() {
-      msgs.addMsg(AIMsgModel("")..loaded = false);
-    });
   }
 
   void getSummary() async {
-    sleep(const Duration(seconds: 8));
     final rating = await getConversationRating(
         widget.scenario.ratingDesc,
         widget.scenario.ratingName,
         context.read<AuthProvider>().user!.appLang,
         msgs);
+    sleep(const Duration(seconds: 8));
     setState(() {
       msgs.rating = rating;
     });

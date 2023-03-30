@@ -7,9 +7,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatBubbleColumn extends StatelessWidget {
   AudioPlayer audioPlayer = AudioPlayer();
+  void Function()? sendAnyways;
   ChatBubbleColumn({
     super.key,
     required this.msgs,
+    this.sendAnyways,
   });
 
   final Messages msgs;
@@ -28,7 +30,6 @@ class ChatBubbleColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initAudio();
-    bool displayedHint = false;
     return Column(
       children: [
         Column(
@@ -41,32 +42,32 @@ class ChatBubbleColumn extends StatelessWidget {
                 audioPlayer,
               );
             } else if (e is PersonMsgModel) {
-              if (!displayedHint && e.rating != null) {
-                displayedHint = true;
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    OwnMsgBubble(e),
-                    Text(
-                      AppLocalizations.of(context)!.chat_page_hint,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.8)),
-                    ),
-                  ],
-                );
-              } else {
-                return OwnMsgBubble(e);
-              }
+              return OwnMsgBubble(e);
             } else {
               return Container();
             }
           }).toList(),
         ),
+        if (sendAnyways != null)
+          Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: sendAnyways,
+                borderRadius: BorderRadius.circular(20),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.reply, size: 14),
+                      const SizedBox(width: 6),
+                      Text(AppLocalizations.of(context)!.chat_page_send_anyways,
+                          style: const TextStyle(fontSize: 14)),
+                    ],
+                  ),
+                ),
+              )),
         if (msgs.rating != null)
           Container(
               alignment: Alignment.center,

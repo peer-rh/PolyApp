@@ -4,8 +4,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ChatInputArea extends StatefulWidget {
   ValueSetter<String> sendMsg;
   bool disabled;
+  String hint;
 
-  ChatInputArea({Key? key, required this.sendMsg, required this.disabled})
+  ChatInputArea(
+      {Key? key,
+      required this.hint,
+      required this.sendMsg,
+      required this.disabled})
       : super(key: key);
 
   @override
@@ -51,8 +56,8 @@ class _InputAreaState extends State<ChatInputArea> {
               maxLines: 5,
               minLines: 1,
               textInputAction: TextInputAction.send,
-              decoration: const InputDecoration(
-                hintText: "Write message...",
+              decoration: InputDecoration(
+                hintText: widget.hint,
                 border: InputBorder.none,
               ),
             ),
