@@ -15,7 +15,6 @@ class MsgRating {
       this.type, this.suggestion, this.suggestionTranslated, this.explanation);
 
   Map<String, dynamic> toMap() {
-
     return {
       "type": type.index,
       "suggestion": suggestion,
@@ -34,12 +33,11 @@ class MsgRating {
   }
 }
 
-Future<MsgRating> getRating(String scenarioShort, String assistantName,
-    Conversation msgs, String lang) async {
+Future<MsgRating> getRating(Conversation msgs, String lang) async {
   final response =
       await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
-    "environment": scenarioShort,
-    "assistant_name": assistantName,
+    "environment": msgs.scenario.environmentDesc,
+    "assistant_name": msgs.scenario.ratingAssistantName,
     "messages": msgs.getLastMsgs(4).sublist(1), // Remove Scenario Msg
     "language": lang,
   });

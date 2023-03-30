@@ -115,12 +115,14 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
         suggestion_translated = suggestion;
     }
 
-    return {
+    let ret = {
         explanation: explanation,
         suggestion: suggestion,
         suggestion_translated: suggestion_translated,
         result: result
     };
+    functions.logger.info("Returning: " + JSON.stringify(ret));
+    return ret;
 })
 
 export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
@@ -135,11 +137,8 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
             text += "ME: " + data["messages"][i]["content"] + "\n";
         }
     }
+    let system_prompt = `Rate the discussion for me. How well would I probably do in a real life situation.  How well did I achieve my goal of "${data["goal"]}". Give me feedback in ${data["language"]}. Follow the format: "SUGGESTION_1: ... \n SUGGESTION_2:... \n SUGGESTION_3: ... \n OVERALL_SCORE: .../10 \n GOAL_SCORE: .../10"`;
 
-    let system_prompt = `You will rate how good I performed in this conversation. Give 4-5 Tips in Bulletpoints. End with "Rating: .../100" where you will give a final performance rating from 1 to 100. 100 means perfect fluency.`;
-    if (data["language"] == "de") {
-        system_prompt = `Du wirst bewerten wie gut ich in diesem Gespräch performt habe. Gib 4-5 Tipps in Stichpunkten. Ende mit "Bewertung: .../100" wo du eine finale Bewertung von 1 bis 100 gibst. 100 bedeutet perfektes Verständins.`;
-    }
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
     });
@@ -148,14 +147,47 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         user: uid,
-        max_tokens: 200,
+        max_tokens: 240,
         messages: [
             { role: "system", content: system_prompt },
             { role: "user", content: text }
         ],
 
     })).data;
-    return comp.choices[0].message?.content;
+    functions.logger.info("Response: " + comp.choices[0].message?.content);
+
+    let suggestion_1 = "";
+    let suggestion_2 = "";
+    let suggestion_3 = "";
+    let overall_score: number | null = null;
+    let goal_score: number | null = null;
+
+    let ans: string[] | undefined = comp.choices[0].message?.content.split("\n");
+
+    if (ans == undefined) {
+        throw new functions.https.HttpsError('internal', "Error while splitting answer");
+    }
+
+    for (let i = 0; i < ans.length; i++) {
+        if (ans[i].startsWith("SUGGESTION_1:"))
+            suggestion_1 = ans[i].substring(13).trim();
+        else if (ans[i].startsWith("SUGGESTION_2:"))
+            suggestion_2 = ans[i].substring(13).trim();
+        else if (ans[i].startsWith("SUGGESTION_3:"))
+            suggestion_3 = ans[i].substring(13).trim();
+        else if (ans[i].startsWith("OVERALL_SCORE:"))
+            overall_score = parseInt(ans[i].substring(15).split("/")[0].trim());
+        else if (ans[i].startsWith("GOAL_SCORE:"))
+            goal_score = parseInt(ans[i].substring(12).split("/")[0].trim());
+    }
+
+    return {
+        suggestion_1: suggestion_1,
+        suggestion_2: suggestion_2,
+        suggestion_3: suggestion_3,
+        overall_score: overall_score,
+        goal_score: goal_score
+    };
 })
 
 export const generateTextToSpeech = functions.https.onCall(async (data, context) => {

@@ -133,23 +133,22 @@ class Conversation {
       "state": state.index,
       "rating": rating?.toMap(),
       "systemMessage": systemMessage.msg,
-      "messages": this.msgs.map((e) => e.toFirestore()).toList(),
+      "messages": msgs.map((e) => e.toFirestore()).toList(),
       "scenario": scenario.uniqueId,
     };
   }
 
   factory Conversation.fromFirestore(
       Map<String, dynamic> data, ScenarioModel scenario) {
-    // print(data);
-    List<dynamic> msgs_data = data['messages'];
-    List<MsgModel> msgModels = msgs_data.map((e) {
-      print(e);
+    List<dynamic> msgsData = data['messages'];
+    List<MsgModel> msgModels = msgsData.map((e) {
       if (e['type'] == 'ai') {
         return AIMsgModel.fromFirestore(e);
       } else if (e['type'] == 'person') {
         return PersonMsgModel.fromFirestore(e);
       } else {
-        throw Exception("Unknown message type");
+        print(data);
+        throw Exception("Unknown message type: ${e['type']}");
       }
     }).toList();
     return Conversation(scenario)
