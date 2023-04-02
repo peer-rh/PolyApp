@@ -101,6 +101,7 @@ enum ConversationState {
   waitingForRating,
   waitingForAIMsg,
   waitingForUserMsg,
+  waitingForUserRedo,
 }
 
 class Conversation {
@@ -147,7 +148,6 @@ class Conversation {
       } else if (e['type'] == 'person') {
         return PersonMsgModel.fromFirestore(e);
       } else {
-        print(data);
         throw Exception("Unknown message type: ${e['type']}");
       }
     }).toList();

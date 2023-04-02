@@ -107,8 +107,7 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
                                       height: 18,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 3,
-                                        value:
-                                            scenarios[index].userScore! / 100,
+                                        value: scenarios[index].userScore! / 10,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .primary,

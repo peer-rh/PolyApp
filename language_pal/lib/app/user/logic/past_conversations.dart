@@ -6,9 +6,6 @@ import 'package:language_pal/auth/models/user_model.dart';
 
 Future<List<Conversation>> loadPastConversations(
     List<ScenarioModel> scenarios, String uid) async {
-  // Get all docs in user/${uid}/conversations
-  // For each doc, get the scenario and the messages
-  // Return a list of Messages
   List<Conversation> conversations = [];
   await FirebaseFirestore.instance
       .collection('users')
