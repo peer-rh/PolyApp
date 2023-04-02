@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:language_pal/app/chat/logic/get_answer_suggestion.dart';
+import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatInputArea extends StatefulWidget {
-  ValueSetter<String> sendMsg;
-  bool disabled;
-  String hint;
+  void Function(String, bool) sendMsg;
+  Conversation conv;
 
-  ChatInputArea(
-      {Key? key,
-      required this.hint,
-      required this.sendMsg,
-      required this.disabled})
+  ChatInputArea({Key? key, required this.sendMsg, required this.conv})
       : super(key: key);
 
   @override
@@ -33,34 +31,50 @@ class _InputAreaState extends State<ChatInputArea> {
 
   @override
   Widget build(BuildContext context) {
+    bool disabled = widget.conv.state != ConversationState.waitingForUserMsg &&
+        widget.conv.state != ConversationState.waitingForUserRedo;
+    String hint = widget.conv.state == ConversationState.waitingForUserRedo
+        ? AppLocalizations.of(context)!.chat_input_hint_try_again
+        : AppLocalizations.of(context)!.chat_input_hint_reg;
     return Row(
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
                     color: Theme.of(context).colorScheme.surfaceVariant),
                 color: Theme.of(context).colorScheme.surface),
             alignment: Alignment.centerLeft,
-            child: TextField(
-              onSubmitted: (s) {
-                if (widget.disabled) return;
-                if (s != "") {
-                  widget.sendMsg(controller.text);
-                  controller.text = "";
-                }
-              },
-              controller: controller,
-              textAlignVertical: TextAlignVertical.center,
-              maxLines: 5,
-              minLines: 1,
-              textInputAction: TextInputAction.send,
-              decoration: InputDecoration(
-                hintText: widget.hint,
-                border: InputBorder.none,
-              ),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 13,
+                ),
+                Expanded(
+                  child: TextField(
+                    onSubmitted: (s) {
+                      if (disabled) return;
+                      if (s != "") {
+                        widget.sendMsg(controller.text, true);
+                        controller.text = "";
+                      }
+                    },
+                    controller: controller,
+                    textAlignVertical: TextAlignVertical.center,
+                    maxLines: 5,
+                    minLines: 1,
+                    textInputAction: TextInputAction.send,
+                    decoration: InputDecoration(
+                      hintText: hint,
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 13),
+                if (widget.conv.state == ConversationState.waitingForUserRedo)
+                  AnswerSuggestionButton(widget.conv, widget.sendMsg)
+              ],
             ),
           ),
         ),
@@ -69,8 +83,8 @@ class _InputAreaState extends State<ChatInputArea> {
         ),
         GestureDetector(
           onTap: () async {
-            if (widget.disabled) return;
-            widget.sendMsg(controller.text);
+            if (disabled) return;
+            widget.sendMsg(controller.text, true);
             controller.text = "";
           },
           child: Container(
@@ -79,7 +93,7 @@ class _InputAreaState extends State<ChatInputArea> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: widget.disabled
+                color: disabled
                     ? Theme.of(context).colorScheme.surfaceVariant
                     : Theme.of(context).colorScheme.primary),
             child: FaIcon(

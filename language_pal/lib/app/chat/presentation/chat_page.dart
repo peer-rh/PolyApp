@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
@@ -33,8 +31,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late Conversation msgs;
 
-  bool tryAgain = false;
-
   final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
@@ -42,7 +38,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool disabled = msgs.state != ConversationState.waitingForUserMsg;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -84,7 +79,10 @@ class _ChatPageState extends State<ChatPage> {
                       parent: AlwaysScrollableScrollPhysics()),
                   child: ChatBubbleColumn(
                     msgs: msgs,
-                    sendAnyways: tryAgain ? sendAnyways : null,
+                    sendAnyways:
+                        msgs.state == ConversationState.waitingForUserRedo
+                            ? sendAnyways
+                            : null,
                   ),
                 ),
               ),
@@ -92,11 +90,8 @@ class _ChatPageState extends State<ChatPage> {
                 height: 10,
               ),
               ChatInputArea(
-                hint: tryAgain
-                    ? AppLocalizations.of(context)!.chat_input_hint_try_again
-                    : AppLocalizations.of(context)!.chat_input_hint_reg,
                 sendMsg: _addMsg,
-                disabled: disabled,
+                conv: msgs,
               ),
             ],
           ),
@@ -108,7 +103,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    storeConv(msgs);
+    if (msgs.rating == null) storeConv(msgs);
 
     super.dispose();
   }
@@ -124,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
   void sendAnyways() {
     getAIMsg();
     setState(() {
-      tryAgain = false;
+      msgs.state = ConversationState.waitingForAIMsg;
     });
   }
 
@@ -150,16 +145,24 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  void _addMsg(String msg) async {
+  void _addMsg(String msg, bool check) async {
     if (msgs.msgs.last is! PersonMsgModel) {
       msgs.addMsg(PersonMsgModel([]));
     }
     PersonMsgModel personMsg = msgs.msgs.last as PersonMsgModel;
-    setState(() {
-      personMsg.msgs.add(SingularPersonMsgModel(msg));
-      msgs.state = ConversationState.waitingForRating;
-    });
-    getMsgRating(personMsg);
+    if (check) {
+      setState(() {
+        personMsg.msgs.add(SingularPersonMsgModel(msg));
+        msgs.state = ConversationState.waitingForRating;
+      });
+      getMsgRating(personMsg);
+    } else {
+      setState(() {
+        personMsg.msgs.add(SingularPersonMsgModel(msg));
+        msgs.state = ConversationState.waitingForAIMsg;
+      });
+      getAIMsg();
+    }
   }
 
   void getMsgRating(PersonMsgModel personMsg) {
@@ -174,13 +177,11 @@ class _ChatPageState extends State<ChatPage> {
       if (resp.type == MsgRatingType.correct) {
         setState(() {
           msgs.state = ConversationState.waitingForAIMsg;
-          tryAgain = false;
         });
         getAIMsg();
       } else {
         setState(() {
-          msgs.state = ConversationState.waitingForUserMsg;
-          tryAgain = true;
+          msgs.state = ConversationState.waitingForUserRedo;
         });
       }
     });
@@ -215,8 +216,8 @@ class _ChatPageState extends State<ChatPage> {
       msgs.rating = rating;
     });
 
-    addConversationToFirestore(msgs, context.read<AuthProvider>());
     deleteConv(widget.scenario);
+    addConversationToFirestore(msgs, context.read<AuthProvider>());
     Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
   }
 }

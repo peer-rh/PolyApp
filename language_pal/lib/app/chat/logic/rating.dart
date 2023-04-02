@@ -10,15 +10,19 @@ class MsgRating {
   final String? suggestion;
   final String? suggestionTranslated;
   final String explanation;
+  final String? meCorrected;
+  final String? meCorrectedTranslated;
 
-  MsgRating(
-      this.type, this.suggestion, this.suggestionTranslated, this.explanation);
+  MsgRating(this.type, this.suggestion, this.suggestionTranslated,
+      this.meCorrected, this.meCorrectedTranslated, this.explanation);
 
   Map<String, dynamic> toMap() {
     return {
       "type": type.index,
       "suggestion": suggestion,
       "suggestion_translated": suggestionTranslated,
+      "me_corrected": meCorrected,
+      "me_corrected_translated": meCorrectedTranslated,
       "explanation": explanation,
     };
   }
@@ -28,6 +32,8 @@ class MsgRating {
       MsgRatingType.values[data["type"]],
       data["suggestion"],
       data["suggestion_translated"],
+      data["me_corrected"],
+      data["me_corrected_translated"],
       data["explanation"],
     );
   }
@@ -44,7 +50,8 @@ Future<MsgRating> getRating(Conversation msgs, String lang) async {
   final data = response.data;
   String result = data["result"];
   MsgRatingType type = MsgRatingType.notParse;
-  if (result.contains("grammar_error")) {
+  if (result.contains("grammar_error") ||
+      result.contains("grammatical_error")) {
     type = MsgRatingType.grammarError;
   } else if (result.contains("incomplete")) {
     type = MsgRatingType.incomplete;
@@ -60,7 +67,12 @@ Future<MsgRating> getRating(Conversation msgs, String lang) async {
         StackTrace.current);
   }
 
-  return MsgRating(type, data["suggestion"], data["suggestion_translated"],
+  return MsgRating(
+      type,
+      data["suggestion"],
+      data["suggestion_translated"],
+      data["me_corrected"],
+      data["me_corrected_translated"],
       data["explanation"]!);
 }
 

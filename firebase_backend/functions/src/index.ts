@@ -66,8 +66,8 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     functions.logger.info("Text: " + text);
 
 
+    let system_prompt = `Rate my previous last response based on the following criteria: accuracy, grammar (Ignore punctuation and capital letters), conventions, clarity, conciseness and politeness. The result is only "correct" if it meets all these criteria. Provide an explanation,  suggestion (how I can improve), a corrected answer for me and one word from the result list. Use this format: "EXPLANATION:...(2 Sentences; Max 18 words) \n SUGGESTION: ...(1 Sentence; ; Max 10 words) \n SUGGESTION_TRANSLATED: ...(in ${data["language"]}) \n CORRECTED_ME: ... \n CORRECTED_ME_TRANSLATED: ... (in ${data["language"]}) \n RESULT:grammar_error/incomplete/unclear/impolite/correct (1 Word)"`;
 
-    let system_prompt = `Rate my previous last response based on the following criteria: accuracy, grammar (Ignore punctuation and capital letters), conventions, clarity, conciseness and politeness. The result is only "correct" if it meets all these criteria. Provide an explanation,  suggestion (how I can improve), and one word from the result list. Use this format: "EXPLANATION:...(2 Sentences; Max 18 words) \n SUGGESTION: ...(1 Sentence; ; Max 10 words) \n SUGGESTION_TRANSLATED: ...(1 Sentence; Max 10 words; in ${data["language"]}) RESULT:grammar_error/incomplete/unclear/impolite/correct (1 Word)"`;
 
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
@@ -77,7 +77,7 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         user: uid,
-        max_tokens: 120,
+        max_tokens: 200,
         messages: [
             { role: "system", content: system_prompt },
             { role: "user", content: text }
@@ -94,6 +94,8 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     let explanation = "";
     let suggestion = null;
     let suggestion_translated = null;
+    let me_corrected = "";
+    let me_corrected_translated = "";
     let result = "";
 
     for (let i = 0; i < ans.length; i++) {
@@ -103,6 +105,10 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
             suggestion = ans[i].substring(11).trim();
         else if (ans[i].startsWith("SUGGESTION_TRANSLATED:"))
             suggestion_translated = ans[i].substring(22).trim();
+        else if (ans[i].startsWith("CORRECTED_ME:"))
+            me_corrected = ans[i].substring(13).trim();
+        else if (ans[i].startsWith("CORRECTED_ME_TRANSLATED:"))
+            me_corrected_translated = ans[i].substring(24).trim();
         else if (ans[i].startsWith("RESULT:"))
             result = ans[i].substring(7).trim().replace(".", "").toLowerCase();
     }
@@ -119,6 +125,8 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
         explanation: explanation,
         suggestion: suggestion,
         suggestion_translated: suggestion_translated,
+        me_corrected: me_corrected,
+        me_corrected_translated: me_corrected_translated,
         result: result
     };
     functions.logger.info("Returning: " + JSON.stringify(ret));
@@ -137,7 +145,7 @@ export const getConversationRating = functions.runWith({ secrets: ["OPENAI_KEY"]
             text += "ME: " + data["messages"][i]["content"] + "\n";
         }
     }
-    let system_prompt = `Rate the discussion for me. How well would I probably do in a real life situation.  How well did I achieve my goal of "${data["goal"]}". Give me feedback in ${data["language"]}. Follow the format: "SUGGESTION_1: ... \n SUGGESTION_2:... \n SUGGESTION_3: ... \n OVERALL_SCORE: .../10 \n GOAL_SCORE: .../10"`;
+    let system_prompt = `Rate the discussion for me. How well would I probably do in a real life situation.  How well did I achieve my goal of "${data["goal"]}". Give me feedback in ${data["language"]}. Follow the format: "SUGGESTION_1: ... (1 sentence) \n SUGGESTION_2:... (1 sentence) \n SUGGESTION_3: ... (1 sentence) \n OVERALL_SCORE: .../10 \n GOAL_SCORE: .../10"`;
 
     const configuration = new Configuration({
         apiKey: openAIKey.value(),

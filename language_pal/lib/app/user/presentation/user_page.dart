@@ -247,7 +247,7 @@ class _UserPageState extends State<UserPage> {
                                                     .rating
                                                     ?.totalScore ??
                                                 0) /
-                                            100,
+                                            10,
                                         strokeWidth: 3,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
