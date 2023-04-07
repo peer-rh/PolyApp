@@ -3,6 +3,7 @@
         "id": "RESTAURANT",
         "avatar": "assets/avatars/Restaurant.png",
         "emoji": "🍽",
+        "goal": "Learn how to order food in a restaurant",
         "name": {
             "de": "Essen Bestellen",
             "en": "Ordering Food",
@@ -48,6 +49,7 @@
         "id": "BEACH",
         "avatar": "assets/avatars/Beach.png",
         "emoji": "🏖",
+        "goal": "Learn how to talk to a friend at the beach",
         "name": {
             "de": "Am Strand",
             "en": "At the Beach",
@@ -94,6 +96,7 @@
         "id": "JOB_INTERVIEW",
         "avatar": "assets/avatars/Job Interview.png",
         "emoji": "👔",
+        "goal": "Learn how to talk to a potential employer",
         "name": {
             "de": "Vorstellungsgespräch",
             "en": "Job Interview",
@@ -138,6 +141,7 @@
         "id": "DOCTOR",
         "avatar": "assets/avatars/Doctor.png",
         "emoji": "🏥",
+        "goal": "Learn how to talk to a doctor",
         "name": {
             "de": "Arztbesuch",
             "en": "Doctor's Office",
@@ -148,16 +152,13 @@
         "rating_name": "DOCTOR",
         "starting_msgs": {
             "de": [
-                "Guten Tag. Was kann ich für sie tun?",
-                "Hallo, wie geht es ihnen?"
+                "Guten Tag. Was kann ich für sie tun?"
             ],
             "en": [
-                "Good afternoon. What can I do for you?",
-                "Hello, how are you?"
+                "Good afternoon. What can I do for you?"
             ],
             "es": [
-                "Buenas tardes. ¿En qué puedo ayudarle?",
-                "Hola, ¿cómo estás?"
+                "Buenas tardes. ¿En qué puedo ayudarle?"
             ]
         },
         "voice_info": {
@@ -182,6 +183,7 @@
         "id": "HOTEL_CHECKIN",
         "avatar": "assets/avatars/Man.png",
         "emoji": "🏨",
+        "goal": "Learn how to checkin",
         "name": {
             "de": "Hotel Checkin",
             "en": "Hotel Checkin",
@@ -226,6 +228,7 @@
         "id": "HOTEL_CHECKOUT",
         "avatar": "assets/avatars/Women.png",
         "emoji": "🏨",
+        "goal": "Learn how to checkout",
         "name": {
             "de": "Hotel Checkout",
             "en": "Hotel Checkout",
@@ -270,6 +273,7 @@
         "id": "ORDERING_DELIVERY",
         "avatar": "assets/avatars/Fast Food.png",
         "emoji": "🍕",
+        "goal": "Learn how to order delivery",
         "name": {
             "de": "Essen Liefern lassen",
             "en": "Ordering Delivery",
@@ -314,6 +318,7 @@
         "id": "ASKING_FOR_DIRECTIONS",
         "avatar": "assets/avatars/Man.png",
         "emoji": "🧭",
+        "goal": "Learn how to ask a stranger for directions",
         "name": {
             "de": "Nach dem Weg fragen",
             "en": "Asking for Directions",
@@ -358,6 +363,7 @@
         "id": "COFFEESHOP_CONVERSATION",
         "avatar": "assets/avatars/Man.png",
         "emoji": "☕",
+        "goal": "Learn how to have a casual conversation",
         "name": {
             "de": "Treffen mit Freund",
             "en": "Meeting a Friend",

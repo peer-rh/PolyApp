@@ -6,7 +6,7 @@ class Response {
   Response(this.message, this.endOfConversation);
 }
 
-Future<Response> getAIRespone(List<Map<String, String>> msgs) async {
+Future<Response> getAIResponse(List<Map<String, String>> msgs) async {
   final response = await FirebaseFunctions.instance
       .httpsCallable("getChatGPTResponse")
       .call(msgs);
