@@ -18,7 +18,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  List<Messages>? conversations;
+  List<Conversation>? conversations;
   List<UseCaseModel> useCases = [];
   List<ScenarioModel> scenarios = [];
 
@@ -245,9 +245,9 @@ class _UserPageState extends State<UserPage> {
                                       child: CircularProgressIndicator(
                                         value: (conversations![index]
                                                     .rating
-                                                    ?.score ??
+                                                    ?.totalScore ??
                                                 0) /
-                                            100,
+                                            10,
                                         strokeWidth: 3,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(

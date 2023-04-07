@@ -8,11 +8,10 @@ import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/components/ai_avatar.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class OwnMsgBubble extends StatelessWidget {
-  final PersonMsgModel msg;
-  const OwnMsgBubble(this.msg, {super.key});
+class SingularOwnMsgBubble extends StatelessWidget {
+  final SingularPersonMsgModel msg;
+  const SingularOwnMsgBubble(this.msg, {super.key});
 
   Widget rating(BuildContext context) {
     if (msg.rating != null) {
@@ -27,62 +26,74 @@ class OwnMsgBubble extends StatelessWidget {
     return Container();
   }
 
-  void showRatingDesc(BuildContext context) {
-    if (msg.rating == null) return;
-
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              content: Text(msg.rating!.details),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(AppLocalizations.of(context)!.close))
-              ],
-            ));
+  Widget ratingSuggestion(BuildContext context) {
+    if (msg.rating != null &&
+        msg.rating!.suggestion != null &&
+        msg.rating!.type != MsgRatingType.correct) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(),
+          Text(
+            msg.rating!.suggestionTranslated ?? msg.rating!.suggestion!,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            ),
+          ),
+        ],
+      );
+    }
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => showRatingDesc(context),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      alignment: Alignment.centerRight,
       child: Container(
-        padding: const EdgeInsets.only(top: 5),
-        alignment: Alignment.centerRight,
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.7,
-          ),
-          child: GestureDetector(
-            onLongPress: () {
-              // TODO: Option to edit
-            },
-            child: Card(
-              elevation: 0,
-              color: Theme.of(context).colorScheme.primary,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (msg.rating != null) rating(context),
-                    Text(
-                      msg.msg,
-                      textWidthBasis: TextWidthBasis.longestLine,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ],
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7,
+        ),
+        child: Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.primary,
+          margin: const EdgeInsets.all(0),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (msg.rating != null) rating(context),
+                Text(
+                  msg.msg,
+                  textWidthBasis: TextWidthBasis.longestLine,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onPrimary),
                 ),
-              ),
+                if (msg.rating != null) ratingSuggestion(context),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class OwnMsgBubble extends StatelessWidget {
+  PersonMsgModel msg;
+  OwnMsgBubble(this.msg, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var m in msg.msgs) SingularOwnMsgBubble(m),
+      ],
     );
   }
 }
@@ -98,7 +109,7 @@ class AiMsgBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       alignment: Alignment.centerLeft,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,

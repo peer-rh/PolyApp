@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:language_pal/common/languages.dart';
 
-const int scoreCompletedCutoff = 80;
+const int scoreCompletedCutoff = 8;
 
 class ScenarioModel {
   String uniqueId;
@@ -11,10 +11,11 @@ class ScenarioModel {
   String emoji;
   String avatar;
   String prompt;
-  String ratingDesc;
-  String ratingName;
+  String environmentDesc;
+  String ratingAssistantName;
   List<String> startMessages;
   Map<String, dynamic> voiceSettings;
+  String goal;
   int? userScore;
   bool useCaseRecommended;
   ScenarioModel(
@@ -24,9 +25,10 @@ class ScenarioModel {
       this.startMessages,
       this.emoji,
       this.avatar,
-      this.ratingDesc,
-      this.ratingName,
+      this.environmentDesc,
+      this.ratingAssistantName,
       this.voiceSettings,
+      this.goal,
       this.useCaseRecommended);
 }
 
@@ -53,6 +55,7 @@ Future<List<ScenarioModel>> loadScenarioModels(String learnLang, String ownLang,
         e["rating_desc"],
         e["rating_name"],
         e["voice_info"][learnLang],
+        e["goal"],
         useCaseRecommended.contains(e["id"]))
       ..userScore = userScores[e["id"]];
   }).toList();

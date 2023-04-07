@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/ai_msg.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
+import 'package:language_pal/app/chat/logic/store_conv.dart';
 import 'package:language_pal/app/chat/logic/total_rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/chat_summary_page.dart';
@@ -13,6 +13,7 @@ import 'package:language_pal/app/chat/presentation/components/input_area.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/common/fade_route.dart';
+import 'package:language_pal/common/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -28,14 +29,12 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  late Messages msgs;
+  late Conversation msgs;
 
   final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
   );
-
-  bool disabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +43,28 @@ class _ChatPageState extends State<ChatPage> {
         title: Text(
           "${widget.scenario.emoji} ${widget.scenario.name}",
         ),
+        actions: [
+          PopupMenuButton(
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                        onTap: () async {
+                          await deleteConv(widget.scenario);
+                          setState(() {
+                            msgs = Conversation(widget.scenario);
+                          });
+                          initChat();
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.refresh),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(AppLocalizations.of(context)!.chat_reset),
+                          ],
+                        ))
+                  ])
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -54,7 +75,15 @@ class _ChatPageState extends State<ChatPage> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   reverse: true,
-                  child: ChatBubbleColumn(msgs: msgs),
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  child: ChatBubbleColumn(
+                    msgs: msgs,
+                    sendAnyways:
+                        msgs.state == ConversationState.waitingForUserRedo
+                            ? sendAnyways
+                            : null,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -62,7 +91,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
               ChatInputArea(
                 sendMsg: _addMsg,
-                disabled: disabled,
+                conv: msgs,
               ),
             ],
           ),
@@ -72,70 +101,122 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    if (msgs.rating == null) storeConv(msgs);
+
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 
-    msgs = Messages(widget.scenario);
-    initalFetchAIMsg();
+    msgs = Conversation(widget.scenario);
+    initChat();
   }
 
-  void initalFetchAIMsg() async {
-    String msg = widget.scenario
-        .startMessages[Random().nextInt(widget.scenario.startMessages.length)];
+  void sendAnyways() {
+    getAIMsg();
     setState(() {
-      msgs.addMsg(AIMsgModel(msg));
-      disabled = false;
+      msgs.state = ConversationState.waitingForAIMsg;
     });
   }
 
-  void _addMsg(String msg) async {
-    PersonMsgModel personMsg = PersonMsgModel(msg);
-    setState(() {
-      msgs.addMsg(personMsg);
-      disabled = true;
+  void initChat() async {
+    Conversation? storedConv = await loadConv(widget.scenario);
+    if (storedConv != null) {
+      msgs = storedConv;
+      if (msgs.state == ConversationState.waitingForAIMsg) {
+        msgs.msgs.removeLast();
+        getAIMsg();
+      } else if (msgs.state == ConversationState.waitingForRating) {
+        getMsgRating(msgs.msgs.last as PersonMsgModel);
+      }
+      setState(() {});
+    } else {
+      String msg = widget.scenario.startMessages[
+          Random().nextInt(widget.scenario.startMessages.length)];
+      setState(() {
+        msgs.addMsg(AIMsgModel(msg));
+        msgs.addMsg(PersonMsgModel([]));
+        msgs.state = ConversationState.waitingForUserMsg;
+      });
+    }
+  }
+
+  void _addMsg(String msg, bool check) async {
+    if (msgs.msgs.last is! PersonMsgModel) {
+      msgs.addMsg(PersonMsgModel([]));
+    }
+    PersonMsgModel personMsg = msgs.msgs.last as PersonMsgModel;
+    if (check) {
+      setState(() {
+        personMsg.msgs.add(SingularPersonMsgModel(msg));
+        msgs.state = ConversationState.waitingForRating;
+      });
+      getMsgRating(personMsg);
+    } else {
+      setState(() {
+        personMsg.msgs.add(SingularPersonMsgModel(msg));
+        msgs.state = ConversationState.waitingForAIMsg;
+      });
+      getAIMsg();
+    }
+  }
+
+  void getMsgRating(PersonMsgModel personMsg) {
+    getRating(
+      msgs,
+      convertLangCode(context.read<AuthProvider>().user!.appLang)
+          .getEnglishName(),
+    ).then((resp) {
+      setState(() {
+        personMsg.msgs.last.rating = resp;
+      });
+      if (resp.type == MsgRatingType.correct) {
+        setState(() {
+          msgs.state = ConversationState.waitingForAIMsg;
+        });
+        getAIMsg();
+      } else {
+        setState(() {
+          msgs.state = ConversationState.waitingForUserRedo;
+        });
+      }
     });
+  }
+
+  void getAIMsg() async {
     if (msgs.rating != null) return;
-    getAIRespone(msgs.getLastMsgs()).then((resp) {
+    setState(() {
+      msgs.addMsg(AIMsgModel("")..loaded = false);
+    });
+    getAIResponse(msgs.getLastMsgs(10)).then((resp) {
       setState(() {
         msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
-        disabled = false;
+        msgs.state = ConversationState.waitingForUserMsg;
       });
       _scrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.bounceInOut);
       if (resp.endOfConversation) {
+        setState(() {
+          msgs.state = ConversationState.finished;
+        });
         getSummary();
       }
-    });
-    getRating(
-      widget.scenario.ratingDesc,
-      widget.scenario.ratingName,
-      msgs,
-      context.read<AuthProvider>().user!.appLang,
-      AppLocalizations.of(context)!.msg_rating_great,
-      AppLocalizations.of(context)!.msg_rating_good,
-      AppLocalizations.of(context)!.msg_rating_poor,
-    ).then((resp) {
-      setState(() {
-        personMsg.rating = resp;
-      });
-    });
-    setState(() {
-      msgs.addMsg(AIMsgModel("")..loaded = false);
     });
   }
 
   void getSummary() async {
-    sleep(const Duration(seconds: 8));
     final rating = await getConversationRating(
-        widget.scenario.ratingDesc,
-        widget.scenario.ratingName,
-        context.read<AuthProvider>().user!.appLang,
-        msgs);
+        context.read<AuthProvider>().user!.appLang, msgs);
     setState(() {
       msgs.rating = rating;
     });
 
+    deleteConv(widget.scenario);
     addConversationToFirestore(msgs, context.read<AuthProvider>());
     Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
   }
