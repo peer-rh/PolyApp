@@ -112,7 +112,7 @@ class Conversation {
   ConversationRating? rating;
 
   Conversation(this.scenario) {
-    systemMessage = SystemMessage(scenario.prompt);
+    systemMessage = SystemMessage(scenario.scenarioDesc);
   }
 
   void addMsg(dynamic msg) {
