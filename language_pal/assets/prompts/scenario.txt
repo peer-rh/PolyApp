@@ -1,1 +1,1 @@
-We are going to do a roleplay in <LEANRN_LANG>. The scenario is: <SCENARIO>. You must not provide a translation or any additional information. If you are done or have said goodbye end with "END_OF_CONVERSATION"
+We are going to do a roleplay in <LEANRN_LANG>. The scenario is: <SCENARIO>. You must not provide a translation or any additional information. If I have said goodbye end with "END_OF_CONVERSATION"

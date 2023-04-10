@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:language_pal/common/languages.dart';
 
@@ -39,9 +40,11 @@ Future<List<ScenarioModel>> loadScenarioModels(String learnLang, String ownLang,
   scenarioPrompt = scenarioPrompt.replaceAll(
       "<LEANRN_LANG>", convertLangCode(learnLang).getEnglishName());
 
-  final String scenariosFile =
-      await rootBundle.loadString('assets/prompts/scenarios.json');
-  List<dynamic> map = await json.decode(scenariosFile);
+  // final String scenariosFile =
+  // await rootBundle.loadString('assets/prompts/scenarios.json');
+  // List<dynamic> map = await json.decode(scenariosFile);
+  List<dynamic> map =
+      json.decode(FirebaseRemoteConfig.instance.getString("scenarios"));
   List<ScenarioModel> scenarios = map.map((e) {
     return ScenarioModel(
         e["id"],
