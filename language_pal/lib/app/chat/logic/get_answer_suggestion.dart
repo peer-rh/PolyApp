@@ -1,11 +1,8 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/common/languages.dart';
-import 'package:provider/provider.dart';
 
 class AnswerSuggestionButton extends StatelessWidget {
   Conversation conv;
@@ -60,7 +57,8 @@ class AnswerSuggestionButton extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return IconButton(
       onPressed: () async {
-        String lang = context.read<AuthProvider>().user!.appLang;
+        String lang = Localizations.localeOf(context).languageCode;
+
         lang = convertLangCode(lang).getEnglishName();
         var lastMsg = conv.msgs.last as PersonMsgModel;
         if (context.mounted) {

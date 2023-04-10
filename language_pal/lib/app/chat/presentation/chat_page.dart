@@ -168,7 +168,7 @@ class _ChatPageState extends State<ChatPage> {
   void getMsgRating(PersonMsgModel personMsg) {
     getRating(
       msgs,
-      convertLangCode(context.read<AuthProvider>().user!.appLang)
+      convertLangCode(Localizations.localeOf(context).languageCode)
           .getEnglishName(),
     ).then((resp) {
       setState(() {
@@ -210,14 +210,18 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getSummary() async {
+    AuthProvider ap = context.read<AuthProvider>();
+
     final rating = await getConversationRating(
-        context.read<AuthProvider>().user!.appLang, msgs);
+        Localizations.localeOf(context).languageCode, msgs);
     setState(() {
       msgs.rating = rating;
     });
 
     deleteConv(widget.scenario);
-    addConversationToFirestore(msgs, context.read<AuthProvider>());
-    Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
+    addConversationToFirestore(msgs, ap);
+    if (context.mounted) {
+      Navigator.push(context, FadeRoute(ChatSummaryPage(rating)));
+    }
   }
 }
