@@ -18,7 +18,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  List<Messages>? conversations;
+  List<Conversation>? conversations;
   List<UseCaseModel> useCases = [];
   List<ScenarioModel> scenarios = [];
 
@@ -27,9 +27,11 @@ class _UserPageState extends State<UserPage> {
     if (ap.user == null) return;
     final tmp = await loadScenarioModels(
       ap.user!.learnLang,
-      ap.user!.appLang,
+      Localizations.localeOf(context).languageCode,
       ap.user!.scenarioScores,
-      (await loadUseCaseModel(ap.user!.useCase, ap.user!.appLang))!.recommended,
+      (await loadUseCaseModel(
+              ap.user!.useCase, Localizations.localeOf(context).languageCode))!
+          .recommended,
     );
     setState(() {
       scenarios = tmp;
@@ -49,7 +51,8 @@ class _UserPageState extends State<UserPage> {
   void loadUseCases() async {
     AuthProvider ap = context.read<AuthProvider>();
     if (ap.user == null) return;
-    var tmp = await loadUseCaseModels(ap.user!.appLang);
+    var tmp =
+        await loadUseCaseModels(Localizations.localeOf(context).languageCode);
     setState(() {
       useCases = tmp;
     });
@@ -84,21 +87,24 @@ class _UserPageState extends State<UserPage> {
                       const Icon(Icons.account_circle_outlined,
                           size: 54, fill: 0.0),
                       const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              ap.firebaseUser!.displayName ??
-                                  ap.firebaseUser!.email ??
-                                  "No Email provided",
-                              style: Theme.of(context).textTheme.headlineSmall),
-                          const SizedBox(height: 4),
-                          if (ap.firebaseUser!.displayName != null)
-                            Text(ap.firebaseUser!.email ?? ""),
-                        ],
-                      ),
-                      const Expanded(
-                        child: SizedBox(),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                ap.firebaseUser!.displayName ??
+                                    ap.firebaseUser!.email ??
+                                    "No Email provided",
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
+                            const SizedBox(height: 4),
+                            if (ap.firebaseUser!.displayName != null)
+                              Text(ap.firebaseUser!.email ?? ""),
+                          ],
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.logout),
@@ -119,31 +125,6 @@ class _UserPageState extends State<UserPage> {
                       Expanded(
                         child: Table(
                           children: [
-                            TableRow(children: [
-                              TableCell(
-                                verticalAlignment:
-                                    TableCellVerticalAlignment.middle,
-                                child: Text(
-                                    AppLocalizations.of(context)!
-                                        .user_page_app_lang,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                              DropdownButton(
-                                value: ap.user!.appLang,
-                                items: supportedAppLanguages().map((e) {
-                                  return DropdownMenuItem(
-                                      value: e.code,
-                                      child: Text(
-                                          "${e.emoji}${e.getName(context)}"));
-                                }).toList(),
-                                onChanged: (e) {
-                                  UserModel newUser = ap.user!;
-                                  newUser.appLang = e!;
-                                  ap.setUserModel(newUser);
-                                },
-                              )
-                            ]),
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:
@@ -242,9 +223,9 @@ class _UserPageState extends State<UserPage> {
                                       child: CircularProgressIndicator(
                                         value: (conversations![index]
                                                     .rating
-                                                    ?.score ??
+                                                    ?.totalScore ??
                                                 0) /
-                                            100,
+                                            10,
                                         strokeWidth: 3,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(

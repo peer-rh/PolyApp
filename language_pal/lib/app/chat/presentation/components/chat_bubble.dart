@@ -2,55 +2,46 @@ import 'dart:math' as math show sin, pi;
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/logic/translation.dart';
 import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/components/ai_avatar.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
-import 'package:language_pal/auth/auth_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class OwnMsgBubble extends StatelessWidget {
-  final PersonMsgModel msg;
-  const OwnMsgBubble(this.msg, {super.key});
+class SingularOwnMsgBubble extends StatelessWidget {
+  final SingularPersonMsgModel msg;
+  const SingularOwnMsgBubble(this.msg, {super.key});
 
   Widget rating(BuildContext context) {
     if (msg.rating != null) {
-      return GestureDetector(
-        onTap: () {
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    content: Text(msg.rating!.details),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(AppLocalizations.of(context)!.close))
-                    ],
-                  ));
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              generateRatingShort(context, msg.rating!.type),
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              size: 14,
+      return Text(
+        generateRatingShort(context, msg.rating!.type),
+        style: TextStyle(
+          fontSize: 14,
+          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget ratingSuggestion(BuildContext context) {
+    if (msg.rating != null &&
+        msg.rating!.suggestion != null &&
+        msg.rating!.type != MsgRatingType.correct) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(),
+          Text(
+            msg.rating!.suggestionTranslated ?? msg.rating!.suggestion!,
+            style: TextStyle(
+              fontSize: 12,
               color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
     return Container();
@@ -59,39 +50,50 @@ class OwnMsgBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       alignment: Alignment.centerRight,
       child: Container(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.7,
         ),
-        child: GestureDetector(
-          onLongPress: () {
-            // TODO: Option to edit
-          },
-          child: Card(
-            elevation: 0,
-            color: Theme.of(context).colorScheme.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (msg.rating != null) rating(context),
-                  Text(
-                    msg.msg,
-                    textWidthBasis: TextWidthBasis.longestLine,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ],
-              ),
+        child: Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.primary,
+          margin: const EdgeInsets.all(0),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (msg.rating != null) rating(context),
+                Text(
+                  msg.msg,
+                  textWidthBasis: TextWidthBasis.longestLine,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onPrimary),
+                ),
+                if (msg.rating != null) ratingSuggestion(context),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class OwnMsgBubble extends StatelessWidget {
+  PersonMsgModel msg;
+  OwnMsgBubble(this.msg, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var m in msg.msgs) SingularOwnMsgBubble(m),
+      ],
     );
   }
 }
@@ -107,7 +109,7 @@ class AiMsgBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       alignment: Alignment.centerLeft,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -177,6 +179,7 @@ class _AnimatedThinkingState extends State<AnimatedThinking>
       setState(() {});
     });
     _controller.repeat();
+    super.initState();
   }
 
   @override

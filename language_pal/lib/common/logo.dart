@@ -7,21 +7,24 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text("Language",
-            style: GoogleFonts.nunito(
-              fontSize: size,
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w700,
-            )),
-        Text("Pal",
-            style: GoogleFonts.nunito(
-              fontSize: size,
-              fontWeight: FontWeight.w700,
-            )),
-      ],
+    return FittedBox(
+      fit: BoxFit.fitWidth,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Language",
+              style: GoogleFonts.nunito(
+                fontSize: size,
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w700,
+              )),
+          Text("Pal",
+              style: GoogleFonts.nunito(
+                fontSize: size,
+                fontWeight: FontWeight.w700,
+              )),
+        ],
+      ),
     );
   }
 }

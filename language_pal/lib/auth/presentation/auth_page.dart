@@ -114,16 +114,18 @@ class _AuthPageState extends State<AuthPage> {
                   OAuthButtons(ap),
                   const SizedBox(height: 25),
                   TextButton(
-                      onPressed: () {
-                        setState(() {
-                          signIn = !signIn;
-                        });
-                      },
-                      child: signIn
-                          ? Text(
-                              AppLocalizations.of(context)!.auth_sign_up_link)
-                          : Text(
-                              AppLocalizations.of(context)!.auth_sign_in_link)),
+                    onPressed: () {
+                      setState(() {
+                        signIn = !signIn;
+                      });
+                    },
+                    child: Text(
+                      signIn
+                          ? AppLocalizations.of(context)!.auth_sign_up_link
+                          : AppLocalizations.of(context)!.auth_sign_in_link,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ],
               ),
             ),

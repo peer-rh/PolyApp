@@ -15,7 +15,7 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  UserModel thisUser = UserModel(null, "", "", "", {});
+  UserModel thisUser = UserModel(null, "", "", {});
   final learnCont = TextEditingController();
   int currentStep = 0;
   List<UseCaseModel> useCases = [];
@@ -24,7 +24,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void didChangeDependencies() async {
     AuthProvider ap = Provider.of(context);
     thisUser.email = ap.firebaseUser!.email;
-    thisUser.appLang = AppLocalizations.of(context)!.localeName;
     super.didChangeDependencies();
 
     useCases =
@@ -160,12 +159,18 @@ class CustomCard extends StatelessWidget {
               children: [
                 Text(emoji, style: const TextStyle(fontSize: 60)),
                 const SizedBox(width: 16),
-                Text(title,
-                    style: GoogleFonts.nunito(
-                        fontSize: 30,
-                        color: selected
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.onSurface)),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(title,
+                        maxLines: 1,
+                        style: GoogleFonts.nunito(
+                            fontSize: 30,
+                            color: selected
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context).colorScheme.onSurface)),
+                  ),
+                ),
               ],
             ),
           ),
