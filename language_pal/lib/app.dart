@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/home_page.dart';
 import 'package:language_pal/app/loading_page.dart';
@@ -24,8 +22,6 @@ class App extends StatelessWidget {
             title: "LanguagePal",
             theme: lightTheme,
             darkTheme: darkTheme,
-            locale: Locale(context.watch<AuthProvider>().user?.appLang ??
-                Platform.localeName),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Builder(

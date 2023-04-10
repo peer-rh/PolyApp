@@ -179,6 +179,7 @@ class _AnimatedThinkingState extends State<AnimatedThinking>
       setState(() {});
     });
     _controller.repeat();
+    super.initState();
   }
 
   @override

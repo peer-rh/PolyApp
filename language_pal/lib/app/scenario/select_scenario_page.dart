@@ -23,9 +23,11 @@ class _SelectScenarioPageState extends State<SelectScenarioPage> {
     AuthProvider ap = context.watch();
     final tmp = await loadScenarioModels(
       ap.user!.learnLang,
-      ap.user!.appLang,
+      Localizations.localeOf(context).languageCode,
       ap.user!.scenarioScores,
-      (await loadUseCaseModel(ap.user!.useCase, ap.user!.appLang))!.recommended,
+      (await loadUseCaseModel(
+              ap.user!.useCase, Localizations.localeOf(context).languageCode))!
+          .recommended,
     );
     setState(() {
       scenarios = tmp;
