@@ -1,1 +1,5 @@
 .DS_Store
+language_pal/macos/Runner/GoogleService-Info.plist
+language_pal/macos/firebase_app_id_file.json
+language_pal/ios/firebase_app_id_file.json
+language_pal/ios/Flutter/Env.xcconfig

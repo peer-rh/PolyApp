@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class UseCaseModel {
   final String uniqueId;
@@ -12,8 +12,8 @@ class UseCaseModel {
 }
 
 Future<List<UseCaseModel>> loadUseCaseModels(String ownLang) async {
-  final String useCases = await rootBundle.loadString('assets/use_cases.json');
-  List<dynamic> map = await json.decode(useCases);
+  List<dynamic> map =
+      json.decode(FirebaseRemoteConfig.instance.getString("use_cases"));
   return map.map((e) {
     return UseCaseModel(
       e["id"],

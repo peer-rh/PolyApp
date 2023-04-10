@@ -12,6 +12,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
     // Check if current user is allowed to do so
     const uid = context.auth?.uid;
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
+    functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
@@ -25,7 +26,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
         messages: data,
         user: uid,
     })).data
-    functions.logger.info("Returning response");
+    functions.logger.info("Returning response: " + comp.choices[0].message?.content);
     return comp.choices[0].message?.content;
 
 });
@@ -66,7 +67,7 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
     functions.logger.info("Text: " + text);
 
 
-    let system_prompt = `Rate my previous last response based on the following criteria: accuracy, grammar (Ignore punctuation and capital letters), conventions, clarity, conciseness and politeness. The result is only "correct" if it meets all these criteria. Provide an explanation,  suggestion (how I can improve), a corrected answer for me and one word from the result list. Use this format: "EXPLANATION:...(2 Sentences; Max 18 words) \n SUGGESTION: ...(1 Sentence; ; Max 10 words) \n SUGGESTION_TRANSLATED: ...(in ${data["language"]}) \n CORRECTED_ME: ... \n CORRECTED_ME_TRANSLATED: ... (in ${data["language"]}) \n RESULT:grammar_error/incomplete/unclear/impolite/correct (1 Word)"`;
+    let system_prompt = `Rate my previous last response based on the following criteria: accuracy, grammar (Ignore punctuation and capital letters), conventions, clarity, conciseness and politeness. The result is only "correct" if it meets all these criteria. Provide an explanation, suggestion (how I can improve), a corrected answer for me and one word from the result list. Use this format: "EXPLANATION:...(2 Sentences; Max 18 words) \n SUGGESTION: ...(1 Sentence; ; Max 10 words) \n SUGGESTION_TRANSLATED: ...(in ${data["language"]}) \n CORRECTED_ME: ... \n CORRECTED_ME_TRANSLATED: ... (in ${data["language"]}) \n RESULT:grammar_error/incomplete/unclear/impolite/correct (1 Word)"`;
 
 
     const configuration = new Configuration({
