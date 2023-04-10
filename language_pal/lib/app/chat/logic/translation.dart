@@ -1,10 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/common/languages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 
 Future<String> getTranslations(String msg, String lang) async {
   // Call cloud function to get translations
@@ -53,7 +51,7 @@ class _TranslationButtonState extends State<TranslationButton> {
                 showTranslation(context, widget.msg.translations!);
                 return;
               }
-              String lang = context.read<AuthProvider>().user!.appLang;
+        String lang = Localizations.localeOf(context).languageCode;
               setState(() {
                 loading = true;
               });

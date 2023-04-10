@@ -25,13 +25,13 @@ class LanguageModel {
   String getEnglishName() {
     switch (code) {
       case "en":
-        return "English";
+        return "english";
       case "de":
-        return "German";
+        return "german";
       case "es":
-        return "Spanish";
+        return "spanish";
       default:
-        return "English";
+        return "english";
     }
   }
 }

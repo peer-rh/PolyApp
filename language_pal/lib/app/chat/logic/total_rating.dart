@@ -1,50 +1,88 @@
+import 'dart:math';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 
 class ConversationRating {
-  final int? score;
-  final String details;
+  final int? goalScore;
+  final int? aiScore;
+  final int totalMessages;
+  final int totalRetries;
+  final int totalScore;
+  final String suggestion1;
+  final String suggestion2;
+  final String suggestion3;
 
-  ConversationRating(this.score, this.details);
+  ConversationRating(
+    this.goalScore,
+    this.aiScore,
+    this.totalMessages,
+    this.totalRetries,
+    this.totalScore,
+    this.suggestion1,
+    this.suggestion2,
+    this.suggestion3,
+  );
 
   Map<String, dynamic> toMap() {
     return {
-      "rating": score,
-      "details": details,
+      "goal_score": goalScore,
+      "ai_score": aiScore,
+      "total_messages": totalMessages,
+      "total_retries": totalRetries,
+      "total_score": totalScore,
+      "suggestion_1": suggestion1,
+      "suggestion_2": suggestion2,
+      "suggestion_3": suggestion3,
     };
   }
 
   factory ConversationRating.fromMap(Map<String, dynamic> map) {
     return ConversationRating(
-      map["rating"],
-      map["details"],
+      map["goal_score"],
+      map["ai_score"],
+      map["total_messages"],
+      map["total_retries"],
+      map["total_score"],
+      map["suggestion_1"],
+      map["suggestion_2"],
+      map["suggestion_3"],
     );
   }
 }
 
-Future<ConversationRating> getConversationRating(String scenarioShort,
-    String assistantName, String lang, Messages msgs) async {
+Future<ConversationRating> getConversationRating(
+    String lang, Conversation msgs) async {
   final response = await FirebaseFunctions.instance
       .httpsCallable('getConversationRating')
       .call({
-    "environment": scenarioShort,
-    "assistant_name": assistantName,
+    "environment": msgs.scenario.environmentDesc,
+    "assistant_name": msgs.scenario.ratingAssistantName,
     "messages": msgs.msgs.map((e) => e.toMap()).toList(),
     "language": lang,
+    "goal": msgs.scenario.goal,
   });
-  String data = response.data;
-  int? rating;
-  if (lang == "en") {
-    int startPos = data.indexOf("Rating: ") + 8;
-    String a = data.substring(startPos, data.length - 1);
-    rating = int.tryParse(a.substring(0, a.indexOf("/")));
-    data = data.substring(0, startPos - 8);
-  } else if (lang == "de") {
-    int startPos = data.indexOf("Bewertung: ") + 11;
-    String a = data.substring(startPos, data.length - 1);
-    rating = int.tryParse(a.substring(0, a.indexOf("/")));
-    data = data.substring(0, startPos - 11);
+  int totalMessages = msgs.msgs.length;
+  int totalRetries = 0;
+  int goalScore = response.data["goal_score"];
+  int aiScore = response.data["overall_score"];
+  for (var msg in msgs.msgs) {
+    if (msg is PersonMsgModel) {
+      totalRetries += msg.msgs.length - 1;
+    }
   }
-
-  return ConversationRating(rating, data);
+  int totalScore = 3 * goalScore +
+      2 * aiScore +
+      max(0, ((1 - totalRetries / totalMessages) * 10).round());
+  totalScore = (totalScore / 6).round();
+  return ConversationRating(
+    goalScore,
+    aiScore,
+    totalMessages,
+    totalRetries,
+    totalScore,
+    response.data["suggestion_1"],
+    response.data["suggestion_2"],
+    response.data["suggestion_3"],
+  );
 }

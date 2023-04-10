@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:language_pal/auth/models/user_model.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 
 class AuthException {
   String msg;
@@ -30,7 +29,7 @@ class AuthProvider with ChangeNotifier {
     userAuthSub = FirebaseAuth.instance.authStateChanges().listen((event) {
       firebaseUser = event;
       if (firebaseUser != null) {
-        Purchases.logIn((firebaseUser!).uid);
+//        Purchases.logIn((firebaseUser!).uid);
         _getFirestore();
       } else {
         user = null;
@@ -51,12 +50,8 @@ class AuthProvider with ChangeNotifier {
     if (!doc.exists) {
       setState(AuthState.onboarding);
     } else {
-      user = UserModel(
-          doc.get("email"),
-          doc.get("appLang"),
-          doc.get("learnLang"),
-          doc.get("useCase"),
-          doc.get("scenarioScores").cast<String, int>());
+      user = UserModel(doc.get("email"), doc.get("learnLang"),
+          doc.get("useCase"), doc.get("scenarioScores").cast<String, int>());
       setState(AuthState.authenticated);
     }
   }

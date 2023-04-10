@@ -3,7 +3,7 @@ import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/components/chat_bubble_scroll.dart';
 
 class PastConversationPage extends StatelessWidget {
-  final Messages msgs;
+  final Conversation msgs;
   const PastConversationPage(this.msgs, {super.key});
 
   @override
@@ -15,6 +15,8 @@ class PastConversationPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
         child: Container(
           padding: const EdgeInsets.all(16),
           child: ChatBubbleColumn(msgs: msgs),

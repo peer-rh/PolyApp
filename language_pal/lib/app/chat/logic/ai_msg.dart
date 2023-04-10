@@ -1,4 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:language_pal/app/chat/models/messages.dart';
 
 class Response {
   String message;
@@ -6,10 +7,16 @@ class Response {
   Response(this.message, this.endOfConversation);
 }
 
-Future<Response> getAIRespone(List<Map<String, String>> msgs) async {
+Future<Response> getAIResponse(Conversation conv, String learnLang) async {
   final response = await FirebaseFunctions.instance
       .httpsCallable("getChatGPTResponse")
-      .call(msgs);
+      .call(
+          {
+                "language": learnLang,
+                "messages": conv.getLastMsgs(8),
+                "scenario": conv.scenario.scenarioDesc
+          }
+      );
   String message = response.data;
   ParserResult result = parseAIMsg(message);
   return Response(result.message, result.endOfConversation);
