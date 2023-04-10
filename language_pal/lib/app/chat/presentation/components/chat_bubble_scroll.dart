@@ -75,6 +75,7 @@ class ChatBubbleColumn extends StatelessWidget {
               child: GestureDetector(
                 child: Text(
                   AppLocalizations.of(context)!.chat_page_end,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                       decoration: TextDecoration.underline),
