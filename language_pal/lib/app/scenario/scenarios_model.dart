@@ -11,7 +11,7 @@ class ScenarioModel {
   String name;
   String emoji;
   String avatar;
-  String prompt;
+  String scenarioDesc;
   String environmentDesc;
   String ratingAssistantName;
   List<String> startMessages;
@@ -22,7 +22,7 @@ class ScenarioModel {
   ScenarioModel(
       this.uniqueId,
       this.name,
-      this.prompt,
+      this.scenarioDesc,
       this.startMessages,
       this.emoji,
       this.avatar,
@@ -35,21 +35,13 @@ class ScenarioModel {
 
 Future<List<ScenarioModel>> loadScenarioModels(String learnLang, String ownLang,
     Map<String, int> userScores, List<String> useCaseRecommended) async {
-  String scenarioPrompt =
-      await rootBundle.loadString('assets/prompts/scenario.txt');
-  scenarioPrompt = scenarioPrompt.replaceAll(
-      "<LEANRN_LANG>", convertLangCode(learnLang).getEnglishName());
-
-  // final String scenariosFile =
-  // await rootBundle.loadString('assets/prompts/scenarios.json');
-  // List<dynamic> map = await json.decode(scenariosFile);
   List<dynamic> map =
       json.decode(FirebaseRemoteConfig.instance.getString("scenarios"));
   List<ScenarioModel> scenarios = map.map((e) {
     return ScenarioModel(
         e["id"],
         e["name"][ownLang],
-        scenarioPrompt.replaceAll("<SCENARIO>", e["prompt_desc"]),
+        e["prompt_desc"],
         (e["starting_msgs"][learnLang] != null)
             ? e["starting_msgs"][learnLang].cast<String>()
             : [],

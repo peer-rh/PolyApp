@@ -192,7 +192,11 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       msgs.addMsg(AIMsgModel("")..loaded = false);
     });
-    getAIResponse(msgs.getLastMsgs(10)).then((resp) {
+    getAIResponse(
+            msgs,
+            convertLangCode(Localizations.localeOf(context).languageCode)
+                .getEnglishName())
+        .then((resp) {
       setState(() {
         msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
         msgs.state = ConversationState.waitingForUserMsg;

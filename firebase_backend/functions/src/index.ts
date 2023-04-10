@@ -14,16 +14,19 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
     functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
+    let system_message = `We are going to do a roleplay in ${data["language"]}. The scenario is: ${data["scenario"]}. Use simple vocabulary and grammar. You must not provide a translation or any additional information. If I have said goodbye end with "END_OF_CONVERSATION"`;
+
     const configuration = new Configuration({
         apiKey: openAIKey.value(),
     });
     const openai = new OpenAIApi(configuration);
+    let new_data: Array<any> = [{ role: "system", content: system_message }].concat(data["messages"]);
 
     functions.logger.info("Loaded OpenAI API in getAIMsgResponse");
     let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         max_tokens: 100,
-        messages: data,
+        messages: new_data,
         user: uid,
     })).data
     functions.logger.info("Returning response: " + comp.choices[0].message?.content);
