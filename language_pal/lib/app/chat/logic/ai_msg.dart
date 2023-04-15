@@ -10,13 +10,11 @@ class Response {
 Future<Response> getAIResponse(Conversation conv, String learnLang) async {
   final response = await FirebaseFunctions.instance
       .httpsCallable("getChatGPTResponse")
-      .call(
-          {
-                "language": learnLang,
-                "messages": conv.getLastMsgs(8),
-                "scenario": conv.scenario.scenarioDesc
-          }
-      );
+      .call({
+    "language": learnLang,
+    "messages": conv.getLastMsgs(8),
+    "scenario": conv.scenario.scenarioDesc
+  });
   String message = response.data;
   ParserResult result = parseAIMsg(message);
   return Response(result.message, result.endOfConversation);
@@ -30,11 +28,9 @@ class ParserResult {
 
 ParserResult parseAIMsg(String msg) {
   bool end = false;
-  if (msg.toLowerCase().contains("end_of_conversation")) {
+  if (msg.toLowerCase().contains("[end]")) {
     end = true;
-    msg = msg
-        .substring(0, msg.toLowerCase().indexOf("end_of_conversation"))
-        .trim();
+    msg = msg.substring(0, msg.toLowerCase().indexOf("[end]")).trim();
   }
   return ParserResult(msg.trim(), end);
 }

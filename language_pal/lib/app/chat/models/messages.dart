@@ -102,6 +102,7 @@ enum ConversationState {
   waitingForAIMsg,
   waitingForUserMsg,
   waitingForUserRedo,
+  waitingForFinalRating,
 }
 
 class Conversation {
