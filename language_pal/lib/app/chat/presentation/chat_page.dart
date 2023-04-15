@@ -206,7 +206,7 @@ class _ChatPageState extends State<ChatPage> {
           curve: Curves.bounceInOut);
       if (resp.endOfConversation) {
         setState(() {
-          msgs.state = ConversationState.finished;
+          msgs.state = ConversationState.waitingForFinalRating;
         });
         getSummary();
       }
@@ -220,6 +220,7 @@ class _ChatPageState extends State<ChatPage> {
         Localizations.localeOf(context).languageCode, msgs);
     setState(() {
       msgs.rating = rating;
+      msgs.state = ConversationState.finished;
     });
 
     deleteConv(widget.scenario);

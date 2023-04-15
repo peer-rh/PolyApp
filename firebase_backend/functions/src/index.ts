@@ -14,7 +14,7 @@ export const getChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] })
     if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
     functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
-    let system_message = `We are going to do a roleplay in ${data["language"]}. The scenario is: ${data["scenario"]}. Use simple vocabulary and grammar. You must not provide a translation or any additional information. If I have said goodbye end with "END_OF_CONVERSATION"`;
+    let system_message = `We are going to do a roleplay in ${data["language"]}. The scenario is: ${data["scenario"]}. Use simple vocabulary and grammar. You must not provide a translation or any additional information. If I have said goodbye end with "[END]"`;
 
     const configuration = new Configuration({
         apiKey: openAIKey.value(),

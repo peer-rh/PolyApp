@@ -9,6 +9,7 @@
   "chat_input_hint_try_again": "Try again...",
   "chat_page_hint": "Tap for more Info",
   "chat_page_end": "This Conversation is over. VIEW CHATMENTOR",
+  "chat_page_end_loading": "This Conversation is over.",
   "chat_page_send_anyways": "Send Anyways",
   "chat_suggestion_title": "Suggestion",
   "chat_suggestion_use": "Use",
