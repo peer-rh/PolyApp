@@ -9,6 +9,7 @@
   "chat_input_hint_try_again": "Versuche es nochmal...",
   "chat_page_hint": "Tippe für mehr info",
   "chat_page_end": "Dieses Gespräch ist zu ende. CHATMENTOR anschauen",
+  "chat_page_end_loading": "Dieses Gespräch ist zu ende.",
   "chat_page_send_anyways": "Trotzdem senden",
   "chat_suggestion_title": "Vorschlag",
   "chat_suggestion_use": "Nutzen",

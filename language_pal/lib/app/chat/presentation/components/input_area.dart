@@ -3,6 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/get_answer_suggestion.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/common/languages.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class ChatInputArea extends StatefulWidget {
   void Function(String, bool) sendMsg;
@@ -17,16 +20,50 @@ class ChatInputArea extends StatefulWidget {
 
 class _InputAreaState extends State<ChatInputArea> {
   final controller = TextEditingController();
+  var microphoneOn = true;
+  var _speechEnabled = false;
+  final _speechToText = SpeechToText();
+
   @override
   void dispose() {
     controller.dispose();
-
     super.dispose();
   }
 
   @override
   void initState() {
+    _initSpeech();
     super.initState();
+    controller.addListener(() {
+      setState(() {
+        microphoneOn = _speechEnabled && controller.text.isEmpty;
+      });
+    });
+  }
+
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  void _startListening() async {
+    await _speechToText.listen(
+        listenMode: ListenMode.dictation,
+        onResult: _onSpeechResult,
+        localeId: convertLangCode(widget.conv.scenario.learnLang)
+            .getSpeechRecognitionLocale());
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      controller.text = result.recognizedWords;
+    });
   }
 
   @override
@@ -53,6 +90,7 @@ class _InputAreaState extends State<ChatInputArea> {
                 ),
                 Expanded(
                   child: TextField(
+                    autocorrect: false,
                     onSubmitted: (s) {
                       if (disabled) return;
                       if (s != "") {
@@ -81,24 +119,44 @@ class _InputAreaState extends State<ChatInputArea> {
         const SizedBox(
           width: 10,
         ),
-        GestureDetector(
-          onTap: () async {
-            if (disabled) return;
-            widget.sendMsg(controller.text, true);
-            controller.text = "";
-          },
-          child: Container(
-            height: 50,
-            width: 50,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: disabled
-                    ? Theme.of(context).colorScheme.surfaceVariant
-                    : Theme.of(context).colorScheme.primary),
-            child: FaIcon(
-              FontAwesomeIcons.arrowUp,
-              color: Theme.of(context).colorScheme.onPrimary,
+        InkWell(
+          onLongPress: () {},
+          customBorder: const CircleBorder(),
+          child: GestureDetector(
+            onTap: (microphoneOn || disabled)
+                ? null
+                : () async {
+                    widget.sendMsg(controller.text, true);
+                    controller.text = "";
+                  },
+            onLongPressStart: (!microphoneOn || disabled)
+                ? null
+                : (details) async {
+                    _startListening();
+                  },
+            onLongPressEnd: (details) async {
+              _stopListening();
+            },
+            child: Ink(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: disabled
+                      ? Theme.of(context).colorScheme.surfaceVariant
+                      : Theme.of(context).colorScheme.primary),
+              child: Align(
+                alignment: Alignment.center,
+                child: microphoneOn
+                    ? FaIcon(
+                        FontAwesomeIcons.microphone,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )
+                    : FaIcon(
+                        FontAwesomeIcons.arrowUp,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+              ),
             ),
           ),
         )

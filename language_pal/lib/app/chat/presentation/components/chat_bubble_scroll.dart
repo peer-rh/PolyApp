@@ -68,6 +68,26 @@ class ChatBubbleColumn extends StatelessWidget {
                   ),
                 ),
               )),
+        if (msgs.state == ConversationState.waitingForFinalRating)
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(top: 15, bottom: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.chat_page_end_loading,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      decoration: TextDecoration.underline),
+                ),
+                const SizedBox(width: 5),
+                const SizedBox(
+                    height: 14, width: 14, child: CircularProgressIndicator())
+              ],
+            ),
+          ),
         if (msgs.rating != null)
           Container(
               alignment: Alignment.center,

@@ -68,7 +68,10 @@ class _AuthPageState extends State<AuthPage> {
                   const SizedBox(height: 80),
                   TextField(
                     keyboardType: TextInputType.emailAddress,
-                    autofillHints: const [AutofillHints.email],
+                    autofillHints: const [
+                      AutofillHints.email,
+                      AutofillHints.username
+                    ],
                     controller: emailCont,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
