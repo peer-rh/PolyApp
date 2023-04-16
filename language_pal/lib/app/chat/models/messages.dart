@@ -37,6 +37,7 @@ class AIMsgModel extends MsgModel {
 
 class SingularPersonMsgModel {
   String msg;
+  bool suggested = false;
   MsgRating? rating;
   SingularPersonMsgModel(this.msg);
 }
@@ -57,7 +58,11 @@ class PersonMsgModel extends MsgModel {
   Map<String, dynamic> toFirestore() {
     return {
       'content': msgs
-          .map((e) => {"content": e.msg, "rating": e.rating?.toMap()})
+          .map((e) => {
+                "content": e.msg,
+                "rating": e.rating?.toMap(),
+                "suggested": e.suggested
+              })
           .toList(),
       'type': 'person',
     };
@@ -69,7 +74,8 @@ class PersonMsgModel extends MsgModel {
     model.msgs = msgs.map((e) {
       return SingularPersonMsgModel(e['content'])
         ..rating =
-            e["rating"] == null ? null : MsgRating.fromFirestore(e["rating"]);
+            e["rating"] == null ? null : MsgRating.fromFirestore(e["rating"])
+        ..suggested = e["suggested"];
     }).toList();
     return model;
   }

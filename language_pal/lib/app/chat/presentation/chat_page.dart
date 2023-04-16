@@ -158,7 +158,7 @@ class _ChatPageState extends State<ChatPage> {
       getMsgRating(personMsg);
     } else {
       setState(() {
-        personMsg.msgs.add(SingularPersonMsgModel(msg));
+        personMsg.msgs.add(SingularPersonMsgModel(msg)..suggested = true);
         msgs.state = ConversationState.waitingForAIMsg;
       });
       getAIMsg();
