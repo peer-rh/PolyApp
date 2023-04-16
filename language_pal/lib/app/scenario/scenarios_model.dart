@@ -8,6 +8,7 @@ const int scoreCompletedCutoff = 8;
 
 class ScenarioModel {
   String uniqueId;
+  String learnLang;
   String name;
   String emoji;
   String avatar;
@@ -21,6 +22,7 @@ class ScenarioModel {
   bool useCaseRecommended;
   ScenarioModel(
       this.uniqueId,
+      this.learnLang,
       this.name,
       this.scenarioDesc,
       this.startMessages,
@@ -40,6 +42,7 @@ Future<List<ScenarioModel>> loadScenarioModels(String learnLang, String ownLang,
   List<ScenarioModel> scenarios = map.map((e) {
     return ScenarioModel(
         e["id"],
+        learnLang,
         e["name"][ownLang],
         e["prompt_desc"],
         (e["starting_msgs"][learnLang] != null)
