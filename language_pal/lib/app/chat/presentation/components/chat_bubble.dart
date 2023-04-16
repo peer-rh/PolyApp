@@ -23,28 +23,35 @@ class SingularOwnMsgBubble extends StatelessWidget {
         ),
       );
     }
-    return Container();
+    return const SkeletonRating();
   }
 
   Widget ratingSuggestion(BuildContext context) {
     if (msg.rating != null &&
         msg.rating!.suggestion != null &&
         msg.rating!.type != MsgRatingType.correct) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Divider(),
-          Text(
-            msg.rating!.suggestionTranslated ?? msg.rating!.suggestion!,
-            style: TextStyle(
-              fontSize: 12,
+      return Container(
+        margin: const EdgeInsets.only(top: 5),
+        padding: const EdgeInsets.only(top: 5),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              width: 0.5,
             ),
           ),
-        ],
+        ),
+        child: Text(
+          msg.rating!.suggestionTranslated ?? msg.rating!.suggestion!,
+          textWidthBasis: TextWidthBasis.longestLine,
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+          ),
+        ),
       );
     }
-    return Container();
+    return const SizedBox();
   }
 
   @override
@@ -66,7 +73,7 @@ class SingularOwnMsgBubble extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (msg.rating != null) rating(context),
+                if (!msg.suggested) rating(context),
                 Text(
                   msg.msg,
                   textWidthBasis: TextWidthBasis.longestLine,
@@ -220,4 +227,60 @@ class DelayTween extends Tween<double> {
 
   @override
   double evaluate(Animation<double> animation) => lerp(animation.value);
+}
+
+class SkeletonRating extends StatefulWidget {
+  const SkeletonRating({super.key});
+
+  @override
+  State<SkeletonRating> createState() => _SkeletonRatingState();
+}
+
+class _SkeletonRatingState extends State<SkeletonRating>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  late Animation gradientPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 1500), vsync: this);
+
+    gradientPosition = Tween<double>(
+      begin: -3,
+      end: 10,
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 14,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          gradient: LinearGradient(
+              begin: Alignment(gradientPosition.value, 0),
+              end: const Alignment(-1, 0),
+              colors: [
+                Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+                Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+              ])),
+    );
+  }
 }

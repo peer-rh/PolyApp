@@ -64,6 +64,14 @@ Future<MsgRating> getRating(Conversation msgs, String lang) async {
     data = response.data;
     result = data["result"];
     type = parseRatingType(result);
+
+    return MsgRating(
+        type,
+        data["suggestion"],
+        data["suggestion_translated"],
+        data["me_corrected"],
+        data["me_corrected_translated"],
+        data["explanation"]!);
   }
 
   return MsgRating(
