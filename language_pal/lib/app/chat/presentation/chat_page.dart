@@ -158,7 +158,7 @@ class _ChatPageState extends State<ChatPage> {
       getMsgRating(personMsg);
     } else {
       setState(() {
-        personMsg.msgs.add(SingularPersonMsgModel(msg));
+        personMsg.msgs.add(SingularPersonMsgModel(msg)..suggested = true);
         msgs.state = ConversationState.waitingForAIMsg;
       });
       getAIMsg();
@@ -193,10 +193,8 @@ class _ChatPageState extends State<ChatPage> {
       msgs.addMsg(AIMsgModel("")..loaded = false);
     });
     getAIResponse(
-            msgs,
-            convertLangCode(Localizations.localeOf(context).languageCode)
-                .getEnglishName())
-        .then((resp) {
+      msgs,
+    ).then((resp) {
       setState(() {
         msgs.msgs[msgs.msgs.length - 1] = AIMsgModel(resp.message);
         msgs.state = ConversationState.waitingForUserMsg;
@@ -206,7 +204,7 @@ class _ChatPageState extends State<ChatPage> {
           curve: Curves.bounceInOut);
       if (resp.endOfConversation) {
         setState(() {
-          msgs.state = ConversationState.finished;
+          msgs.state = ConversationState.waitingForFinalRating;
         });
         getSummary();
       }
@@ -220,6 +218,7 @@ class _ChatPageState extends State<ChatPage> {
         Localizations.localeOf(context).languageCode, msgs);
     setState(() {
       msgs.rating = rating;
+      msgs.state = ConversationState.finished;
     });
 
     deleteConv(widget.scenario);
