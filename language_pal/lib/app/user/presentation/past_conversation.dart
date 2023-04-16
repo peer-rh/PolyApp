@@ -15,6 +15,7 @@ class PastConversationPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        // TODO: Not crop off when not filling entire screen
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
         child: Container(
