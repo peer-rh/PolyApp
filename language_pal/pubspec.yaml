@@ -54,6 +54,7 @@ dependencies:
   path_provider: ^2.0.14
   uuid: ^3.0.7
   firebase_remote_config: ^4.0.0
+  speech_to_text: ^6.1.1
 
 dev_dependencies:
   flutter_test:

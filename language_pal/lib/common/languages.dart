@@ -34,6 +34,19 @@ class LanguageModel {
         return "english";
     }
   }
+
+  String getSpeechRecognitionLocale() {
+    switch (code) {
+      case "en":
+        return "en_US";
+      case "de":
+        return "de_DE";
+      case "es":
+        return "es_ES";
+      default:
+        return "en_US";
+    }
+  }
 }
 
 List<LanguageModel> supportedAppLanguages() {

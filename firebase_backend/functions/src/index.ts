@@ -47,7 +47,7 @@ export const getTranslation = functions.runWith({ secrets: ["OPENAI_KEY"] }).htt
         user: uid,
         max_tokens: 200,
         messages: [
-            { role: "system", content: `You will translate this sentence into ${data["lang"]}. Give 2 Options.` },
+            { role: "system", content: `Translate this sentence into ${data["lang"]}.` },
             { role: "user", content: data["text"] }
         ],
 
