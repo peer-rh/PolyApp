@@ -90,6 +90,7 @@ class _InputAreaState extends State<ChatInputArea> {
                 ),
                 Expanded(
                   child: TextField(
+                    autocorrect: false,
                     onSubmitted: (s) {
                       if (disabled) return;
                       if (s != "") {
