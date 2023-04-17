@@ -7,6 +7,7 @@
   "auth_sign_up_link": "Hast du noch keinen Account? JETZT REGISTIEREN",
   "chat_input_hint_reg": "Tippe Nachricht...",
   "chat_input_hint_try_again": "Versuche es nochmal...",
+  "chat_input_hint_listening": "Listening...",
   "chat_page_hint": "Tippe für mehr info",
   "chat_page_end": "Dieses Gespräch ist zu ende. CHATMENTOR anschauen",
   "chat_page_end_loading": "Dieses Gespräch ist zu ende.",

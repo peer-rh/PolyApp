@@ -22,6 +22,7 @@ class _InputAreaState extends State<ChatInputArea> {
   final controller = TextEditingController();
   var microphoneOn = true;
   var _speechEnabled = false;
+  var _listening = false;
   final _speechToText = SpeechToText();
 
   @override
@@ -47,22 +48,31 @@ class _InputAreaState extends State<ChatInputArea> {
   }
 
   void _startListening() async {
+    if (!_speechEnabled) {
+      // TODO: Show error message
+      return;
+    }
     await _speechToText.listen(
         listenMode: ListenMode.dictation,
         onResult: _onSpeechResult,
         localeId: convertLangCode(widget.conv.scenario.learnLang)
             .getSpeechRecognitionLocale());
-    setState(() {});
+    setState(() {
+      _listening = true;
+    });
   }
 
   void _stopListening() async {
     await _speechToText.stop();
-    setState(() {});
+    setState(() {
+      _listening = false;
+    });
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
       controller.text = result.recognizedWords;
+      if (result.finalResult) _stopListening();
     });
   }
 
@@ -70,9 +80,11 @@ class _InputAreaState extends State<ChatInputArea> {
   Widget build(BuildContext context) {
     bool disabled = widget.conv.state != ConversationState.waitingForUserMsg &&
         widget.conv.state != ConversationState.waitingForUserRedo;
-    String hint = widget.conv.state == ConversationState.waitingForUserRedo
-        ? AppLocalizations.of(context)!.chat_input_hint_try_again
-        : AppLocalizations.of(context)!.chat_input_hint_reg;
+    String hint = _listening
+        ? AppLocalizations.of(context)!.chat_input_hint_listening
+        : widget.conv.state == ConversationState.waitingForUserRedo
+            ? AppLocalizations.of(context)!.chat_input_hint_try_again
+            : AppLocalizations.of(context)!.chat_input_hint_reg;
     return Row(
       children: <Widget>[
         Expanded(
@@ -119,47 +131,38 @@ class _InputAreaState extends State<ChatInputArea> {
         const SizedBox(
           width: 10,
         ),
-        InkWell(
-          onLongPress: () {},
-          customBorder: const CircleBorder(),
-          child: GestureDetector(
-            onTap: (microphoneOn || disabled)
+        SizedBox(
+          height: 50,
+          width: 50,
+          child: IconButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(disabled
+                  ? Theme.of(context).colorScheme.surfaceVariant
+                  : Theme.of(context).colorScheme.primary),
+            ),
+            onPressed: (disabled)
                 ? null
                 : () async {
-                    widget.sendMsg(controller.text, true);
-                    controller.text = "";
+                    if (_listening) {
+                      _stopListening();
+                    } else if (!microphoneOn) {
+                      widget.sendMsg(controller.text, true);
+                      controller.text = "";
+                    } else {
+                      _startListening();
+                    }
                   },
-            onLongPressStart: (!microphoneOn || disabled)
-                ? null
-                : (details) async {
-                    _startListening();
-                  },
-            onLongPressEnd: (details) async {
-              _stopListening();
-            },
-            child: Ink(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: disabled
-                      ? Theme.of(context).colorScheme.surfaceVariant
-                      : Theme.of(context).colorScheme.primary),
-              child: Align(
-                alignment: Alignment.center,
-                child: microphoneOn
-                    ? FaIcon(
-                        FontAwesomeIcons.microphone,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      )
-                    : FaIcon(
-                        FontAwesomeIcons.arrowUp,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-              ),
+            icon: Icon(
+              _listening
+                  ? Icons.mic_rounded
+                  : microphoneOn
+                      ? Icons.mic_none_rounded
+                      : Icons.arrow_upward_rounded,
+              size: 30,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
-        )
+        ),
       ],
     );
   }
