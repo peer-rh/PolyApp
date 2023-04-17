@@ -5,10 +5,19 @@ import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<Conversation?> loadConv(ScenarioModel scenario) async {
+Future<File> getConvFile(ScenarioModel scenario) async {
   Directory appDir = await getApplicationDocumentsDirectory();
-  File convFile = File(
-      '${appDir.path}/conversations/${scenario.learnLang}/${scenario.uniqueId}.json');
+  return getConvFileFromStrings(
+      appDir.path, scenario.learnLang, scenario.uniqueId);
+}
+
+File getConvFileFromStrings(
+    String appDir, String learnLang, String scenarioID) {
+  return File('$appDir/conversations/$learnLang/$scenarioID.json');
+}
+
+Future<Conversation?> loadConv(ScenarioModel scenario) async {
+  File convFile = await getConvFile(scenario);
   if (await convFile.exists()) {
     Map<String, dynamic> convJson = jsonDecode(await convFile.readAsString());
     return Conversation.fromFirestore(convJson, scenario);
@@ -17,9 +26,7 @@ Future<Conversation?> loadConv(ScenarioModel scenario) async {
 }
 
 void storeConv(Conversation msgs) async {
-  Directory appDir = await getApplicationDocumentsDirectory();
-  File convFile = File(
-      '${appDir.path}/conversations/${msgs.scenario.learnLang}/${msgs.scenario.uniqueId}.json');
+  File convFile = await getConvFile(msgs.scenario);
   if (!await convFile.exists()) {
     await convFile.create(recursive: true);
   }
@@ -27,9 +34,7 @@ void storeConv(Conversation msgs) async {
 }
 
 Future<void> deleteConv(ScenarioModel scenario) async {
-  Directory appDir = await getApplicationDocumentsDirectory();
-  File convFile = File(
-      '${appDir.path}/conversations/${scenario.learnLang}/${scenario.uniqueId}.json');
+  File convFile = await getConvFile(scenario);
   if (await convFile.exists()) {
     await convFile.delete();
   }

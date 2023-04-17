@@ -48,7 +48,10 @@ class _ChatPageState extends State<ChatPage> {
               itemBuilder: (context) => [
                     PopupMenuItem(
                         onTap: () async {
-                          await deleteConv(widget.scenario);
+                          if (await (await getConvFile(widget.scenario))
+                              .exists()) {
+                            await deleteConv(widget.scenario);
+                          }
                           setState(() {
                             msgs = Conversation(widget.scenario);
                           });
@@ -103,7 +106,9 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    if (msgs.rating == null) storeConv(msgs);
+    final isEmpty =
+        msgs.msgs.length == 2 && (msgs.msgs[1] as PersonMsgModel).msgs.isEmpty;
+    if (msgs.rating == null && !isEmpty) storeConv(msgs);
 
     super.dispose();
   }

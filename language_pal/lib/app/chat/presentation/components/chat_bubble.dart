@@ -92,8 +92,8 @@ class SingularOwnMsgBubble extends StatelessWidget {
 }
 
 class OwnMsgBubble extends StatelessWidget {
-  PersonMsgModel msg;
-  OwnMsgBubble(this.msg, {super.key});
+  final PersonMsgModel msg;
+  const OwnMsgBubble(this.msg, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -108,9 +108,9 @@ class OwnMsgBubble extends StatelessWidget {
 class AiMsgBubble extends StatelessWidget {
   final ScenarioModel scenario;
   final AIMsgModel msg;
-  AudioPlayer audioPlayer;
+  final AudioPlayer audioPlayer;
   final String avatar;
-  AiMsgBubble(this.msg, this.avatar, this.scenario, this.audioPlayer,
+  const AiMsgBubble(this.msg, this.avatar, this.scenario, this.audioPlayer,
       {super.key});
 
   @override

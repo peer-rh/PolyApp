@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:language_pal/common/languages.dart';
 
 class AnswerSuggestionButton extends StatelessWidget {
-  Conversation conv;
-  void Function(String, bool) sendMsg;
-  AnswerSuggestionButton(this.conv, this.sendMsg, {super.key});
+  final Conversation conv;
+  final void Function(String, bool) sendMsg;
+  const AnswerSuggestionButton(this.conv, this.sendMsg, {super.key});
 
   showSuggestion(BuildContext context, MsgRating rating) {
     return showDialog(

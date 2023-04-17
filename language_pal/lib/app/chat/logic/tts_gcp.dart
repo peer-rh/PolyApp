@@ -31,10 +31,10 @@ Future<String> generateTextToSpeech(String msg, ScenarioModel scenario) async {
 }
 
 class TTSButton extends StatefulWidget {
-  ScenarioModel scenario;
-  AIMsgModel msg;
-  AudioPlayer audioPlayer;
-  TTSButton(this.msg, this.audioPlayer, this.scenario, {super.key});
+  final ScenarioModel scenario;
+  final AIMsgModel msg;
+  final AudioPlayer audioPlayer;
+  const TTSButton(this.msg, this.audioPlayer, this.scenario, {super.key});
 
   @override
   State<TTSButton> createState() => _TTSButtonState();

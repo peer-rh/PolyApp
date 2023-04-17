@@ -147,7 +147,7 @@ class _InputAreaState extends State<ChatInputArea> {
                     if (_listening) {
                       _stopListening();
                       HapticFeedback
-                          .lightImpact(); // TODO: check if good impact
+                          .lightImpact(); // TODO: check if good impact level
                     } else if (!microphoneOn) {
                       widget.sendMsg(controller.text, true);
                       controller.text = "";

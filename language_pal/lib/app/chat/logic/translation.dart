@@ -13,8 +13,8 @@ Future<String> getTranslations(String msg, String lang) async {
 }
 
 class TranslationButton extends StatefulWidget {
-  AIMsgModel msg;
-  TranslationButton(this.msg, {super.key});
+  final AIMsgModel msg;
+  const TranslationButton(this.msg, {super.key});
 
   @override
   State<TranslationButton> createState() => _TranslationButtonState();
@@ -51,7 +51,7 @@ class _TranslationButtonState extends State<TranslationButton> {
                 showTranslation(context, widget.msg.translations!);
                 return;
               }
-        String lang = Localizations.localeOf(context).languageCode;
+              String lang = Localizations.localeOf(context).languageCode;
               setState(() {
                 loading = true;
               });

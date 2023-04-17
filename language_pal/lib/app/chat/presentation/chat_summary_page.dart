@@ -3,8 +3,8 @@ import 'package:language_pal/app/chat/logic/total_rating.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatSummaryPage extends StatelessWidget {
-  ConversationRating rating;
-  ChatSummaryPage(this.rating, {super.key});
+  final ConversationRating rating;
+  const ChatSummaryPage(this.rating, {super.key});
 
   @override
   Widget build(BuildContext context) {
