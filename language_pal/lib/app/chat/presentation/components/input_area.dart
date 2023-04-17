@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/get_answer_suggestion.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
@@ -145,11 +146,14 @@ class _InputAreaState extends State<ChatInputArea> {
                 : () async {
                     if (_listening) {
                       _stopListening();
+                      HapticFeedback
+                          .lightImpact(); // TODO: check if good impact
                     } else if (!microphoneOn) {
                       widget.sendMsg(controller.text, true);
                       controller.text = "";
                     } else {
                       _startListening();
+                      HapticFeedback.lightImpact();
                     }
                   },
             icon: Icon(

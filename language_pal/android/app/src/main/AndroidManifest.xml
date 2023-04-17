@@ -34,6 +34,7 @@
                 <uses-permission android:name="android.permission.INTERNET"/>
                 <uses-permission android:name="android.permission.BLUETOOTH"/>
                 <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+                <uses-permission android:name="android.permission.VIBRATE" />
                 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>        </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
