@@ -7,7 +7,7 @@ PODS:
     - AppAuth/Core
   - audioplayers_darwin (0.0.1):
     - Flutter
-  - cloud_firestore (4.5.0):
+  - cloud_firestore (4.5.1):
     - Firebase/Firestore (= 10.7.0)
     - firebase_core
     - Flutter
@@ -42,12 +42,12 @@ PODS:
     - Firebase/Analytics (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_app_check (0.1.2):
+  - firebase_app_check (0.1.2-1):
     - Firebase/CoreOnly (~> 10.7.0)
     - firebase_core
     - FirebaseAppCheck (~> 10.7.0-beta)
     - Flutter
-  - firebase_auth (4.4.0):
+  - firebase_auth (4.4.1):
     - Firebase/Auth (= 10.7.0)
     - firebase_core
     - Flutter
@@ -212,12 +212,6 @@ PODS:
   - PromisesObjC (2.2.0)
   - PromisesSwift (2.2.0):
     - PromisesObjC (= 2.2.0)
-  - purchases_flutter (4.11.1):
-    - Flutter
-    - PurchasesHybridCommon (= 4.14.1)
-  - PurchasesHybridCommon (4.14.1):
-    - RevenueCat (= 4.17.8)
-  - RevenueCat (4.17.8)
   - speech_to_text (0.0.1):
     - Flutter
     - Try
@@ -237,7 +231,6 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
-  - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - speech_to_text (from `.symlinks/plugins/speech_to_text/ios`)
 
 SPEC REPOS:
@@ -269,8 +262,6 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PromisesSwift
-    - PurchasesHybridCommon
-    - RevenueCat
     - Try
 
 EXTERNAL SOURCES:
@@ -301,8 +292,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
-  purchases_flutter:
-    :path: ".symlinks/plugins/purchases_flutter/ios"
   speech_to_text:
     :path: ".symlinks/plugins/speech_to_text/ios"
 
@@ -314,12 +303,12 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AppAuth: e48b432bb4ba88b10cb2bcc50d7f3af21e78b9c2
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  cloud_firestore: 84f58b426bd8d21a22c4b19d9d18028fc4ff3eb1
+  cloud_firestore: 996fbe17886e254538f5bc51c1606ee9fb524997
   cloud_functions: 1013ced10d7b82cc7b4239f86236782fe3b9fc5b
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
   firebase_analytics: 8954db5c9b63075214fa1b3ad2cdced9646f45a0
-  firebase_app_check: ea42c4a4300cb9949584cd37202edd7bab6c539d
-  firebase_auth: 5984ebaf5463319e304ab1c0966b06994bd1c69a
+  firebase_app_check: e1b58a9d2ac67b961c1c2ac0ea1631ce0bdee997
+  firebase_auth: 5a84572b7f5315a3aff5b07c62bb0cd5a28cade5
   firebase_core: d85432877e814811e040e7659f9c82faeab66e04
   firebase_crashlytics: 4c90334dc536ffa73b92f3e978426a0d1e339c74
   firebase_remote_config: 1d886366a02d15bdca4e1997b38e502722e8dc39
@@ -352,9 +341,6 @@ SPEC CHECKSUMS:
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
-  purchases_flutter: 941e65870ed6f7439122cb4999fb61636dd86ccf
-  PurchasesHybridCommon: fb1a3319024c1aa9f98d40cc5820476b824409fc
-  RevenueCat: f2f96c2cbde5ddab3a86381923c6f023383342e0
   speech_to_text: b43a7d99aef037bd758ed8e45d79bbac035d2dfe
   Try: 5ef669ae832617b3cee58cb2c6f99fb767a4ff96
 

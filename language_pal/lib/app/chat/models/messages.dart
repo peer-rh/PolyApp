@@ -75,7 +75,7 @@ class PersonMsgModel extends MsgModel {
       return SingularPersonMsgModel(e['content'])
         ..rating =
             e["rating"] == null ? null : MsgRating.fromFirestore(e["rating"])
-        ..suggested = e["suggested"];
+        ..suggested = e["suggested"] ?? false;
     }).toList();
     return model;
   }
