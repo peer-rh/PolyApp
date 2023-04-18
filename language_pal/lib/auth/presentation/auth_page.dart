@@ -3,7 +3,7 @@ import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/presentation/components/o_auth_buttons.dart';
 import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
 import 'package:language_pal/auth/presentation/forgot_password.dart';
-import 'package:language_pal/common/logo.dart';
+import 'package:language_pal/common/ui/logo.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

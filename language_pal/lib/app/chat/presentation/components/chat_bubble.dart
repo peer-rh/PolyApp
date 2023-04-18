@@ -1,5 +1,3 @@
-import 'dart:math' as math show sin, pi;
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
@@ -8,6 +6,8 @@ import 'package:language_pal/app/chat/logic/tts_gcp.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:language_pal/app/chat/presentation/components/ai_avatar.dart';
 import 'package:language_pal/app/scenario/scenarios_model.dart';
+import 'package:language_pal/common/ui/loading_three_dots.dart';
+import 'package:language_pal/common/ui/skeleton.dart';
 
 class SingularOwnMsgBubble extends StatelessWidget {
   final SingularPersonMsgModel msg;
@@ -23,7 +23,10 @@ class SingularOwnMsgBubble extends StatelessWidget {
         ),
       );
     }
-    return const SkeletonRating();
+    return SizedBox(
+        height: 14,
+        width: 100,
+        child: SkeletonBox(color: Theme.of(context).colorScheme.onPrimary));
   }
 
   Widget ratingSuggestion(BuildContext context) {
@@ -136,7 +139,8 @@ class AiMsgBubble extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: !msg.loaded
-                      ? const AnimatedThinking()
+                      ? LoadingThreeDots(
+                          color: Theme.of(context).colorScheme.onSurface)
                       : Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,126 +165,6 @@ class AiMsgBubble extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class AnimatedThinking extends StatefulWidget {
-  const AnimatedThinking({super.key});
-
-  @override
-  State<AnimatedThinking> createState() => _AnimatedThinkingState();
-}
-
-class _AnimatedThinkingState extends State<AnimatedThinking>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    _controller.addListener(() {
-      setState(() {});
-    });
-    _controller.repeat();
-    super.initState();
-  }
-
-  @override
-  dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(3, (i) {
-        return ScaleTransition(
-          scale: DelayTween(begin: 0.0, end: 1.0, delay: i * .2)
-              .animate(_controller),
-          child: SizedBox.fromSize(
-              size: const Size.square(12),
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      shape: BoxShape.circle))),
-        );
-      }),
-    );
-  }
-}
-
-class DelayTween extends Tween<double> {
-  DelayTween({double? begin, double? end, required this.delay})
-      : super(begin: begin, end: end);
-
-  final double delay;
-
-  @override
-  double lerp(double t) =>
-      super.lerp((math.sin((t - delay) * 2 * math.pi) + 1) / 2);
-
-  @override
-  double evaluate(Animation<double> animation) => lerp(animation.value);
-}
-
-class SkeletonRating extends StatefulWidget {
-  const SkeletonRating({super.key});
-
-  @override
-  State<SkeletonRating> createState() => _SkeletonRatingState();
-}
-
-class _SkeletonRatingState extends State<SkeletonRating>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  late Animation gradientPosition;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 1500), vsync: this);
-
-    gradientPosition = Tween<double>(
-      begin: -3,
-      end: 10,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.linear),
-    )..addListener(() {
-        setState(() {});
-      });
-
-    _controller.repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 14,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          gradient: LinearGradient(
-              begin: Alignment(gradientPosition.value, 0),
-              end: const Alignment(-1, 0),
-              colors: [
-                Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
-                Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
-                Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
-              ])),
     );
   }
 }

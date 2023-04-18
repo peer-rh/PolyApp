@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:language_pal/app/chat/logic/rating.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/common/languages.dart';
+import 'package:language_pal/common/logic/languages.dart';
 
 class AnswerSuggestionButton extends StatelessWidget {
   final Conversation conv;

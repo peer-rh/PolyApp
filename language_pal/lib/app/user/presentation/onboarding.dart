@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/user/logic/use_cases.dart';
 import 'package:language_pal/auth/auth_provider.dart';
 import 'package:language_pal/auth/models/user_model.dart';
-import 'package:language_pal/common/languages.dart';
+import 'package:language_pal/common/logic/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

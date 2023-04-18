@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/services.dart';
-import 'package:language_pal/common/languages.dart';
 
 const int scoreCompletedCutoff = 8;
 

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/chat/logic/get_answer_suggestion.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/common/languages.dart';
+import 'package:language_pal/common/logic/languages.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 

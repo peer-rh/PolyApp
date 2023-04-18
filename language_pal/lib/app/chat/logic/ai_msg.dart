@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/common/languages.dart';
+import 'package:language_pal/common/logic/languages.dart';
 
 class Response {
   String message;

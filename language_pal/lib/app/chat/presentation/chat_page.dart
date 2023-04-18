@@ -12,8 +12,8 @@ import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/components/input_area.dart';
 import 'package:language_pal/app/user/logic/past_conversations.dart';
 import 'package:language_pal/auth/auth_provider.dart';
-import 'package:language_pal/common/fade_route.dart';
-import 'package:language_pal/common/languages.dart';
+import 'package:language_pal/common/ui/fade_route.dart';
+import 'package:language_pal/common/logic/languages.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
