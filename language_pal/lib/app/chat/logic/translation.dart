@@ -8,7 +8,7 @@ Future<String> getTranslations(String msg, String lang) async {
   // Call cloud function to get translations
   final response = await FirebaseFunctions.instance
       .httpsCallable('getTranslation')
-      .call({"text": msg, "lang": convertLangCode(lang).getEnglishName()});
+      .call({"text": msg, "lang": LanguageModel.fromCode(lang).englishName});
   return response.data;
 }
 

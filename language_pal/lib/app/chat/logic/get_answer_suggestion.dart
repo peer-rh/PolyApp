@@ -59,7 +59,7 @@ class AnswerSuggestionButton extends StatelessWidget {
       onPressed: () async {
         String lang = Localizations.localeOf(context).languageCode;
 
-        lang = convertLangCode(lang).getEnglishName();
+        lang = LanguageModel.fromCode(lang).englishName;
         var lastMsg = conv.msgs.last as PersonMsgModel;
         if (context.mounted) {
           showSuggestion(context, lastMsg.msgs.last.rating!);

@@ -12,7 +12,7 @@ Future<Response> getAIResponse(Conversation conv) async {
   final response = await FirebaseFunctions.instance
       .httpsCallable("getChatGPTResponse")
       .call({
-    "language": convertLangCode(conv.scenario.learnLang).getEnglishName(),
+    "language": LanguageModel.fromCode(conv.scenario.learnLang).englishName,
     "messages": conv.getLastMsgs(8),
     "scenario": conv.scenario.scenarioDesc
   });

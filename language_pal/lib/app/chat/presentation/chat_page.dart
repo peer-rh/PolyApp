@@ -173,8 +173,8 @@ class _ChatPageState extends State<ChatPage> {
   void getMsgRating(PersonMsgModel personMsg) {
     getRating(
       msgs,
-      convertLangCode(Localizations.localeOf(context).languageCode)
-          .getEnglishName(),
+      LanguageModel.fromCode(Localizations.localeOf(context).languageCode)
+          .englishName,
     ).then((resp) {
       setState(() {
         personMsg.msgs.last.rating = resp;

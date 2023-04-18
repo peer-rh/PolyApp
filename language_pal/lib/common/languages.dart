@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-LanguageModel convertLangCode(String code) {
-  switch (code) {
-    case "de":
-      return LanguageModel("de", "🇩🇪");
-    case "en":
-      return LanguageModel("en", "🇬🇧");
-    case "es":
-      return LanguageModel("es", "🇪🇸");
-    default:
-      return LanguageModel("en", "🇬🇧");
-  }
-}
-
 class LanguageModel {
   String code;
-  String emoji;
+  String flag;
 
-  LanguageModel(this.code, this.emoji);
+  LanguageModel(this.code, this.flag);
+  factory LanguageModel.fromCode(String code) {
+    switch (code) {
+      case "de":
+        return LanguageModel("de", "🇩🇪");
+      case "en":
+        return LanguageModel("en", "🇬🇧");
+      case "es":
+        return LanguageModel("es", "🇪🇸");
+      default:
+        return LanguageModel("en", "🇬🇧");
+    }
+  }
+
   String getName(BuildContext context) =>
       AppLocalizations.of(context)!.language(code);
 
-  String getEnglishName() {
+  String get englishName {
     switch (code) {
       case "en":
         return "english";
@@ -35,7 +35,8 @@ class LanguageModel {
     }
   }
 
-  String getSpeechRecognitionLocale() {
+  String get speechRecognitionLocale {
+    // TODO: Check if it also works with Android
     switch (code) {
       case "en":
         return "en_US";
@@ -50,16 +51,13 @@ class LanguageModel {
 }
 
 List<LanguageModel> supportedAppLanguages() {
-  return [
-    LanguageModel("en", "🇬🇧"),
-    LanguageModel("de", "🇩🇪"),
-  ];
+  return AppLocalizations.supportedLocales.map((e) {
+    return LanguageModel.fromCode(e.languageCode);
+  }).toList();
 }
 
 List<LanguageModel> supportedLearnLanguages() {
-  return [
-    LanguageModel("en", "🇬🇧"),
-    LanguageModel("de", "🇩🇪"),
-    LanguageModel("es", "🇪🇸"),
-  ];
+  return ["en" "de", "es"].map((e) {
+    return LanguageModel.fromCode(e);
+  }).toList();
 }

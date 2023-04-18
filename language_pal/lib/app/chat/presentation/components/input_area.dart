@@ -56,8 +56,8 @@ class _InputAreaState extends State<ChatInputArea> {
     await _speechToText.listen(
         listenMode: ListenMode.dictation,
         onResult: _onSpeechResult,
-        localeId: convertLangCode(widget.conv.scenario.learnLang)
-            .getSpeechRecognitionLocale());
+        localeId: LanguageModel.fromCode(widget.conv.scenario.learnLang)
+            .speechRecognitionLocale);
     setState(() {
       _listening = true;
     });

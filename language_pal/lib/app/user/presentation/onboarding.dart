@@ -62,7 +62,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             child: ListView(
               children: supportedLearnLanguages()
                   .map((lang) => CustomCard(thisUser.learnLang == lang.code,
-                          lang.emoji, lang.getName(context), () {
+                          lang.flag, lang.getName(context), () {
                         setState(() {
                           thisUser.learnLang = lang.code;
                         });

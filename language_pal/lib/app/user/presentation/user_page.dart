@@ -141,7 +141,7 @@ class _UserPageState extends State<UserPage> {
                                   return DropdownMenuItem(
                                       value: e.code,
                                       child: Text(
-                                          "${e.emoji}${e.getName(context)}"));
+                                          "${e.flag}${e.getName(context)}"));
                                 }).toList(),
                                 onChanged: (e) {
                                   UserModel newUser = ap.user!;
