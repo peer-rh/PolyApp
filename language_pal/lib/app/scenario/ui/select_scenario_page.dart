@@ -1,35 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:language_pal/app/chat/presentation/chat_page.dart';
-import 'package:language_pal/app/user/logic/use_cases.dart';
+import 'package:language_pal/app/scenario/data/personalizedScenario.dart';
+import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/app/user/presentation/user_page.dart';
-import 'package:language_pal/auth/auth_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/common/data/scenario_model.dart';
+import 'package:language_pal/common/logic/scenario_provider.dart';
+import 'package:language_pal/common/logic/use_case_provider.dart';
 
-class SelectScenarioPage extends StatefulWidget {
+class SelectScenarioPage extends ConsumerStatefulWidget {
   const SelectScenarioPage({Key? key}) : super(key: key);
 
   @override
-  State<SelectScenarioPage> createState() => _SelectScenarioPageState();
+  ConsumerState<SelectScenarioPage> createState() => _SelectScenarioPageState();
 }
 
-class _SelectScenarioPageState extends State<SelectScenarioPage> {
-  List<ScenarioModel> scenarios = [];
+class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
+  List<PersonaliedScenario> scenarios = [];
 
   void loadScenarios() async {
-    AuthProviderOld ap = context.watch();
-    final tmp = await loadScenarioModels(
-      ap.user!.learnLang,
-      Localizations.localeOf(context).languageCode,
-      ap.user!.scenarioScores,
-      (await loadUseCaseModel(
-              ap.user!.useCase, Localizations.localeOf(context).languageCode))!
-          .recommended,
-    );
+    final scenariosP = ref.watch(scenarioProvider);
+    final user = ref.watch(userProvider).user;
+    // TODO: inProgress and bestScore
+    var tmp = scenariosP.values.map((e) {
+      return PersonaliedScenario(
+        scenario: e,
+        useCaseRecommended: ref
+            .read(useCaseProvider)[user?.useCase]!
+            .recommended
+            .contains(e.uniqueId),
+      );
+    }).toList();
+
+    tmp.sort((a, b) {
+      return a.compareTo(b);
+    });
+
     setState(() {
       scenarios = tmp;
     });

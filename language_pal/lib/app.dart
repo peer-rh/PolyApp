@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_pal/app/home_page.dart';
-import 'package:language_pal/app/user/presentation/onboarding.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
 import 'package:language_pal/auth/presentation/auth_page.dart';
 import 'package:language_pal/common/ui/loading_page.dart';

@@ -37,7 +37,6 @@ dependencies:
   firebase_auth: ^4.2.9
   cloud_firestore: ^4.4.4
   google_fonts: ^4.0.3
-  provider: ^6.0.5
   flutter_riverpod: ^2.3.4
   # purchases_flutter: ^4.0.0
   google_sign_in: ^6.0.2

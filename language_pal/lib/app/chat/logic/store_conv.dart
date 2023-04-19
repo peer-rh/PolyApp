@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/app/scenario/scenarios_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<File> getConvFile(ScenarioModel scenario) async {

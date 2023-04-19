@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/user/logic/use_cases.dart';
-import 'package:language_pal/auth/auth_provider.dart';
-import 'package:language_pal/auth/models/user_model.dart';
+import 'package:language_pal/app/user/data/user_model.dart';
+import 'package:language_pal/auth/logic/auth_provider.dart';
 import 'package:language_pal/common/logic/languages.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/common/logic/use_case_provider.dart';
 
-class OnboardingPage extends StatefulWidget {
+class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({Key? key}) : super(key: key);
 
   @override
-  State<OnboardingPage> createState() => _OnboardingPageState();
+  ConsumerState<OnboardingPage> createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> {
-  UserModel thisUser = UserModel(null, "", "", {});
+class _OnboardingPageState extends ConsumerState<OnboardingPage> {
+  UserModel thisUser = UserModel("", "", "");
   final learnCont = TextEditingController();
   int currentStep = 0;
-  List<UseCaseModel> useCases = [];
 
   @override
   void didChangeDependencies() async {
-    AuthProviderOld ap = Provider.of(context);
-    thisUser.email = ap.firebaseUser!.email;
+    thisUser.email = ref.read(authProvider).currentUser!.email ?? "";
     super.didChangeDependencies();
-
-    useCases =
-        await loadUseCaseModels(AppLocalizations.of(context)!.localeName);
-    setState(() {});
   }
 
   @override
@@ -40,17 +34,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
               style: Theme.of(context).textTheme.headlineLarge),
           const SizedBox(height: 30),
           Expanded(
-            child: ListView.builder(
-                itemCount: useCases.length,
-                itemBuilder: (context, i) {
-                  return CustomCard(thisUser.useCase == useCases[i].uniqueId,
-                      useCases[i].emoji, useCases[i].title, () {
-                    setState(() {
-                      thisUser.useCase = useCases[i].uniqueId;
-                    });
-                  });
-                }),
-          ),
+              child: ListView(
+                  children: ref
+                      .read(useCaseProvider)
+                      .values
+                      .map((e) => CustomCard(
+                              thisUser.useCase == e.uniqueId, e.emoji, e.title,
+                              () {
+                            setState(() {
+                              thisUser.useCase = e.uniqueId;
+                            });
+                          }))
+                      .toList())),
         ],
       ),
       Column(

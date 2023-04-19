@@ -9,6 +9,7 @@ import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/app/user/presentation/past_conversation.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
 import 'package:language_pal/common/logic/languages.dart';
+import 'package:language_pal/common/logic/use_case_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -21,24 +22,6 @@ class UserPage extends ConsumerStatefulWidget {
 
 class _UserPageState extends ConsumerState<UserPage> {
   List<Conversation>? conversations;
-  List<UseCaseModel> useCases = [];
-  List<ScenarioModel> scenarios = [];
-
-  Future<void> loadScenarios() async {
-    AuthProviderOld ap = context.read();
-    if (ap.user == null) return;
-    final tmp = await loadScenarioModels(
-      ap.user!.learnLang,
-      Localizations.localeOf(context).languageCode,
-      ap.user!.scenarioScores,
-      (await loadUseCaseModel(
-              ap.user!.useCase, Localizations.localeOf(context).languageCode))!
-          .recommended,
-    );
-    setState(() {
-      scenarios = tmp;
-    });
-  }
 
   void loadConversations() async {
     if (conversations != null) return;
@@ -50,21 +33,9 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
-  void loadUseCases() async {
-    AuthProviderOld ap = context.read<AuthProviderOld>();
-    if (ap.user == null) return;
-    var tmp =
-        await loadUseCaseModels(Localizations.localeOf(context).languageCode);
-    setState(() {
-      useCases = tmp;
-    });
-  }
-
   @override
   void didChangeDependencies() async {
-    await loadScenarios();
     loadConversations();
-    loadUseCases();
 
     super.didChangeDependencies();
   }
@@ -146,7 +117,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                         DropdownButton(
                           isExpanded: true,
                           value: userP.user!.useCase,
-                          items: useCases
+                          items: ref
+                              .read(useCaseProvider)
+                              .values
                               .map((e) => DropdownMenuItem(
                                   value: e.uniqueId,
                                   child: Text(
