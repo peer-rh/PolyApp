@@ -1,7 +1,7 @@
 // Sign in Button with option for google, apple and default
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:language_pal/auth/auth_provider.dart';
+import 'package:language_pal/auth/logic/auth_provider.dart';
 
 class OAuthButtons extends StatelessWidget {
   final AuthProvider authProvider;

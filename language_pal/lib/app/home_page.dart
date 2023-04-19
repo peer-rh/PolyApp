@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:language_pal/app/scenario/select_scenario_page.dart';
+import 'package:language_pal/app/user/logic/user_provider.dart';
+import 'package:language_pal/app/user/presentation/onboarding.dart';
 import 'package:language_pal/app/user/presentation/user_page.dart';
+import 'package:language_pal/common/ui/loading_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              icon: const Icon(FontAwesomeIcons.circleUser),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserPage(),
-                    ));
-              })
-        ],
-      ),
-      body: const SelectScenarioPage(),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userP = ref.watch(userProvider);
+
+    switch (userP.state) {
+      case UserState.loading:
+        return const LoadingPage();
+      case UserState.onboarding:
+        return const OnboardingPage();
+      case UserState.loaded:
+        return const SelectScenarioPage();
+    }
   }
 }

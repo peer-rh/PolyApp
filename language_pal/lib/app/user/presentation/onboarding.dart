@@ -22,7 +22,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   void didChangeDependencies() async {
-    AuthProvider ap = Provider.of(context);
+    AuthProviderOld ap = Provider.of(context);
     thisUser.email = ap.firebaseUser!.email;
     super.didChangeDependencies();
 
@@ -90,7 +90,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             : const Icon(Icons.arrow_back),
                         onPressed: () {
                           if (currentStep == 0) {
-                            context.read<AuthProvider>().signOut();
+                            context.read<AuthProviderOld>().signOut();
                           } else {
                             setState(() {
                               currentStep--;
@@ -115,7 +115,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           } else {
                             if (currentStep == steps.length - 1) {
                               context
-                                  .read<AuthProvider>()
+                                  .read<AuthProviderOld>()
                                   .setUserModel(thisUser);
                             } else {
                               setState(() {

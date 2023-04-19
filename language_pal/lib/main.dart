@@ -9,6 +9,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_pal/app.dart';
 import 'package:language_pal/firebase_options.dart';
 
@@ -51,5 +52,5 @@ void main() async {
 
   // await initPlatformState();
 
-  runApp(App());
+  runApp(ProviderScope(child: App()));
 }

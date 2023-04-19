@@ -24,7 +24,7 @@ Future<List<Conversation>> loadPastConversations(
 }
 
 Future<void> addConversationToFirestore(
-    Conversation conversation, AuthProvider ap) async {
+    Conversation conversation, AuthProviderOld ap) async {
   if (!ap.user!.scenarioScores.containsKey(conversation.scenario.uniqueId) ||
       ap.user!.scenarioScores[conversation.scenario.uniqueId]! <=
           conversation.rating!.totalScore) {

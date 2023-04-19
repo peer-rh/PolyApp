@@ -217,7 +217,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getSummary() async {
-    AuthProvider ap = context.read<AuthProvider>();
+    AuthProviderOld ap = context.read<AuthProviderOld>();
 
     final rating = await getConversationRating(
         Localizations.localeOf(context).languageCode, msgs);
