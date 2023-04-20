@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
+import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
 import 'package:language_pal/common/logic/languages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -85,7 +86,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             : const Icon(Icons.arrow_back),
                         onPressed: () {
                           if (currentStep == 0) {
-                            context.read<AuthProviderOld>().signOut();
+                            ref.read(authProvider).signOut();
                           } else {
                             setState(() {
                               currentStep--;
@@ -109,9 +110,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                     .onboarding_must_select_option)));
                           } else {
                             if (currentStep == steps.length - 1) {
-                              context
-                                  .read<AuthProviderOld>()
-                                  .setUserModel(thisUser);
+                              ref.read(userProvider).setUserModel(thisUser);
                             } else {
                               setState(() {
                                 currentStep++;

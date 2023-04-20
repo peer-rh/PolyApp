@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:language_pal/app/chat/data/messages.dart';
 import 'package:language_pal/common/logic/languages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

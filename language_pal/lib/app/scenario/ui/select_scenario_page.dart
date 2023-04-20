@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/chat/presentation/chat_page.dart';
+import 'package:language_pal/app/chat/ui/active_chat_page.dart';
 import 'package:language_pal/app/scenario/data/personalizedScenario.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/app/user/presentation/user_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:language_pal/common/logic/scenario_provider.dart';
 import 'package:language_pal/common/logic/use_case_provider.dart';
 
@@ -101,7 +100,7 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ChatPage(
-                                    scenario: scenarios[index],
+                                    scenario: scenarios[index].scenario,
                                   )));
                     },
                     child: Container(
@@ -120,11 +119,10 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
                                       .onSurfaceVariant,
                                   size: 18,
                                 )),
-                          if (scenarios[index].userScore != null)
+                          if (scenarios[index].done != null)
                             Align(
                                 alignment: Alignment.topLeft,
-                                child: scenarios[index].userScore! >=
-                                        scoreCompletedCutoff
+                                child: scenarios[index].done
                                     ? Icon(
                                         FontAwesomeIcons.check,
                                         color: Theme.of(context)
@@ -138,7 +136,7 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
                                         child: CircularProgressIndicator(
                                           strokeWidth: 3,
                                           value:
-                                              scenarios[index].userScore! / 10,
+                                              scenarios[index].bestScore! / 10,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .primary,
@@ -148,12 +146,12 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                scenarios[index].emoji,
+                                scenarios[index].scenario.emoji,
                                 style: const TextStyle(fontSize: 80),
                               ),
                               FittedBox(
                                 child: Text(
-                                  scenarios[index].name,
+                                  scenarios[index].scenario.emoji,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.nunito(
                                       fontSize: 24,

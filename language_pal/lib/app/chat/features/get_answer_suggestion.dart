@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/chat/logic/rating.dart';
-import 'package:language_pal/app/chat/models/messages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/common/logic/languages.dart';
+import 'package:language_pal/app/chat/data/user_msg_rating_model.dart';
+import 'package:language_pal/app/chat/logic/conversation_provider.dart';
 
 class AnswerSuggestionButton extends StatelessWidget {
-  final Conversation conv;
-  final void Function(String, bool) sendMsg;
-  const AnswerSuggestionButton(this.conv, this.sendMsg, {super.key});
+  final ConversationProvider conv;
+  const AnswerSuggestionButton(this.conv, {super.key});
 
-  showSuggestion(BuildContext context, MsgRating rating) {
+  showSuggestion(BuildContext context, UserMsgRating rating) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -43,7 +41,7 @@ class AnswerSuggestionButton extends StatelessWidget {
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      sendMsg(rating.meCorrected!, false);
+                      conv.addPersonMsg(rating.meCorrected!, suggested: true);
                     },
                     child:
                         Text(AppLocalizations.of(context)!.chat_suggestion_use))
@@ -57,12 +55,9 @@ class AnswerSuggestionButton extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return IconButton(
       onPressed: () async {
-        String lang = Localizations.localeOf(context).languageCode;
-
-        lang = LanguageModel.fromCode(lang).englishName;
-        var lastMsg = conv.msgs.last as PersonMsgModel;
+        var lastMsg = conv.currentUserMsg!.msgs.last;
         if (context.mounted) {
-          showSuggestion(context, lastMsg.msgs.last.rating!);
+          showSuggestion(context, lastMsg.rating!);
         }
       },
       style: IconButton.styleFrom(

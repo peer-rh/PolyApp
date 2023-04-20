@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/app/scenario/scenarios_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:language_pal/app/chat/data/messages.dart';
+import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,17 +31,17 @@ Future<String> generateTextToSpeech(String msg, ScenarioModel scenario) async {
   return filePath;
 }
 
-class TTSButton extends StatefulWidget {
+class TTSButton extends ConsumerStatefulWidget {
   final ScenarioModel scenario;
   final AIMsgModel msg;
   final AudioPlayer audioPlayer;
   const TTSButton(this.msg, this.audioPlayer, this.scenario, {super.key});
 
   @override
-  State<TTSButton> createState() => _TTSButtonState();
+  ConsumerState<TTSButton> createState() => _TTSButtonState();
 }
 
-class _TTSButtonState extends State<TTSButton> {
+class _TTSButtonState extends ConsumerState<TTSButton> {
   bool loading = false;
 
   playAudio() async {

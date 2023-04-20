@@ -1,16 +1,15 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/chat/models/messages.dart';
-import 'package:language_pal/app/scenario/scenarios_model.dart';
+import 'package:language_pal/app/chat/data/conversation.dart';
+import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
+import 'package:language_pal/app/chat/ui/past_conversation_page.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
-import 'package:language_pal/app/user/logic/past_conversations.dart';
-import 'package:language_pal/app/user/logic/use_cases.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
-import 'package:language_pal/app/user/presentation/past_conversation.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
 import 'package:language_pal/common/logic/languages.dart';
+import 'package:language_pal/common/logic/scenario_provider.dart';
 import 'package:language_pal/common/logic/use_case_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserPage extends ConsumerStatefulWidget {
@@ -21,22 +20,14 @@ class UserPage extends ConsumerStatefulWidget {
 }
 
 class _UserPageState extends ConsumerState<UserPage> {
-  List<Conversation>? conversations;
-
-  void loadConversations() async {
-    if (conversations != null) return;
-    AuthProviderOld ap = context.read<AuthProviderOld>();
-    if (ap.firebaseUser == null) return;
-    var tmp = await loadPastConversations(scenarios, ap.firebaseUser!.uid);
-    setState(() {
-      conversations = tmp;
-    });
-  }
+  List<Conversation> convs = [];
 
   @override
-  void didChangeDependencies() async {
-    loadConversations();
-
+  void didChangeDependencies() {
+    ref
+        .watch(
+            pastConversationProvider(ref.read(authProvider).currentUser!.uid))
+        .whenData((value) => convs = value);
     super.didChangeDependencies();
   }
 
@@ -146,21 +137,28 @@ class _UserPageState extends ConsumerState<UserPage> {
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context)!.user_page_conversations_title,
                 style: Theme.of(context).textTheme.headlineSmall),
-            if (conversations == null)
-              const CircularProgressIndicator()
-            else if (conversations!.isEmpty)
+            if (convs.isEmpty)
               Text(AppLocalizations.of(context)!.user_page_no_conversations)
             else
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (context, index) {
+                  final scenario =
+                      ref.read(scenarioProvider)[convs[index].scenarioId];
+                  if (scenario == null) {
+                    FirebaseCrashlytics.instance.recordError(
+                        Exception(
+                            "Scenario ${convs[index].scenarioId}not found"),
+                        StackTrace.current);
+                    return const SizedBox();
+                  }
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  PastConversationPage(conversations![index])));
+                                  PastConversationPage(conv: convs[index])));
                     },
                     child: Card(
                       child: ListTile(
@@ -168,30 +166,28 @@ class _UserPageState extends ConsumerState<UserPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(conversations![index].scenario.emoji),
+                              Text(scenario.emoji),
                               const SizedBox(width: 12),
                               SizedBox(
                                 width: 14,
                                 height: 14,
                                 child: CircularProgressIndicator(
-                                  value: (conversations![index]
-                                              .rating
-                                              ?.totalScore ??
-                                          0) /
-                                      10,
+                                  value:
+                                      (convs[index].rating?.totalScore ?? 0) /
+                                          10,
                                   strokeWidth: 3,
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                       Theme.of(context).colorScheme.primary),
                                 ),
                               ),
                             ]),
-                        title: Text(conversations![index].scenario.name),
+                        title: Text(scenario.name),
                         trailing: const Icon(Icons.chevron_right),
                       ),
                     ),
                   );
                 },
-                itemCount: conversations!.length,
+                itemCount: convs.length,
               )),
           ],
         ),

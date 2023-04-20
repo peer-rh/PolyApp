@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:language_pal/app/chat/logic/get_answer_suggestion.dart';
-import 'package:language_pal/app/chat/models/messages.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/app/chat/features/get_answer_suggestion.dart';
+import 'package:language_pal/app/chat/logic/conversation_provider.dart';
+import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:language_pal/common/logic/languages.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-class ChatInputArea extends StatefulWidget {
-  void Function(String, bool) sendMsg;
-  Conversation conv;
+class ChatInputArea extends ConsumerStatefulWidget {
+  ScenarioModel scenario;
 
-  ChatInputArea({Key? key, required this.sendMsg, required this.conv})
-      : super(key: key);
+  ChatInputArea({Key? key, required this.scenario}) : super(key: key);
 
   @override
-  State<ChatInputArea> createState() => _InputAreaState();
+  ConsumerState<ChatInputArea> createState() => _InputAreaState();
 }
 
-class _InputAreaState extends State<ChatInputArea> {
-  final controller = TextEditingController();
-  var microphoneOn = true;
-  var _speechEnabled = false;
-  var _listening = false;
+class _InputAreaState extends ConsumerState<ChatInputArea> {
+  final _controller = TextEditingController();
+  bool _speechEnabled = false;
+  bool _listening = false;
+  SendButtonState _sendButtonState = SendButtonState.mic;
   final _speechToText = SpeechToText();
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -35,11 +35,19 @@ class _InputAreaState extends State<ChatInputArea> {
   void initState() {
     _initSpeech();
     super.initState();
-    controller.addListener(() {
-      setState(() {
-        microphoneOn = _speechEnabled && controller.text.isEmpty;
-      });
+    _controller.addListener(() {
+      setButtonState();
     });
+  }
+
+  void setButtonState() {
+    if (_listening) {
+      _sendButtonState = SendButtonState.micListening;
+    } else if (_controller.text.isEmpty && _speechEnabled) {
+      _sendButtonState = SendButtonState.mic;
+    } else {
+      _sendButtonState = SendButtonState.send;
+    }
   }
 
   void _initSpeech() async {
@@ -55,36 +63,50 @@ class _InputAreaState extends State<ChatInputArea> {
     await _speechToText.listen(
         listenMode: ListenMode.dictation,
         onResult: _onSpeechResult,
-        localeId: LanguageModel.fromCode(widget.conv.scenario.learnLang)
+        localeId: ref
+            .read(conversationProvider(widget.scenario))
+            .learnLang
             .speechRecognitionLocale);
-    setState(() {
-      _listening = true;
-    });
+    _listening = true;
+    setButtonState();
   }
 
   void _stopListening() async {
     await _speechToText.stop();
-    setState(() {
-      _listening = false;
-    });
+    _listening = false;
+    setButtonState();
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-      controller.text = result.recognizedWords;
+      _controller.text = result.recognizedWords;
       if (result.finalResult) _stopListening();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    bool disabled = widget.conv.state != ConversationState.waitingForUserMsg &&
-        widget.conv.state != ConversationState.waitingForUserRedo;
+    ConversationProvider conv =
+        ref.watch(conversationProvider(widget.scenario));
+    bool disabled = !(conv.status == ConversationStatus.waitingForUserRedo ||
+        conv.status == ConversationStatus.waitingForUser);
     String hint = _listening
         ? AppLocalizations.of(context)!.chat_input_hint_listening
-        : widget.conv.state == ConversationState.waitingForUserRedo
+        : conv.status == ConversationStatus.waitingForUserRedo
             ? AppLocalizations.of(context)!.chat_input_hint_try_again
             : AppLocalizations.of(context)!.chat_input_hint_reg;
+    IconData icon;
+    switch (_sendButtonState) {
+      case SendButtonState.mic:
+        icon = Icons.mic;
+        break;
+      case SendButtonState.micListening:
+        icon = Icons.mic_none;
+        break;
+      case SendButtonState.send:
+        icon = Icons.send;
+        break;
+    }
     return Row(
       children: <Widget>[
         Expanded(
@@ -106,11 +128,11 @@ class _InputAreaState extends State<ChatInputArea> {
                     onSubmitted: (s) {
                       if (disabled) return;
                       if (s != "") {
-                        widget.sendMsg(controller.text, true);
-                        controller.text = "";
+                        conv.addPersonMsg(_controller.text);
+                        _controller.text = "";
                       }
                     },
-                    controller: controller,
+                    controller: _controller,
                     textAlignVertical: TextAlignVertical.center,
                     maxLines: 5,
                     minLines: 1,
@@ -122,8 +144,8 @@ class _InputAreaState extends State<ChatInputArea> {
                   ),
                 ),
                 const SizedBox(width: 13),
-                if (widget.conv.state == ConversationState.waitingForUserRedo)
-                  AnswerSuggestionButton(widget.conv, widget.sendMsg)
+                if (conv.status == ConversationStatus.waitingForUserRedo)
+                  AnswerSuggestionButton(conv)
               ],
             ),
           ),
@@ -143,24 +165,21 @@ class _InputAreaState extends State<ChatInputArea> {
             onPressed: (disabled)
                 ? null
                 : () async {
-                    if (_listening) {
-                      _stopListening();
-                      HapticFeedback
-                          .lightImpact(); // TODO: check if good impact level
-                    } else if (!microphoneOn) {
-                      widget.sendMsg(controller.text, true);
-                      controller.text = "";
-                    } else {
-                      _startListening();
-                      HapticFeedback.lightImpact();
+                    switch (_sendButtonState) {
+                      case SendButtonState.send:
+                        conv.addPersonMsg(_controller.text);
+                        _controller.text = "";
+                        break;
+                      case SendButtonState.mic:
+                        _startListening();
+                        HapticFeedback.lightImpact();
+                        break;
+                      case SendButtonState.micListening:
+                        _stopListening();
                     }
                   },
             icon: Icon(
-              _listening
-                  ? Icons.mic_rounded
-                  : microphoneOn
-                      ? Icons.mic_none_rounded
-                      : Icons.arrow_upward_rounded,
+              icon,
               size: 30,
               color: Theme.of(context).colorScheme.onPrimary,
             ),
@@ -169,4 +188,10 @@ class _InputAreaState extends State<ChatInputArea> {
       ],
     );
   }
+}
+
+enum SendButtonState {
+  send,
+  mic,
+  micListening,
 }

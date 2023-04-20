@@ -1,4 +1,4 @@
-import 'package:language_pal/app/chat/logic/rating.dart';
+import 'package:language_pal/app/chat/data/user_msg_rating_model.dart';
 
 abstract class MsgModel {
   Map<String, String> toGPT();
@@ -6,7 +6,6 @@ abstract class MsgModel {
 }
 
 class AIMsgModel extends MsgModel {
-  bool loaded = true;
   String msg;
   String? translations;
   String? audioPath;
@@ -35,14 +34,16 @@ class AIMsgModel extends MsgModel {
 
 class SingularPersonMsgModel {
   String msg;
-  bool suggested = false;
-  MsgRating? rating;
-  SingularPersonMsgModel(this.msg);
+  bool suggested;
+  UserMsgRating? rating;
+  SingularPersonMsgModel(this.msg, {this.suggested = false, this.rating});
 }
 
-class PersonMsgModel extends MsgModel {
+class PersonMsgListModel extends MsgModel {
   late List<SingularPersonMsgModel> msgs;
-  PersonMsgModel(this.msgs);
+  PersonMsgListModel(this.msgs);
+
+  int get nRetries => msgs.length - 1;
 
   @override
   Map<String, String> toGPT() {
@@ -66,36 +67,13 @@ class PersonMsgModel extends MsgModel {
     };
   }
 
-  factory PersonMsgModel.fromFirestore(Map<String, dynamic> data) {
+  factory PersonMsgListModel.fromFirestore(Map<String, dynamic> data) {
     List<dynamic> msgs = data['content'];
-    PersonMsgModel model = PersonMsgModel([]);
+    PersonMsgListModel model = PersonMsgListModel([]);
     model.msgs = msgs.map((e) {
-      return SingularPersonMsgModel(e['content'])
-        ..rating =
-            e["rating"] == null ? null : MsgRating.fromFirestore(e["rating"])
-        ..suggested = e["suggested"] ?? false;
+      return SingularPersonMsgModel(e['content'],
+          rating: e['rating'], suggested: e['suggested'] ?? false);
     }).toList();
     return model;
-  }
-}
-
-class SystemMessage extends MsgModel {
-  String msg;
-  SystemMessage(this.msg);
-
-  @override
-  Map<String, String> toGPT() {
-    return {
-      'content': msg,
-      'role': 'system',
-    };
-  }
-
-  @override
-  Map<String, dynamic> toFirestore() {
-    return {
-      'content': msg,
-      'type': 'system',
-    };
   }
 }
