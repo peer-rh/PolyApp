@@ -16,12 +16,13 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", "");
+  UserModel thisUser = UserModel("", "", "", "");
   final learnCont = TextEditingController();
   int currentStep = 0;
 
   @override
   void didChangeDependencies() async {
+    thisUser.uid = ref.read(authProvider).currentUser!.uid;
     thisUser.email = ref.read(authProvider).currentUser!.email ?? "";
     super.didChangeDependencies();
   }

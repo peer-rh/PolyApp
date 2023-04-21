@@ -10,7 +10,7 @@ final scenarioMap =
     json.decode(FirebaseRemoteConfig.instance.getString("scenarios"));
 
 final scenarioProvider = Provider<Map<String, ScenarioModel>>((ref) {
-  final appLang = Intl.getCurrentLocale();
+  final appLang = Intl.shortLocale(Intl.getCurrentLocale());
   final learnLang = ref.watch(userProvider).user?.learnLang;
   if (learnLang == null) {
     return {};
@@ -18,6 +18,6 @@ final scenarioProvider = Provider<Map<String, ScenarioModel>>((ref) {
 
   return {
     for (var e in scenarioMap)
-      e["id"]: ScenarioModel.fromMap(e, appLang, learnLang)
+      e["id"]: ScenarioModel.fromMap(e, learnLang, appLang)
   };
 });

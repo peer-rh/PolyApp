@@ -55,10 +55,8 @@ enum MsgRatingType {
         return MsgRatingType.unclear;
       case "impolite":
         return MsgRatingType.impolite;
-      case "not_parse":
-        return MsgRatingType.notParse;
       default:
-        throw Exception("Invalid rating type: $type");
+        return MsgRatingType.notParse;
     }
   }
 }

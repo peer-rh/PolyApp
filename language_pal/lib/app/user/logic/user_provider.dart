@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
 
-final userProvider = Provider<UserProvider>(
+final userProvider = ChangeNotifierProvider<UserProvider>(
     (ref) => UserProvider(ref.watch(authStateChangesProvider).value));
 
-class UserProvider {
+class UserProvider extends ChangeNotifier {
   final User? _fbUser;
 
   UserState _state = UserState.loading;
   UserModel? _currentU;
+  UserModel? get user => _currentU;
 
   UserProvider(this._fbUser) {
     if (_fbUser != null) {
@@ -22,20 +24,21 @@ class UserProvider {
           .then((doc) {
         if (doc.exists) {
           _state = UserState.loaded;
-          _currentU = UserModel.fromMap(doc.data()!);
+          _currentU = UserModel.fromMap(_fbUser!.uid, doc.data()!);
         } else {
           _state = UserState.onboarding;
         }
+        notifyListeners();
       });
     }
   }
 
-  UserModel? get user => _currentU;
   UserState get state => _state;
 
   Future<void> setUserModel(UserModel newU) async {
     _currentU = newU;
     _state = UserState.loaded;
+    notifyListeners();
     await FirebaseFirestore.instance
         .collection("users")
         .doc(_fbUser!.uid)

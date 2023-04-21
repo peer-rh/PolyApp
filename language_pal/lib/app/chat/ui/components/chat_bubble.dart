@@ -60,6 +60,7 @@ class SingularOwnMsgBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MessageBubble(
+      padding: const EdgeInsets.symmetric(vertical: 1),
       color: Theme.of(context).colorScheme.primary,
       left: false,
       child: Column(
@@ -105,6 +106,7 @@ class AiMsgBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MessageBubble(
+      padding: const EdgeInsets.symmetric(vertical: 6),
       color: Theme.of(context).colorScheme.surfaceVariant,
       left: true,
       preIcon: AIAvatar(avatar),
@@ -135,6 +137,7 @@ class AIMsgBubbleLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MessageBubble(
+        padding: const EdgeInsets.symmetric(vertical: 6),
         color: Theme.of(context).colorScheme.surfaceVariant,
         left: true,
         preIcon: AIAvatar(avatar),
@@ -148,19 +151,22 @@ class MessageBubble extends StatelessWidget {
   final Widget child;
   final bool left;
   final Widget? preIcon;
+  final EdgeInsetsGeometry? padding;
   const MessageBubble(
       {required this.color,
       required this.left,
       this.preIcon,
+      this.padding,
       required this.child,
       super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: padding,
       alignment: left ? Alignment.centerLeft : Alignment.centerRight,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           preIcon ?? const SizedBox(),

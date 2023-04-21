@@ -135,8 +135,9 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
                                         height: 18,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 3,
-                                          value:
-                                              scenarios[index].bestScore! / 10,
+                                          value: (scenarios[index].bestScore ??
+                                                  0) /
+                                              10,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .primary,
@@ -151,7 +152,7 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
                               ),
                               FittedBox(
                                 child: Text(
-                                  scenarios[index].scenario.emoji,
+                                  scenarios[index].scenario.name,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.nunito(
                                       fontSize: 24,

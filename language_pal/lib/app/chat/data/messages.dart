@@ -72,7 +72,10 @@ class PersonMsgListModel extends MsgModel {
     PersonMsgListModel model = PersonMsgListModel([]);
     model.msgs = msgs.map((e) {
       return SingularPersonMsgModel(e['content'],
-          rating: e['rating'], suggested: e['suggested'] ?? false);
+          rating: e["rating"] == null
+              ? null
+              : UserMsgRating.fromFirestore(e["rating"]),
+          suggested: e['suggested'] ?? false);
     }).toList();
     return model;
   }

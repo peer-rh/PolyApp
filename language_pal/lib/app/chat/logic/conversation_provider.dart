@@ -15,8 +15,12 @@ import 'package:language_pal/common/logic/languages.dart';
 final conversationProvider =
     ChangeNotifierProvider.family<ConversationProvider, ScenarioModel>(
         (ref, scenario) {
-  final learnLang = ref.watch(userProvider).user!.learnLang;
-  return ConversationProvider(scenario, learnLang);
+  final user = ref.watch(userProvider).user!;
+  final conv = ConversationProvider(scenario, user.learnLang, user.uid);
+  ref.onDispose(() {
+    conv.dispose();
+  });
+  return conv;
 });
 
 enum ConversationStatus {
@@ -36,6 +40,7 @@ class ConversationProvider extends ChangeNotifier {
       ValueNotifier(ConversationStatus.initialising);
   late LanguageModel learnLang;
   late LanguageModel appLang;
+  String uid;
   PersonMsgListModel? currentUserMsg;
 
   ConversationStatus get status => _status.value;
@@ -45,15 +50,23 @@ class ConversationProvider extends ChangeNotifier {
 
   bool get isEmpty => conv.msgs.length == 1;
 
-  ConversationProvider(this.scenario, String learnLang) {
+  ConversationProvider(this.scenario, String learnLang, this.uid) {
     Conversation(scenario.uniqueId, learnLang);
     this.learnLang = LanguageModel.fromCode(learnLang);
     _status.addListener(() {
-      // TODO: Check if necessary
       notifyListeners();
     });
-    appLang = LanguageModel.fromCode(Intl.getCurrentLocale());
-    loadConv();
+    appLang = LanguageModel.fromCode(Intl.shortLocale(Intl.getCurrentLocale()));
+    conv = Conversation(scenario.uniqueId, learnLang);
+    initChat();
+  }
+
+  @override
+  void dispose() {
+    if (!isEmpty && status != ConversationStatus.finished) {
+      storeConv();
+    }
+    super.dispose();
   }
 
   void initChat({checkFile = true}) async {

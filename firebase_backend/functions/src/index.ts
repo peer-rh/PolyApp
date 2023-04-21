@@ -131,7 +131,7 @@ export const getAnswerRating = functions.runWith({ secrets: ["OPENAI_KEY"] }).ht
         suggestion_translated: suggestion_translated,
         me_corrected: me_corrected,
         me_corrected_translated: me_corrected_translated,
-        result: result
+        type: result
     };
     functions.logger.info("Returning: " + JSON.stringify(ret));
     return ret;

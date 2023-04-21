@@ -48,6 +48,7 @@ class _InputAreaState extends ConsumerState<ChatInputArea> {
     } else {
       _sendButtonState = SendButtonState.send;
     }
+    setState(() {});
   }
 
   void _initSpeech() async {
@@ -98,13 +99,13 @@ class _InputAreaState extends ConsumerState<ChatInputArea> {
     IconData icon;
     switch (_sendButtonState) {
       case SendButtonState.mic:
-        icon = Icons.mic;
+        icon = Icons.mic_none_rounded;
         break;
       case SendButtonState.micListening:
-        icon = Icons.mic_none;
+        icon = Icons.mic_rounded;
         break;
       case SendButtonState.send:
-        icon = Icons.send;
+        icon = Icons.arrow_upward_rounded;
         break;
     }
     return Row(

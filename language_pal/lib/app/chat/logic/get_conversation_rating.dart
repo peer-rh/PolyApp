@@ -4,6 +4,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:language_pal/app/chat/data/conversation_rating.dart';
 import 'package:language_pal/app/chat/data/messages.dart';
 import 'package:language_pal/app/chat/logic/conversation_provider.dart';
+import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
+import 'package:language_pal/app/chat/logic/store_conv.dart';
 
 extension GetConversationRating on ConversationProvider {
   void getConversationRating() async {
@@ -36,9 +38,13 @@ extension GetConversationRating on ConversationProvider {
       totalMessages: totalMessages,
       totalRetries: totalRetries,
       totalScore: totalScore,
-      suggestion1: response.data["suggestion1"],
-      suggestion2: response.data["suggestion2"],
-      suggestion3: response.data["suggestion3"],
+      suggestion1: response.data["suggestion_1"],
+      suggestion2: response.data["suggestion_2"],
+      suggestion3: response.data["suggestion_3"],
     );
+
+    status = ConversationStatus.finished;
+    deleteConv();
+    saveConvToFirestore(uid, conv);
   }
 }

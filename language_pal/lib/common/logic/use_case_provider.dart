@@ -9,7 +9,7 @@ final List<dynamic> useCaseMap =
     json.decode(FirebaseRemoteConfig.instance.getString('use_cases'));
 
 final useCaseProvider = Provider<Map<String, UseCaseModel>>((ref) {
-  final appLanguage = Intl.getCurrentLocale();
+  final appLanguage = Intl.shortLocale(Intl.getCurrentLocale());
   return {
     for (var e in useCaseMap) e["id"]: UseCaseModel.fromMap(e, appLanguage)
   };

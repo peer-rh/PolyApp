@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_pal/app/chat/logic/conversation_provider.dart';
 import 'package:language_pal/app/chat/logic/get_ai_response.dart';
-import 'package:language_pal/app/chat/logic/store_conv.dart';
 import 'package:language_pal/app/chat/ui/components/chat_bubble.dart';
 import 'package:language_pal/app/chat/ui/components/conv_column.dart';
 import 'package:language_pal/app/chat/ui/components/input_area.dart';
 import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/app/chat/logic/store_conv.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final ScenarioModel scenario;
@@ -25,16 +25,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
   );
-  late ConversationProvider conv;
-
-  @override
-  void initState() {
-    conv = ref.watch(conversationProvider(widget.scenario));
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final conv = ref.watch(conversationProvider(widget.scenario));
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -93,13 +87,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    if (!conv.isEmpty) {
-      conv.storeConv();
-    }
+    ref.invalidate(conversationProvider(widget.scenario));
     super.dispose();
   }
 
   Widget getBottomWidget() {
+    final conv = ref.read(conversationProvider(widget.scenario));
     switch (conv.status) {
       case ConversationStatus.waitingForAIResponse:
         return AIMsgBubbleLoading(conv.scenario.avatar);

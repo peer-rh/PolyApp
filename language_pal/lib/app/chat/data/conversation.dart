@@ -10,8 +10,8 @@ class Conversation {
 
   Conversation(this.scenarioId, this.langaugeCode);
 
-  get length => _msgs.length;
-  get msgs => _msgs;
+  int get length => _msgs.length;
+  List<MsgModel> get msgs => _msgs;
 
   void addMsg(dynamic msg) {
     _msgs.add(msg);

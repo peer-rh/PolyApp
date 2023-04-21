@@ -57,7 +57,7 @@ List<LanguageModel> supportedAppLanguages() {
 }
 
 List<LanguageModel> supportedLearnLanguages() {
-  return ["en" "de", "es"].map((e) {
+  return ["en", "de", "es"].map((e) {
     return LanguageModel.fromCode(e);
   }).toList();
 }

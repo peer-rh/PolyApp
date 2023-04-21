@@ -9,17 +9,15 @@ extension UserMsgRatingExt on ConversationProvider {
   void getUserMsgRating(SingularPersonMsgModel msg) async {
     status = ConversationStatus.waitingForUserMsgRating;
     var data = await _getFirebaseResponse(msg);
-    MsgRatingType type = MsgRatingType.fromString(data["result"]);
+    MsgRatingType type = MsgRatingType.fromString(data["type"]);
 
     if (type == MsgRatingType.notParse) {
       FirebaseCrashlytics.instance.recordError(
           Exception("Invalid result type: ${data.toString()}"),
           StackTrace.current);
-      data = await _getFirebaseResponse(msg);
-      type = MsgRatingType.fromString(data["result"]);
     }
 
-    data["result"] = type.index;
+    data["type"] = type.index;
     msg.rating = UserMsgRating.fromFirestore(data);
     if (msg.rating!.type == MsgRatingType.correct) {
       getAIResponse();
@@ -34,8 +32,8 @@ extension UserMsgRatingExt on ConversationProvider {
         await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
       "environment": scenario.environmentDesc,
       "assistant_name": scenario.ratingAssistantName,
-      "messages": conv.getLastMsgs(4).sublist(1), // Remove Scenario Msg
-      "language": conv.langaugeCode
+      "messages": conv.getLastMsgs(4), // Remove Scenario Msg
+      "language": appLang.englishName,
     });
 
     return response.data;

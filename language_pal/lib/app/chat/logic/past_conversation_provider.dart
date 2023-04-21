@@ -16,7 +16,7 @@ final pastConversationProvider =
   });
 });
 
-void storeConv(String uid, Conversation conv) async {
+void saveConvToFirestore(String uid, Conversation conv) async {
   FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
