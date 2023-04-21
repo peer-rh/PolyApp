@@ -7,7 +7,6 @@ import 'package:language_pal/app/chat/ui/past_conversation_page.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
-import 'package:language_pal/common/logic/languages.dart';
 import 'package:language_pal/common/logic/scenario_provider.dart';
 import 'package:language_pal/common/logic/use_case_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -80,31 +79,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                       Expanded(
                         child: Table(
                           children: [
-                            TableRow(children: [
-                              TableCell(
-                                verticalAlignment:
-                                    TableCellVerticalAlignment.middle,
-                                child: Text(
-                                    AppLocalizations.of(context)!
-                                        .user_page_learn_lang,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                              DropdownButton(
-                                value: ref.read(userProvider).user?.learnLang,
-                                items: supportedLearnLanguages().map((e) {
-                                  return DropdownMenuItem(
-                                      value: e.code,
-                                      child: Text(
-                                          "${e.flag}${e.getName(context)}"));
-                                }).toList(),
-                                onChanged: (e) {
-                                  UserModel newUser = userP.user!;
-                                  newUser.learnLang = e as String;
-                                  userP.setUserModel(newUser);
-                                },
-                              )
-                            ]),
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:

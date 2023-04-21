@@ -8,6 +8,7 @@ import 'package:language_pal/app/chat/data/messages.dart';
 import 'package:language_pal/app/chat/logic/get_ai_response.dart';
 import 'package:language_pal/app/chat/logic/get_user_msg_rating.dart';
 import 'package:language_pal/app/chat/logic/store_conv.dart';
+import 'package:language_pal/app/user/logic/learn_language_provider.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:language_pal/common/logic/languages.dart';
@@ -16,7 +17,8 @@ final conversationProvider =
     ChangeNotifierProvider.family<ConversationProvider, ScenarioModel>(
         (ref, scenario) {
   final user = ref.watch(userProvider).user!;
-  final conv = ConversationProvider(scenario, user.learnLang, user.uid);
+  final learnLang = ref.read(learnLangProvider).code;
+  final conv = ConversationProvider(scenario, learnLang, user.uid);
   ref.onDispose(() {
     conv.dispose();
   });
@@ -99,8 +101,7 @@ class ConversationProvider extends ChangeNotifier {
       currentUserMsg = PersonMsgListModel([thisMsg]);
       conv.addMsg(currentUserMsg!);
     } else {
-      currentUserMsg!.msgs
-          .add(thisMsg); // TODO: Check if this also updates the conv
+      currentUserMsg!.msgs.add(thisMsg);
     }
     if (suggested) {
       getAIResponse();

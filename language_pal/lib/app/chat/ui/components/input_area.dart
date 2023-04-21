@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:language_pal/app/chat/features/get_answer_suggestion.dart';
 import 'package:language_pal/app/chat/logic/conversation_provider.dart';
 import 'package:language_pal/common/data/scenario_model.dart';
-import 'package:language_pal/common/logic/languages.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 

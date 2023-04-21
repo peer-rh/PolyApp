@@ -16,7 +16,7 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", "", "");
+  UserModel thisUser = UserModel("", "", [], "");
   final learnCont = TextEditingController();
   int currentStep = 0;
 
@@ -58,10 +58,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           Expanded(
             child: ListView(
               children: supportedLearnLanguages()
-                  .map((lang) => CustomCard(thisUser.learnLang == lang.code,
-                          lang.flag, lang.getName(context), () {
+                  .map((lang) => CustomCard(
+                          thisUser.learnLangList == [lang.code],
+                          lang.flag,
+                          lang.getName(context), () {
                         setState(() {
-                          thisUser.learnLang = lang.code;
+                          thisUser.learnLangList = [lang.code];
                         });
                       }))
                   .toList(),
@@ -105,7 +107,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 content: Text(AppLocalizations.of(context)!
                                     .onboarding_must_select_option)));
                           } else if (currentStep == 1 &&
-                              thisUser.learnLang == "") {
+                              thisUser.learnLangList == []) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(AppLocalizations.of(context)!
                                     .onboarding_must_select_option)));

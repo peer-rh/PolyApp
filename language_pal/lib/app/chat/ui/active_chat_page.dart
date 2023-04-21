@@ -7,7 +7,6 @@ import 'package:language_pal/app/chat/ui/components/conv_column.dart';
 import 'package:language_pal/app/chat/ui/components/input_area.dart';
 import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/app/chat/logic/store_conv.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final ScenarioModel scenario;
