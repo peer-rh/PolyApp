@@ -20,20 +20,23 @@ class UserPage extends ConsumerStatefulWidget {
 }
 
 class _UserPageState extends ConsumerState<UserPage> {
+  bool _loadingConvs = false;
   List<Conversation> convs = [];
 
   @override
-  void didChangeDependencies() {
-    ref
-        .watch(
-            pastConversationProvider(ref.read(authProvider).currentUser!.uid))
-        .whenData((value) => convs = value);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ref.watch(pastConversationProvider).when(data: (value) {
+      _loadingConvs = false;
+      convs = value;
+      setState(() {});
+    }, loading: () {
+      _loadingConvs = true;
+      setState(() {});
+    }, error: (e, s) {
+      FirebaseCrashlytics.instance.recordError(e, s);
+    });
     final userP = ref.watch(userProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("User"),
@@ -146,7 +149,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                       AppLocalizations.of(context)!
                           .user_page_conversations_title,
                       style: Theme.of(context).textTheme.headlineSmall),
-                  if (convs.isEmpty)
+                  if (_loadingConvs)
+                    const CircularProgressIndicator()
+                  else if (convs.isEmpty)
                     Text(AppLocalizations.of(context)!
                         .user_page_no_conversations)
                   else
