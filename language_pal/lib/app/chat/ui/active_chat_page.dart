@@ -9,6 +9,7 @@ import 'package:language_pal/app/chat/ui/components/conv_column.dart';
 import 'package:language_pal/app/chat/ui/components/input_area.dart';
 import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:language_pal/common/ui/measure_size.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final ScenarioModel scenario;
@@ -26,10 +27,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
   );
+  double _offset = 0;
+  final inpKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    final inputAreaHeight = 50.0 + MediaQuery.of(context).padding.bottom + 16;
     final conv = ref.watch(conversationProvider(widget.scenario));
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +71,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ConversationColumn(conv: conv.conv, scenario: conv.scenario),
                 getBottomWidget(),
                 SizedBox(
-                  height: inputAreaHeight,
+                  height: _offset,
                 )
               ],
             ),
@@ -78,15 +80,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 100, sigmaY: 12),
-            child: Container(
-              color: Theme.of(context).colorScheme.background.withOpacity(0.5),
-              padding: EdgeInsets.only(
-                  bottom: 8 + MediaQuery.of(context).padding.bottom,
-                  left: 16,
-                  right: 16,
-                  top: 8),
-              child: SizedBox(
-                height: 50,
+            child: MeasureSize(
+              onChange: (size) {
+                setState(() {
+                  _offset = size.height;
+                });
+              },
+              child: Container(
+                color:
+                    Theme.of(context).colorScheme.background.withOpacity(0.5),
+                padding: EdgeInsets.only(
+                    bottom: 8 + MediaQuery.of(context).padding.bottom,
+                    left: 16,
+                    right: 16,
+                    top: 8),
                 child: ChatInputArea(
                   scenario: conv.scenario,
                 ),

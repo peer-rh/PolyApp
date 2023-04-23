@@ -116,7 +116,6 @@ class _InputAreaState extends ConsumerState<ChatInputArea> {
                 border: Border.all(
                     color: Theme.of(context).colorScheme.surfaceVariant),
                 color: Theme.of(context).colorScheme.surface),
-            alignment: Alignment.centerLeft,
             child: Row(
               children: [
                 const SizedBox(
@@ -124,6 +123,7 @@ class _InputAreaState extends ConsumerState<ChatInputArea> {
                 ),
                 Expanded(
                   child: TextField(
+                  
                     autocorrect: false,
                     onSubmitted: (s) {
                       if (disabled) return;
