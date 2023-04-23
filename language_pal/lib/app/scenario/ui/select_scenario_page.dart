@@ -98,12 +98,16 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
               ]),
             if (scenariosNormal.isNotEmpty)
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                if (scenariosInProgress.isNotEmpty)
-                  Text(
-                    AppLocalizations.of(context)!
-                        .select_scenario_not_in_progress,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
+                (scenariosInProgress.isEmpty)
+                    ? Text(
+                        AppLocalizations.of(context)!.select_scenario_title,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      )
+                    : Text(
+                        AppLocalizations.of(context)!
+                            .select_scenario_not_in_progress,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                 const SizedBox(
                   height: 8,
                 ),

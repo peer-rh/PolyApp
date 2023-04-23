@@ -65,32 +65,32 @@ class PastConversationListPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const SelectLearnLangTitle()),
       body: Container(
+          height: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    AppLocalizations.of(context)!.past_conversations_title,
-                    style: Theme.of(context).textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(
-                  height: 32,
-                ),
-                if (loadingConvs)
-                  const CircularProgressIndicator()
-                else if (convs.isEmpty)
-                  Text(
-                    AppLocalizations.of(context)!.user_page_no_conversations,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  )
-                else
-                  ...convsList
-              ]))),
+                    Text(
+                      AppLocalizations.of(context)!.past_conversations_title,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    if (loadingConvs)
+                      const CircularProgressIndicator()
+                    else if (convs.isEmpty)
+                      Text(
+                        AppLocalizations.of(context)!
+                            .user_page_no_conversations,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      )
+                    else
+                      ...convsList
+                  ]))),
     );
   }
 }
@@ -108,16 +108,16 @@ class PastConversationPage extends ConsumerWidget {
           "${scenario.emoji} ${scenario.name}",
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
-          child: Expanded(
-            child: SingleChildScrollView(
-              reverse: true,
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              child: ConversationColumn(conv: conv, scenario: scenario),
-            ),
+      body: Container(
+        height: double.infinity,
+        padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
+        child: SingleChildScrollView(
+          reverse: true,
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 32),
+            child: ConversationColumn(conv: conv, scenario: scenario),
           ),
         ),
       ),
