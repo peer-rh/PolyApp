@@ -5,6 +5,7 @@
   "auth_sign_in_link": "Already have an Account? SIGN IN",
   "auth_sign_up": "Sign Up",
   "auth_sign_up_link": "Don't have an Account yet? SIGN UP",
+
   "chat_input_hint_reg": "Type Message...",
   "chat_input_hint_try_again": "Try again...",
   "chat_input_hint_listening": "Listening...",
@@ -16,7 +17,9 @@
   "chat_suggestion_use": "Use",
   "chat_suggestion_not_use": "Discard",
   "chat_reset": "Reset Chat",
+
   "close": "Close",
+
   "conversation_summary_title": "Chat Mentor",
   "conversation_total_messages": "Messages",
   "conversation_total_score": "Total Score",
@@ -24,6 +27,7 @@
   "conversation_goal_score": "Goal Score",
   "conversation_ai_score": "AI-Score",
   "conversation_summary_suggestions": "Suggestions",
+
   "language": "{code, select, de{German} en{English} es{Spanish} other{Error}}",
   "@language": {
     "placeholders": {
@@ -32,9 +36,13 @@
         }
     }
   },
+  "learn_lang_new_title": "Learn new Language",
+  "learn_lang_add_button": "Language",
+
   "forgot_password_button": "Send Password Reset Email",
   "forgot_password_link": "Forgot Password?",
   "forgot_password_title": "Forgot Password",
+
   "msg_rating_correct": "Good Answer",
   "msg_rating_grammar_error": "Grammar Error",
   "msg_rating_incomplete": "Incomplete Answer",
@@ -42,12 +50,19 @@
   "msg_rating_impolite": "Impolite Answer",
   "msg_rating_not_parse": "Could not parse",
   "msg_translation_title": "Translation",
+
   "onboarding_learn_lang_question": "What language do you want to learn",
   "onboarding_must_select_option": "You must select an option",
   "onboarding_use_case_question": "Why do you want to learn a new language?",
-  "select_scenario_question": "What Scenario do you want to practice?",
+
+  "past_conversations_title": "Past Conversations",
+  
+  "select_scenario_title": "Choose Situation",
+  "select_scenario_in_progress": "Ongoing Conversations",
+  "select_scenario_not_in_progress": "Other Situations",
+  "select_scenario_done": "Completed",
+
   "user_page_app_lang": "App Language",
-  "user_page_conversations_title": "Conversations",
   "user_page_learn_lang": "Language to learn",
   "user_page_no_conversations": "No finished Conversations yet.",
   "user_page_use_case": "Reason"

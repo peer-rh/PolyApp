@@ -45,6 +45,6 @@ extension GetConversationRating on ConversationProvider {
 
     status = ConversationStatus.finished;
     deleteConv();
-    saveConvToFirestore(uid, conv);
+    saveConvToFirestore(uid, learnLang.code, conv);
   }
 }

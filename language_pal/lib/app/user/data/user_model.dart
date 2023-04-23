@@ -11,7 +11,7 @@ class UserModel {
     return UserModel(
       uid,
       map["email"] ?? "",
-      map["learnLangList"].cast<String>(),
+      (map["learnLangList"] ?? []).cast<String>(),
       map["useCase"] ?? "",
     );
   }
@@ -19,7 +19,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       "email": email,
-      "learnLang": learnLangList,
+      "learnLangList": learnLangList,
       "useCase": useCase,
     };
   }

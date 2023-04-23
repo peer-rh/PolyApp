@@ -1,13 +1,8 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/chat/data/conversation.dart';
-import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
-import 'package:language_pal/app/chat/ui/past_conversation_page.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
-import 'package:language_pal/common/logic/scenario_provider.dart';
 import 'package:language_pal/common/logic/use_case_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,21 +14,8 @@ class UserPage extends ConsumerStatefulWidget {
 }
 
 class _UserPageState extends ConsumerState<UserPage> {
-  bool _loadingConvs = false;
-  List<Conversation> convs = [];
-
   @override
   Widget build(BuildContext context) {
-    ref.watch(pastConversationProvider).when(data: (value) {
-      _loadingConvs = false;
-      convs = value;
-      setState(() {});
-    }, loading: () {
-      _loadingConvs = true;
-      setState(() {});
-    }, error: (e, s) {
-      FirebaseCrashlytics.instance.recordError(e, s);
-    });
     final userP = ref.watch(userProvider);
 
     return Scaffold(
@@ -116,72 +98,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
-                  Text(
-                      AppLocalizations.of(context)!
-                          .user_page_conversations_title,
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  if (_loadingConvs)
-                    const CircularProgressIndicator()
-                  else if (convs.isEmpty)
-                    Text(AppLocalizations.of(context)!
-                        .user_page_no_conversations)
-                  else
-                    Expanded(
-                        child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        final scenario =
-                            ref.read(scenarioProvider)[convs[index].scenarioId];
-                        if (scenario == null) {
-                          FirebaseCrashlytics.instance.recordError(
-                              Exception(
-                                  "Scenario ${convs[index].scenarioId}not found"),
-                              StackTrace.current);
-                          return const SizedBox();
-                        }
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PastConversationPage(
-                                        conv: convs[index])));
-                          },
-                          child: Card(
-                            child: ListTile(
-                              leading: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(scenario.emoji),
-                                    const SizedBox(width: 12),
-                                    SizedBox(
-                                      width: 14,
-                                      height: 14,
-                                      child: CircularProgressIndicator(
-                                        value:
-                                            (convs[index].rating?.totalScore ??
-                                                    0) /
-                                                10,
-                                        strokeWidth: 3,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary),
-                                      ),
-                                    ),
-                                  ]),
-                              title: Text(scenario.name),
-                              trailing: const Icon(Icons.chevron_right),
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: convs.length,
-                    )),
                 ],
               ),
             ),

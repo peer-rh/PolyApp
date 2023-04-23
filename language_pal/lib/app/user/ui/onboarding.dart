@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
+import 'package:language_pal/app/user/ui/components/big_selectable_button.dart';
 import 'package:language_pal/auth/logic/auth_provider.dart';
 import 'package:language_pal/common/logic/languages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,9 +41,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   children: ref
                       .read(useCaseProvider)
                       .values
-                      .map((e) => CustomCard(
-                              thisUser.useCase == e.uniqueId, e.emoji, e.title,
-                              () {
+                      .map((e) => BigSelectableButton(
+                          selected: thisUser.useCase == e.uniqueId,
+                          emoji: e.emoji,
+                          title: e.title,
+                          onTap: () {
                             setState(() {
                               thisUser.useCase = e.uniqueId;
                             });
@@ -58,10 +61,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           Expanded(
             child: ListView(
               children: supportedLearnLanguages()
-                  .map((lang) => CustomCard(
-                          thisUser.learnLangList == [lang.code],
-                          lang.flag,
-                          lang.getName(context), () {
+                  .map((lang) => BigSelectableButton(
+                      selected: thisUser.learnLangList.isNotEmpty &&
+                          thisUser.learnLangList.first == lang.code,
+                      emoji: lang.flag,
+                      title: lang.getName(context),
+                      onTap: () {
                         setState(() {
                           thisUser.learnLangList = [lang.code];
                         });
@@ -126,53 +131,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   ),
                 )
               ]))),
-    );
-  }
-}
-
-class CustomCard extends StatelessWidget {
-  bool selected;
-  String emoji;
-  String title;
-  void Function() onTap;
-  CustomCard(this.selected, this.emoji, this.title, this.onTap, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Card(
-          elevation: 1,
-          color: selected
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).cardColor,
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(emoji, style: const TextStyle(fontSize: 60)),
-                const SizedBox(width: 16),
-                Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(title,
-                        maxLines: 1,
-                        style: GoogleFonts.nunito(
-                            fontSize: 30,
-                            color: selected
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.onSurface)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

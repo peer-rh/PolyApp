@@ -48,6 +48,17 @@ class LanguageModel {
         return "en_US";
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is LanguageModel) {
+      return code == other.code;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => code.hashCode;
 }
 
 List<LanguageModel> supportedAppLanguages() {

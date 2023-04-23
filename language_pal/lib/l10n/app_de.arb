@@ -5,6 +5,7 @@
   "auth_sign_in_link": "Hast du bereits einen Account? LOG IN",
   "auth_sign_up": "Registrieren",
   "auth_sign_up_link": "Hast du noch keinen Account? JETZT REGISTIEREN",
+
   "chat_input_hint_reg": "Tippe Nachricht...",
   "chat_input_hint_try_again": "Versuche es nochmal...",
   "chat_input_hint_listening": "Listening...",
@@ -16,7 +17,9 @@
   "chat_suggestion_use": "Nutzen",
   "chat_suggestion_not_use": "Verwerfen",
   "chat_reset": "Chat zurücksetzen",
+
   "close": "Schließen",
+
   "conversation_summary_title": "Chat Mentor",
   "conversation_total_messages": "Nachrichten",
   "conversation_total_score": "Totaler Score",
@@ -24,10 +27,15 @@
   "conversation_goal_score": "Ziel-Score",
   "conversation_ai_score": "AI-Score",
   "conversation_summary_suggestions": "Vorschläge",
+
   "forgot_password_button": "Passwort-Reset Emaill senden",
   "forgot_password_link": "Passwort Vergessen",
   "forgot_password_title": "Passwort Zurücksetzen",
+
   "language": "{code, select, de{Deutsch} en{Englisch} es{Spanisch} other{Fehler}}",
+  "learn_lang_new_title": "Lerne eine neue Sprache",
+  "learn_lang_add_button": "Sprache",
+
   "msg_rating_correct": "Gute Antwort",
   "msg_rating_grammar_error": "Grammatik-Fehler",
   "msg_rating_incomplete": "Unvollständige Antwort",
@@ -35,10 +43,18 @@
   "msg_rating_impolite": "Unhöfliche Antwort",
   "msg_rating_not_parse": "Nicht geparsed",
   "msg_translation_title": "Übersetzung",
+
   "onboarding_learn_lang_question": "Was für eine Sprache möchtest du lernen?",
   "onboarding_must_select_option": "Sie müssen eine Option auswählen",
   "onboarding_use_case_question": "Wieso möchtest du eine neue Sprache lernen?",
-  "select_scenario_question": "Welches Szenario würden sie gerne üben?",
+
+  "past_conversations_title": "Fertige Gespräche",
+
+  "select_scenario_title": "Wähle Situation...",
+  "select_scenario_in_progress": "Angefange Gespräche",
+  "select_scenario_not_in_progress": "Andere Situationen",
+  "select_scenario_done": "Abgeschlossen",
+
   "user_page_app_lang": "App Sprache",
   "user_page_conversations_title": "Gespräche",
   "user_page_learn_lang": "Zu lernende Sprache",

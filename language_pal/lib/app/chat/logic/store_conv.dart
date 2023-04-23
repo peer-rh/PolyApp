@@ -62,6 +62,6 @@ extension StoreConversation on ConversationProvider {
 
 Future<bool> conversationExists(String learnLang, String scenarioId) async {
   Directory appDir = await getApplicationDocumentsDirectory();
-  File file = File('$appDir/conversations/$learnLang/$scenarioId.json');
+  File file = File('${appDir.path}/conversations/$learnLang/$scenarioId.json');
   return file.existsSync();
 }

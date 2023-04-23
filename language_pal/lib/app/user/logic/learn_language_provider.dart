@@ -4,7 +4,7 @@ import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/common/logic/languages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final learnLanguagListProvider = Provider<List<LanguageModel>>((ref) {
+final learnLangListProvider = Provider<List<LanguageModel>>((ref) {
   final codes = ref.watch(userProvider).user?.learnLangList;
   if (codes == null) return [];
   return codes.map((code) => LanguageModel.fromCode(code)).toList();
@@ -12,7 +12,7 @@ final learnLanguagListProvider = Provider<List<LanguageModel>>((ref) {
 
 final learnLangProvider =
     StateNotifierProvider<LearnLanguageProvider, LanguageModel>((ref) {
-  final learnLangs = ref.watch(learnLanguagListProvider);
+  final learnLangs = ref.watch(learnLangListProvider);
   if (learnLangs.isEmpty) {
     return LearnLanguageProvider([LanguageModel.fromCode("en")]);
   }

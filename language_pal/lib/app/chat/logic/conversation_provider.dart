@@ -13,14 +13,13 @@ import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/common/data/scenario_model.dart';
 import 'package:language_pal/common/logic/languages.dart';
 
-final conversationProvider =
-    ChangeNotifierProvider.family<ConversationProvider, ScenarioModel>(
-        (ref, scenario) {
+final conversationProvider = ChangeNotifierProvider.autoDispose
+    .family<ConversationProvider, ScenarioModel>((ref, scenario) {
   final user = ref.watch(userProvider).user!;
   final learnLang = ref.read(learnLangProvider).code;
   final conv = ConversationProvider(scenario, learnLang, user.uid);
   ref.onDispose(() {
-    conv.dispose();
+    conv.checkSave();
   });
   return conv;
 });
@@ -44,10 +43,11 @@ class ConversationProvider extends ChangeNotifier {
   late LanguageModel appLang;
   String uid;
   PersonMsgListModel? currentUserMsg;
+  bool _active = true;
 
   ConversationStatus get status => _status.value;
   set status(ConversationStatus value) {
-    _status.value = value;
+    if (_active) _status.value = value;
   }
 
   bool get isEmpty => conv.msgs.length == 1;
@@ -63,12 +63,10 @@ class ConversationProvider extends ChangeNotifier {
     initChat();
   }
 
-  @override
-  void dispose() {
+  void checkSave() async {
     if (!isEmpty && status != ConversationStatus.finished) {
-      storeConv();
+      await storeConv();
     }
-    super.dispose();
   }
 
   void initChat({checkFile = true}) async {
@@ -93,6 +91,12 @@ class ConversationProvider extends ChangeNotifier {
 
   void addAIMsg(String msg) {
     conv.addMsg(AIMsgModel(msg));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _active = false;
   }
 
   void addPersonMsg(String msg, {bool suggested = false}) {

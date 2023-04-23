@@ -86,7 +86,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    ref.invalidate(conversationProvider(widget.scenario));
     super.dispose();
   }
 

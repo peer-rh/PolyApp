@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:language_pal/app/chat/ui/past_conversation_page.dart';
 import 'package:language_pal/app/scenario/ui/select_scenario_page.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
-import 'package:language_pal/app/user/presentation/onboarding.dart';
+import 'package:language_pal/app/user/ui/onboarding.dart';
+import 'package:language_pal/app/user/ui/user_page.dart';
 import 'package:language_pal/common/ui/loading_page.dart';
 
 class HomePage extends ConsumerWidget {
@@ -18,7 +21,56 @@ class HomePage extends ConsumerWidget {
       case UserState.onboarding:
         return const OnboardingPage();
       case UserState.loaded:
-        return const SelectScenarioPage();
+        return const NavigationPage();
     }
+  }
+}
+
+class NavigationPage extends StatefulWidget {
+  const NavigationPage({super.key});
+
+  @override
+  State<NavigationPage> createState() => _NavigationPageState();
+}
+
+class _NavigationPageState extends State<NavigationPage> {
+  int _selectedIndex = 0;
+
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return const SelectScenarioPage();
+      case 1:
+        return const PastConversationListPage();
+      case 2:
+        return const UserPage();
+      default:
+        return const Text("Error");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: _getPage(_selectedIndex),
+        bottomNavigationBar: NavigationBar(
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: (index) => setState(() {
+                  _selectedIndex = index;
+                }),
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.chat_outlined),
+                label: "Chat",
+                selectedIcon: Icon(Icons.chat),
+              ),
+              NavigationDestination(
+                  icon: Icon(Icons.history_rounded), label: "History"),
+              NavigationDestination(
+                icon: Icon(Icons.account_circle_outlined),
+                label: "User",
+                selectedIcon: Icon(Icons.account_circle),
+              )
+            ]));
   }
 }
