@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
 import 'package:language_pal/app/chat/logic/store_conv.dart';
 import 'package:language_pal/app/chat/ui/active_chat_page.dart';
 import 'package:language_pal/app/scenario/data/personalizedScenario.dart';

@@ -13,13 +13,8 @@ class PastConversationListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool loadingConvs = true;
-    List<Conversation> convs = [];
-
-    ref.watch(pastConversationProvider).whenData((data) {
-      convs = data;
-      loadingConvs = false;
-    });
+    List<Conversation> convs = ref.watch(pastConversationProvider);
+    bool loadingConvs = ref.watch(pastConversationProvider.notifier).loading;
 
     List<Widget> convsList = convs.map((conv) {
       final scenario = ref.read(scenarioProvider)[conv.scenarioId];

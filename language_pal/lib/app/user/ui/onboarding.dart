@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:language_pal/app/user/data/user_model.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
 import 'package:language_pal/app/user/ui/components/big_selectable_button.dart';
@@ -17,7 +16,7 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", [], "");
+  UserModel thisUser = UserModel("", "", [], "", {});
   final learnCont = TextEditingController();
   int currentStep = 0;
 

@@ -8,6 +8,10 @@ import 'package:language_pal/auth/logic/auth_provider.dart';
 final userProvider = ChangeNotifierProvider<UserProvider>(
     (ref) => UserProvider(ref.watch(authStateChangesProvider).value));
 
+final uidProvider = Provider<String?>((ref) {
+  return ref.watch(userProvider.select((u) => u.user?.uid));
+});
+
 class UserProvider extends ChangeNotifier {
   final User? _fbUser;
 

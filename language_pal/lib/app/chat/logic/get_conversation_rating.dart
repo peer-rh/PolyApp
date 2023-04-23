@@ -4,7 +4,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:language_pal/app/chat/data/conversation_rating.dart';
 import 'package:language_pal/app/chat/data/messages.dart';
 import 'package:language_pal/app/chat/logic/conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
 import 'package:language_pal/app/chat/logic/store_conv.dart';
 
 extension GetConversationRating on ConversationProvider {
@@ -45,6 +44,8 @@ extension GetConversationRating on ConversationProvider {
 
     status = ConversationStatus.finished;
     deleteConv();
-    saveConvToFirestore(uid, learnLang.code, conv);
+
+    bestScore.updateBestScore(scenario.uniqueId, conv.rating!.totalScore);
+    pastConvs.addConversation(conv);
   }
 }

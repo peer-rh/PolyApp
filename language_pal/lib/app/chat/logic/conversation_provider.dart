@@ -7,6 +7,7 @@ import 'package:language_pal/app/chat/data/conversation.dart';
 import 'package:language_pal/app/chat/data/messages.dart';
 import 'package:language_pal/app/chat/logic/get_ai_response.dart';
 import 'package:language_pal/app/chat/logic/get_user_msg_rating.dart';
+import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
 import 'package:language_pal/app/chat/logic/store_conv.dart';
 import 'package:language_pal/app/user/logic/learn_language_provider.dart';
 import 'package:language_pal/app/user/logic/user_provider.dart';
@@ -17,7 +18,10 @@ final conversationProvider = ChangeNotifierProvider.autoDispose
     .family<ConversationProvider, ScenarioModel>((ref, scenario) {
   final user = ref.watch(userProvider).user!;
   final learnLang = ref.read(learnLangProvider).code;
-  final conv = ConversationProvider(scenario, learnLang, user.uid);
+  final bestScore = ref.read(bestScoreProvider.notifier);
+  final pastConvs = ref.read(pastConversationProvider.notifier);
+  final conv =
+      ConversationProvider(scenario, learnLang, user.uid, bestScore, pastConvs);
   ref.onDispose(() {
     conv.checkSave();
   });
@@ -41,6 +45,8 @@ class ConversationProvider extends ChangeNotifier {
       ValueNotifier(ConversationStatus.initialising);
   late LanguageModel learnLang;
   late LanguageModel appLang;
+  BestScoreProvider bestScore;
+  PastConversationProvider pastConvs;
   String uid;
   PersonMsgListModel? currentUserMsg;
   bool _active = true;
@@ -52,7 +58,8 @@ class ConversationProvider extends ChangeNotifier {
 
   bool get isEmpty => conv.msgs.length == 1;
 
-  ConversationProvider(this.scenario, String learnLang, this.uid) {
+  ConversationProvider(this.scenario, String learnLang, this.uid,
+      this.bestScore, this.pastConvs) {
     Conversation(scenario.uniqueId, learnLang);
     this.learnLang = LanguageModel.fromCode(learnLang);
     _status.addListener(() {
