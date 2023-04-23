@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
 import 'package:language_pal/app/chat/logic/store_conv.dart';
 import 'package:language_pal/app/chat/ui/active_chat_page.dart';
 import 'package:language_pal/app/scenario/data/personalizedScenario.dart';
@@ -38,6 +39,7 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
             .read(useCaseProvider)[user?.useCase]!
             .recommended
             .contains(e.uniqueId),
+        bestScore: ref.watch(bestScoreProvider)[e.uniqueId],
       );
     }).toList());
 
@@ -50,6 +52,8 @@ class _SelectScenarioPageState extends ConsumerState<SelectScenarioPage> {
     for (var i = 0; i < tmp.length; i++) {
       if (tmp[i].inProgress) {
         scenariosInProgress.add(tmp[i]);
+      } else if (tmp[i].done) {
+        scenariosDone.add(tmp[i]);
       } else {
         scenariosNormal.add(tmp[i]);
       }

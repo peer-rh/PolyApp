@@ -71,7 +71,7 @@ class BestScoreProvider extends StateNotifier<Map<String, int>> {
         .get()
         .then((value) {
       if (value.exists) {
-        state = value.data() as Map<String, int>;
+        state = value.data()!.cast<String, int>();
       }
     });
   }
