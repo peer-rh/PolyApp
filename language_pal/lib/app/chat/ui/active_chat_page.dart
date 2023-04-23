@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_pal/app/chat/logic/conversation_provider.dart';
@@ -27,6 +29,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final inputAreaHeight = 50.0 + MediaQuery.of(context).padding.bottom + 16;
     final conv = ref.watch(conversationProvider(widget.scenario));
     return Scaffold(
       appBar: AppBar(
@@ -52,34 +55,46 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ])
         ],
       ),
-      body: SafeArea(
-        child: Padding(
+      body: Stack(alignment: Alignment.bottomCenter, children: [
+        Container(
+          height: double.infinity,
           padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
-          child: Column(
-            children: [
-              Expanded(
-                  child: SingleChildScrollView(
-                      controller: _scrollController,
-                      reverse: true,
-                      physics: const BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      child: Column(
-                        children: [
-                          ConversationColumn(
-                              conv: conv.conv, scenario: conv.scenario),
-                          getBottomWidget()
-                        ],
-                      ))),
-              const SizedBox(
-                height: 10,
-              ),
-              ChatInputArea(
-                scenario: conv.scenario,
-              ),
-            ],
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            reverse: true,
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            child: Column(
+              children: [
+                ConversationColumn(conv: conv.conv, scenario: conv.scenario),
+                getBottomWidget(),
+                SizedBox(
+                  height: inputAreaHeight,
+                )
+              ],
+            ),
           ),
         ),
-      ),
+        ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 12),
+            child: Container(
+              color: Theme.of(context).colorScheme.background.withOpacity(0.5),
+              padding: EdgeInsets.only(
+                  bottom: 8 + MediaQuery.of(context).padding.bottom,
+                  left: 16,
+                  right: 16,
+                  top: 8),
+              child: SizedBox(
+                height: 50,
+                child: ChatInputArea(
+                  scenario: conv.scenario,
+                ),
+              ),
+            ),
+          ),
+        )
+      ]),
     );
   }
 
