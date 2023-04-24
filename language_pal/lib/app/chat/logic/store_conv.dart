@@ -29,7 +29,12 @@ extension StoreConversation on ConversationProvider {
     File convFile = await _getConvFile();
     if (await convFile.exists()) {
       Map<String, dynamic> convJson = jsonDecode(await convFile.readAsString());
-      conv = Conversation.fromFirestore(convJson["conv"]);
+      try {
+        conv = Conversation.fromFirestore(convJson["conv"]);
+      } catch (e) {
+        await deleteConv();
+        return false;
+      }
       status = ConversationStatus.values[convJson["status"]];
       if (conv.msgs.last is PersonMsgListModel) {
         currentUserMsg = conv.msgs.last as PersonMsgListModel;
