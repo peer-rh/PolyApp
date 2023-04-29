@@ -1,7 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/get_conversation_rating.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/logic/conversation_provider.dart';
+import 'package:poly_app/app/chat/logic/get_conversation_rating.dart';
 
 class Response {
   String message;

@@ -1,4 +1,4 @@
-import 'package:language_pal/app/chat/data/user_msg_rating_model.dart';
+import 'package:poly_app/app/chat/data/user_msg_rating_model.dart';
 
 abstract class MsgModel {
   Map<String, String> toGPT();

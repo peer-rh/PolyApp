@@ -3,16 +3,16 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:language_pal/app/chat/data/conversation.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/logic/get_ai_response.dart';
-import 'package:language_pal/app/chat/logic/get_user_msg_rating.dart';
-import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/store_conv.dart';
-import 'package:language_pal/app/user/logic/learn_language_provider.dart';
-import 'package:language_pal/app/user/logic/user_provider.dart';
-import 'package:language_pal/common/data/scenario_model.dart';
-import 'package:language_pal/common/logic/languages.dart';
+import 'package:poly_app/app/chat/data/conversation.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/logic/get_ai_response.dart';
+import 'package:poly_app/app/chat/logic/get_user_msg_rating.dart';
+import 'package:poly_app/app/chat/logic/past_conversation_provider.dart';
+import 'package:poly_app/app/chat/logic/store_conv.dart';
+import 'package:poly_app/app/user/logic/learn_language_provider.dart';
+import 'package:poly_app/app/user/logic/user_provider.dart';
+import 'package:poly_app/common/data/scenario_model.dart';
+import 'package:poly_app/common/logic/languages.dart';
 
 final conversationProvider = ChangeNotifierProvider.autoDispose
     .family<ConversationProvider, ScenarioModel>((ref, scenario) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/auth/data/auth_exception.dart';
-import 'package:language_pal/auth/logic/auth_provider.dart';
-import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
+import 'package:poly_app/auth/data/auth_exception.dart';
+import 'package:poly_app/auth/logic/auth_provider.dart';
+import 'package:poly_app/auth/presentation/components/sign_in_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {

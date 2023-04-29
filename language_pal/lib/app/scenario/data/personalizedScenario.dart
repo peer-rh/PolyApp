@@ -1,4 +1,4 @@
-import 'package:language_pal/common/data/scenario_model.dart';
+import 'package:poly_app/common/data/scenario_model.dart';
 
 class PersonaliedScenario {
   ScenarioModel scenario;

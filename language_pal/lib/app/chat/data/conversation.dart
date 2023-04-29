@@ -1,5 +1,5 @@
-import 'package:language_pal/app/chat/data/conversation_rating.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/data/conversation_rating.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
 
 class Conversation {
   String scenarioId;

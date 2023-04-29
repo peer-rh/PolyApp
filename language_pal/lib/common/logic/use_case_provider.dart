@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:language_pal/common/data/use_case_model.dart';
+import 'package:poly_app/common/data/use_case_model.dart';
 
 final List<dynamic> useCaseMap =
     json.decode(FirebaseRemoteConfig.instance.getString('use_cases'));

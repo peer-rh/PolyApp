@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/user/data/user_model.dart';
-import 'package:language_pal/app/user/logic/learn_language_provider.dart';
+import 'package:poly_app/app/user/data/user_model.dart';
+import 'package:poly_app/app/user/logic/learn_language_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/app/user/logic/user_provider.dart';
-import 'package:language_pal/app/user/ui/components/big_selectable_button.dart';
-import 'package:language_pal/common/logic/languages.dart';
+import 'package:poly_app/app/user/logic/user_provider.dart';
+import 'package:poly_app/app/user/ui/components/big_selectable_button.dart';
+import 'package:poly_app/common/logic/languages.dart';
 
 class SelectLearnLangTitle extends ConsumerWidget {
   const SelectLearnLangTitle({super.key});

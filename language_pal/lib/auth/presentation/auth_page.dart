@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/auth/data/auth_exception.dart';
-import 'package:language_pal/auth/logic/auth_provider.dart';
-import 'package:language_pal/auth/presentation/components/o_auth_buttons.dart';
-import 'package:language_pal/auth/presentation/components/sign_in_button.dart';
-import 'package:language_pal/auth/presentation/forgot_password.dart';
-import 'package:language_pal/common/ui/logo.dart';
+import 'package:poly_app/auth/data/auth_exception.dart';
+import 'package:poly_app/auth/logic/auth_provider.dart';
+import 'package:poly_app/auth/presentation/components/o_auth_buttons.dart';
+import 'package:poly_app/auth/presentation/components/sign_in_button.dart';
+import 'package:poly_app/auth/presentation/forgot_password.dart';
+import 'package:poly_app/common/ui/logo.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AuthPage extends ConsumerStatefulWidget {

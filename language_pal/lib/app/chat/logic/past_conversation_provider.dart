@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/chat/data/conversation.dart';
-import 'package:language_pal/app/user/logic/learn_language_provider.dart';
-import 'package:language_pal/app/user/logic/user_provider.dart';
+import 'package:poly_app/app/chat/data/conversation.dart';
+import 'package:poly_app/app/user/logic/learn_language_provider.dart';
+import 'package:poly_app/app/user/logic/user_provider.dart';
 
 final pastConversationProvider =
     StateNotifierProvider<PastConversationProvider, List<Conversation>>((ref) {

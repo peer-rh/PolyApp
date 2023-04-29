@@ -1,9 +1,9 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/data/user_msg_rating_model.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/get_ai_response.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/data/user_msg_rating_model.dart';
+import 'package:poly_app/app/chat/logic/conversation_provider.dart';
+import 'package:poly_app/app/chat/logic/get_ai_response.dart';
 
 extension UserMsgRatingExt on ConversationProvider {
   void getUserMsgRating(SingularPersonMsgModel msg) async {

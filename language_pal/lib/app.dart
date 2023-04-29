@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/home_page.dart';
-import 'package:language_pal/auth/logic/auth_provider.dart';
-import 'package:language_pal/auth/presentation/auth_page.dart';
-import 'package:language_pal/common/ui/loading_page.dart';
-import 'package:language_pal/theme.dart';
+import 'package:poly_app/app/home_page.dart';
+import 'package:poly_app/auth/logic/auth_provider.dart';
+import 'package:poly_app/auth/presentation/auth_page.dart';
+import 'package:poly_app/common/ui/loading_page.dart';
+import 'package:poly_app/theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class App extends ConsumerWidget {

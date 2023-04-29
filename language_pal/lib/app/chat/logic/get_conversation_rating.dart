@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:language_pal/app/chat/data/conversation_rating.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/store_conv.dart';
+import 'package:poly_app/app/chat/data/conversation_rating.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/logic/conversation_provider.dart';
+import 'package:poly_app/app/chat/logic/store_conv.dart';
 
 extension GetConversationRating on ConversationProvider {
   void getConversationRating() async {

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:language_pal/app/chat/ui/past_conversation_page.dart';
-import 'package:language_pal/app/scenario/ui/select_scenario_page.dart';
-import 'package:language_pal/app/user/logic/user_provider.dart';
-import 'package:language_pal/app/user/ui/onboarding.dart';
-import 'package:language_pal/app/user/ui/user_page.dart';
-import 'package:language_pal/common/ui/loading_page.dart';
+import 'package:poly_app/app/chat/ui/past_conversation_page.dart';
+import 'package:poly_app/app/scenario/ui/select_scenario_page.dart';
+import 'package:poly_app/app/user/logic/user_provider.dart';
+import 'package:poly_app/app/user/ui/onboarding.dart';
+import 'package:poly_app/app/user/ui/user_page.dart';
+import 'package:poly_app/common/ui/loading_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});

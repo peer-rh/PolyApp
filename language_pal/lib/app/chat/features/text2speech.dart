@@ -5,8 +5,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/common/data/scenario_model.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 

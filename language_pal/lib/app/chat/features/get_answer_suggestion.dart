@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/app/chat/data/user_msg_rating_model.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
+import 'package:poly_app/app/chat/data/user_msg_rating_model.dart';
+import 'package:poly_app/app/chat/logic/conversation_provider.dart';
 
 class AnswerSuggestionButton extends StatelessWidget {
   final ConversationProvider conv;

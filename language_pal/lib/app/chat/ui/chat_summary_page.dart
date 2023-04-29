@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/chat/data/conversation_rating.dart';
+import 'package:poly_app/app/chat/data/conversation_rating.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/common/ui/score_circle.dart';
+import 'package:poly_app/common/ui/score_circle.dart';
 
 class ChatSummaryPage extends StatelessWidget {
   final ConversationRating rating;

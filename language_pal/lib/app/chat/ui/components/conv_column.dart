@@ -1,10 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/chat/data/conversation.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/ui/chat_summary_page.dart';
-import 'package:language_pal/app/chat/ui/components/chat_bubble.dart';
-import 'package:language_pal/common/data/scenario_model.dart';
+import 'package:poly_app/app/chat/data/conversation.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/ui/chat_summary_page.dart';
+import 'package:poly_app/app/chat/ui/components/chat_bubble.dart';
+import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConversationColumn extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:language_pal/app/chat/data/conversation.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/get_ai_response.dart';
-import 'package:language_pal/app/chat/logic/get_conversation_rating.dart';
-import 'package:language_pal/app/chat/logic/get_user_msg_rating.dart';
+import 'package:poly_app/app/chat/data/conversation.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/logic/conversation_provider.dart';
+import 'package:poly_app/app/chat/logic/get_ai_response.dart';
+import 'package:poly_app/app/chat/logic/get_conversation_rating.dart';
+import 'package:poly_app/app/chat/logic/get_user_msg_rating.dart';
 import 'package:path_provider/path_provider.dart';
 
 extension StoreConversation on ConversationProvider {

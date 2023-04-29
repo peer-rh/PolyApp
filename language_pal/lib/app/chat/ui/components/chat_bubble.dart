@@ -1,13 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:language_pal/app/chat/data/messages.dart';
-import 'package:language_pal/app/chat/data/user_msg_rating_model.dart';
-import 'package:language_pal/app/chat/features/text2speech.dart';
-import 'package:language_pal/app/chat/features/translation.dart';
-import 'package:language_pal/app/chat/ui/components/ai_avatar.dart';
-import 'package:language_pal/common/data/scenario_model.dart';
-import 'package:language_pal/common/ui/loading_three_dots.dart';
-import 'package:language_pal/common/ui/skeleton.dart';
+import 'package:poly_app/app/chat/data/messages.dart';
+import 'package:poly_app/app/chat/data/user_msg_rating_model.dart';
+import 'package:poly_app/app/chat/features/text2speech.dart';
+import 'package:poly_app/app/chat/features/translation.dart';
+import 'package:poly_app/app/chat/ui/components/ai_avatar.dart';
+import 'package:poly_app/common/data/scenario_model.dart';
+import 'package:poly_app/common/ui/loading_three_dots.dart';
+import 'package:poly_app/common/ui/skeleton.dart';
 
 class SingularOwnMsgBubble extends StatelessWidget {
   final SingularPersonMsgModel msg;

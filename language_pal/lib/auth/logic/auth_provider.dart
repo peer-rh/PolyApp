@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:language_pal/auth/data/auth_exception.dart';
+import 'package:poly_app/auth/data/auth_exception.dart';
 
 final authProvider = Provider<AuthProvider>((ref) => AuthProvider());
 

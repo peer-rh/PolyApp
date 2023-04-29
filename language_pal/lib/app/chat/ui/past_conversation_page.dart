@@ -1,11 +1,11 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/chat/data/conversation.dart';
-import 'package:language_pal/app/chat/logic/past_conversation_provider.dart';
-import 'package:language_pal/app/chat/ui/components/conv_column.dart';
-import 'package:language_pal/app/user/ui/select_learn_lang.dart';
-import 'package:language_pal/common/logic/scenario_provider.dart';
+import 'package:poly_app/app/chat/data/conversation.dart';
+import 'package:poly_app/app/chat/logic/past_conversation_provider.dart';
+import 'package:poly_app/app/chat/ui/components/conv_column.dart';
+import 'package:poly_app/app/user/ui/select_learn_lang.dart';
+import 'package:poly_app/common/logic/scenario_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PastConversationListPage extends ConsumerWidget {

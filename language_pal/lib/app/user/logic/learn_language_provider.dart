@@ -1,7 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/user/logic/user_provider.dart';
-import 'package:language_pal/common/logic/languages.dart';
+import 'package:poly_app/app/user/logic/user_provider.dart';
+import 'package:poly_app/common/logic/languages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final learnLangListProvider = Provider<List<LanguageModel>>((ref) {

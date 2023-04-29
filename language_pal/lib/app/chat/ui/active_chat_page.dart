@@ -2,14 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_pal/app/chat/logic/conversation_provider.dart';
-import 'package:language_pal/app/chat/logic/get_ai_response.dart';
-import 'package:language_pal/app/chat/ui/components/chat_bubble.dart';
-import 'package:language_pal/app/chat/ui/components/conv_column.dart';
-import 'package:language_pal/app/chat/ui/components/input_area.dart';
-import 'package:language_pal/common/data/scenario_model.dart';
+import 'package:poly_app/app/chat/logic/conversation_provider.dart';
+import 'package:poly_app/app/chat/logic/get_ai_response.dart';
+import 'package:poly_app/app/chat/ui/components/chat_bubble.dart';
+import 'package:poly_app/app/chat/ui/components/conv_column.dart';
+import 'package:poly_app/app/chat/ui/components/input_area.dart';
+import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:language_pal/common/ui/measure_size.dart';
+import 'package:poly_app/common/ui/measure_size.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final ScenarioModel scenario;
