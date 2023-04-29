@@ -83,6 +83,7 @@ flutter:
   assets:
     - assets/avatars/
     - .env
+    - assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -98,7 +99,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-      - family: CustomIcons
+      - family: MyFlutterApp
         fonts:
           - asset: fonts/CustomIcons.ttf
   # fonts:

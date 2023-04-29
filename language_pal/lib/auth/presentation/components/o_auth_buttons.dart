@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poly_app/auth/logic/auth_provider.dart';
+import 'package:poly_app/common/ui/custom_circular_button.dart';
+import 'package:poly_app/common/ui/custom_icons.dart';
 
 class OAuthButtons extends StatelessWidget {
   final AuthProvider authProvider;
@@ -13,41 +15,20 @@ class OAuthButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(
-            style: ButtonStyle(
-                side: MaterialStateProperty.all(
-                    BorderSide(color: Theme.of(context).primaryColor))),
-            onPressed: authProvider.signInWithGoogle,
-            icon: const Icon(FontAwesomeIcons.google)),
-        IconButton(
-          style: ButtonStyle(
-              side: MaterialStateProperty.all(
-                  BorderSide(color: Theme.of(context).primaryColor))),
-          onPressed: authProvider.signInWithApple,
-          icon: const Icon(Icons.apple),
+        CustomCircularButton(
+            size: 48,
+            icon: const Icon(CustomIcons.apple),
+            outlineColor: Theme.of(context).colorScheme.onBackground,
+            onPressed: authProvider.signInWithApple),
+        const SizedBox(
+          width: 16,
         ),
+        CustomCircularButton(
+            size: 48,
+            icon: const Icon(CustomIcons.google),
+            outlineColor: Theme.of(context).colorScheme.onBackground,
+            onPressed: authProvider.signInWithGoogle),
       ],
     );
   }
-}
-
-Widget oAuthDivider() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: const [
-      Expanded(
-        child: Divider(),
-      ),
-      SizedBox(
-        width: 10,
-      ),
-      Text("OR"),
-      SizedBox(
-        width: 10,
-      ),
-      Expanded(
-        child: Divider(),
-      ),
-    ],
-  );
 }
