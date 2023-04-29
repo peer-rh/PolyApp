@@ -16,7 +16,7 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", [], "", {});
+  UserModel thisUser = UserModel("", "", [], "");
   final learnCont = TextEditingController();
   int currentStep = 0;
 

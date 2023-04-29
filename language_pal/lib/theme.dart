@@ -36,10 +36,6 @@ ThemeData darkTheme = ThemeData(
       fontSize: 24,
       fontWeight: FontWeight.w300,
     ),
-    titleMedium: GoogleFonts.nunito(
-      fontSize: 20,
-      fontWeight: FontWeight.w400,
-    ),
   ),
 );
 

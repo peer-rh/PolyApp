@@ -7,6 +7,68 @@ class ChatSummaryPage extends StatelessWidget {
   final ConversationRating rating;
   const ChatSummaryPage(this.rating, {super.key});
 
+  void showScoreExplanationDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                          "${AppLocalizations.of(context)!.conversation_total_messages}: ",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16)),
+                      Text(rating.totalMessages.toString(),
+                          style: const TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                          "${AppLocalizations.of(context)!.conversation_total_retries}: ",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16)),
+                      Text(rating.totalRetries.toString(),
+                          style: const TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                          "${AppLocalizations.of(context)!.conversation_goal_score}: ",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16)),
+                      Text(rating.goalScore.toString(),
+                          style: const TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                          "${AppLocalizations.of(context)!.conversation_ai_score}: ",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16)),
+                      Text(rating.aiScore.toString(),
+                          style: const TextStyle(fontSize: 16)),
+                    ],
+                  )
+                ]),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context)!.close),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,15 +79,18 @@ class ChatSummaryPage extends StatelessWidget {
         child: Container(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(children: [
-                  Stack(
+                SizedBox(
+                  width: double.infinity,
+                  child: Stack(
                     alignment: Alignment.center,
                     children: [
                       CustomPaint(
-                        painter: ScoreCircle(rating.totalScore, context),
-                        size: const Size(100, 100),
+                        painter: ScoreCircle(rating.totalScore, context,
+                            strokeWidth: 16),
+                        size: Size(MediaQuery.of(context).size.width - 128,
+                            MediaQuery.of(context).size.width - 128),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +98,7 @@ class ChatSummaryPage extends StatelessWidget {
                           Text(
                             "${rating.totalScore}/10",
                             style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 64,
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -41,59 +106,24 @@ class ChatSummaryPage extends StatelessWidget {
                             AppLocalizations.of(context)!
                                 .conversation_total_score,
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
+                                fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                            icon: const Icon(Icons.help_rounded),
+                            onPressed: () {
+                              showScoreExplanationDialog(context);
+                            },
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(width: 16),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                                "${AppLocalizations.of(context)!.conversation_total_messages}: ",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
-                            Text(rating.totalMessages.toString(),
-                                style: const TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                "${AppLocalizations.of(context)!.conversation_total_retries}: ",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
-                            Text(rating.totalRetries.toString(),
-                                style: const TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                "${AppLocalizations.of(context)!.conversation_goal_score}: ",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
-                            Text(rating.goalScore.toString(),
-                                style: const TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                "${AppLocalizations.of(context)!.conversation_ai_score}: ",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
-                            Text(rating.aiScore.toString(),
-                                style: const TextStyle(fontSize: 16)),
-                          ],
-                        )
-                      ])
-                ]),
+                ),
                 const SizedBox(height: 16),
                 const Divider(),
                 const SizedBox(height: 8),

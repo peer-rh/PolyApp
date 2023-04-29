@@ -32,11 +32,13 @@ class PastConversationProvider extends StateNotifier<List<Conversation>> {
         .collection("users")
         .doc(uid)
         .collection(learnLang)
+        .orderBy("date_added", descending: true)
         .get()
         .then((value) {
       loading = false;
-      state =
-          value.docs.map((e) => Conversation.fromFirestore(e.data())).toList();
+      state = value.docs
+          .map((e) => Conversation.fromFirestore(e.data()["conv"]))
+          .toList();
     });
   }
 
@@ -50,7 +52,7 @@ class PastConversationProvider extends StateNotifier<List<Conversation>> {
         .collection("users")
         .doc(uid)
         .collection(learnLang)
-        .add(conv.toFirestore());
+        .add({"date_added": Timestamp.now(), "conv": conv.toFirestore()});
   }
 }
 
