@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/auth/data/auth_exception.dart';
 import 'package:poly_app/auth/logic/auth_provider.dart';
 import 'package:poly_app/auth/presentation/components/o_auth_buttons.dart';
-import 'package:poly_app/auth/presentation/components/sign_in_button.dart';
 import 'package:poly_app/auth/presentation/forgot_password.dart';
 import 'package:poly_app/common/ui/divider.dart';
 import 'package:poly_app/common/ui/logo.dart';
@@ -151,7 +150,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
             CustomDivider(text: "OR"), // TODO: i18n
             const SizedBox(height: 16),
             OAuthButtons(ref.read(authProvider)),
-            const SizedBox(height: 25),
+            const SizedBox(height: 96),
             TextButton(
               onPressed: () {
                 setState(() {

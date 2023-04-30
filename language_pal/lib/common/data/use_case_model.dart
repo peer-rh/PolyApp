@@ -15,3 +15,28 @@ class UseCaseModel {
     );
   }
 }
+
+enum UseCaseType {
+  travel,
+  job,
+  studies,
+  interest,
+  move;
+
+  factory UseCaseType.fromCode(String code) {
+    switch (code) {
+      case "travel":
+        return UseCaseType.travel;
+      case "job":
+        return UseCaseType.job;
+      case "studies":
+        return UseCaseType.studies;
+      case "interest":
+        return UseCaseType.interest;
+      case "move":
+        return UseCaseType.move;
+      default:
+        throw Exception("Unknown use case type: $code");
+    }
+  }
+}

@@ -10,14 +10,15 @@ import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
-Future<String> generateTextToSpeech(String msg, ScenarioModel scenario) async {
+Future<String> generateTextToSpeech(
+    String msg, Map<dynamic, dynamic> audioInfo) async {
   // Make post request to Google Cloud Text-to-Speech API
   final data = (await FirebaseFunctions.instance
           .httpsCallable('generateTextToSpeech')
           .call({
-    "language_code": scenario.voiceSettings["language_code"],
-    "pitch": scenario.voiceSettings["pitch"],
-    "voice_name": scenario.voiceSettings["name"],
+    "language_code": audioInfo["language_code"],
+    "pitch": audioInfo["pitch"],
+    "voice_name": audioInfo["name"],
     "text": msg,
   }))
       .data;
@@ -32,10 +33,10 @@ Future<String> generateTextToSpeech(String msg, ScenarioModel scenario) async {
 }
 
 class TTSButton extends ConsumerStatefulWidget {
-  final ScenarioModel scenario;
+  final Map<dynamic, dynamic> audioInfo;
   final AIMsgModel msg;
   final AudioPlayer audioPlayer;
-  const TTSButton(this.msg, this.audioPlayer, this.scenario, {super.key});
+  const TTSButton(this.msg, this.audioPlayer, this.audioInfo, {super.key});
 
   @override
   ConsumerState<TTSButton> createState() => _TTSButtonState();
@@ -62,7 +63,7 @@ class _TTSButtonState extends ConsumerState<TTSButton> {
                 loading = true;
               });
               widget.msg.audioPath =
-                  await generateTextToSpeech(widget.msg.msg, widget.scenario);
+                  await generateTextToSpeech(widget.msg.msg, widget.audioInfo);
               setState(() {
                 loading = false;
               });

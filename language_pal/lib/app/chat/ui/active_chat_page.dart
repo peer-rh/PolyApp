@@ -68,7 +68,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 parent: AlwaysScrollableScrollPhysics()),
             child: Column(
               children: [
-                ConversationColumn(conv: conv.conv, scenario: conv.scenario),
+                ConversationColumn(
+                  conv: conv.conv,
+                  aiAvatar: conv.scenario.avatar,
+                  audioInfo: conv.scenario.voiceSettings,
+                  translationEnabled: true,
+                ),
                 getBottomWidget(),
                 SizedBox(
                   height: _offset,
@@ -94,7 +99,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     left: 16,
                     right: 16,
                     top: 8),
-                child: ChatInputArea(
+                child: ChatInputAreaOld(
                   scenario: conv.scenario,
                 ),
               ),

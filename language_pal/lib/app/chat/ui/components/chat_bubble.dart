@@ -23,10 +23,11 @@ class SingularOwnMsgBubble extends StatelessWidget {
         ),
       );
     }
-    return SizedBox(
-        height: 14,
-        width: 100,
-        child: SkeletonBox(color: Theme.of(context).colorScheme.onPrimary));
+    return const SizedBox();
+    // return SizedBox(
+    //     height: 14,
+    //     width: 100,
+    //     child: SkeletonBox(color: Theme.of(context).colorScheme.onPrimary));
   }
 
   Widget ratingSuggestion(BuildContext context) {
@@ -96,18 +97,19 @@ class OwnMsgBubble extends StatelessWidget {
 }
 
 class AiMsgBubble extends StatelessWidget {
-  final ScenarioModel scenario;
   final AIMsgModel msg;
   final AudioPlayer audioPlayer;
   final String avatar;
-  const AiMsgBubble(this.msg, this.avatar, this.scenario, this.audioPlayer,
-      {super.key});
+  final Map<dynamic, dynamic>? audioInfo;
+  final bool translationEnabled;
+  const AiMsgBubble(this.msg, this.avatar, this.audioInfo, this.audioPlayer,
+      {this.translationEnabled = true, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MessageBubble(
       padding: const EdgeInsets.symmetric(vertical: 6),
-      color: Theme.of(context).colorScheme.surfaceVariant,
+      color: Theme.of(context).colorScheme.surface,
       left: true,
       preIcon: AIAvatar(avatar),
       child: Column(
@@ -121,8 +123,10 @@ class AiMsgBubble extends StatelessWidget {
                 fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
           ),
           Row(mainAxisSize: MainAxisSize.min, children: [
-            TranslationButton(msg),
-            TTSButton(msg, audioPlayer, scenario),
+            translationEnabled ? TranslationButton(msg) : const SizedBox(),
+            audioInfo != null
+                ? TTSButton(msg, audioPlayer, audioInfo!)
+                : const SizedBox(),
           ])
         ],
       ),
@@ -138,11 +142,13 @@ class AIMsgBubbleLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return MessageBubble(
         padding: const EdgeInsets.symmetric(vertical: 6),
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surface,
         left: true,
         preIcon: AIAvatar(avatar),
-        child: LoadingThreeDots(
-            color: Theme.of(context).colorScheme.onSurfaceVariant));
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: LoadingThreeDots(
+                color: Theme.of(context).colorScheme.onSurface)));
   }
 }
 
@@ -173,11 +179,16 @@ class MessageBubble extends StatelessWidget {
           Container(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.6),
-            child: Card(
-              margin: const EdgeInsets.symmetric(horizontal: 6),
-              elevation: 0,
-              color: color,
-              child: Padding(padding: const EdgeInsets.all(10), child: child),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: color,
+              ),
+              child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  child: child),
             ),
           ),
         ],

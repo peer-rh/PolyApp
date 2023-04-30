@@ -112,7 +112,7 @@ class PastConversationPage extends ConsumerWidget {
               parent: AlwaysScrollableScrollPhysics()),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 32),
-            child: ConversationColumn(conv: conv, scenario: scenario),
+            child: ConversationColumn(conv: conv, aiAvatar: "assets/poly_parrot.png",),
           ),
         ),
       ),

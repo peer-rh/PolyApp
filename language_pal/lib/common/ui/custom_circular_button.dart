@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomCircularButton extends StatelessWidget {
   final Widget icon;
-  final Function onPressed;
+  final void Function()? onPressed;
   final Color? color;
   final Color? outlineColor;
   final double? outlineWidth;
@@ -21,7 +21,7 @@ class CustomCircularButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onPressed(),
+      onTap: onPressed,
       borderRadius: BorderRadius.circular(size / 2),
       child: Container(
           width: size,

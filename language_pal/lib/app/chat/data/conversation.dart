@@ -13,7 +13,7 @@ class Conversation {
   int get length => _msgs.length;
   List<MsgModel> get msgs => _msgs;
 
-  void addMsg(dynamic msg) {
+  void addMsg(MsgModel msg) {
     _msgs.add(msg);
   }
 

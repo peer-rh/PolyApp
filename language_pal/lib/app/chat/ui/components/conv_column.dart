@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:poly_app/app/chat/data/conversation.dart';
 import 'package:poly_app/app/chat/data/messages.dart';
 import 'package:poly_app/app/chat/ui/chat_summary_page.dart';
+import 'package:poly_app/app/chat/ui/components/ai_avatar.dart';
 import 'package:poly_app/app/chat/ui/components/chat_bubble.dart';
 import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,11 +11,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ConversationColumn extends StatelessWidget {
   AudioPlayer audioPlayer = AudioPlayer();
   Conversation conv;
-  ScenarioModel scenario;
+  Map<String, dynamic>? audioInfo;
+  bool translationEnabled;
+  String aiAvatar;
   ConversationColumn({
     super.key,
     required this.conv,
-    required this.scenario,
+    this.translationEnabled = false,
+    this.audioInfo,
+    required this.aiAvatar,
   });
 
   void initAudio() async {
@@ -38,9 +43,10 @@ class ConversationColumn extends StatelessWidget {
             if (e is AIMsgModel) {
               return AiMsgBubble(
                 e,
-                scenario.avatar,
-                scenario,
+                aiAvatar,
+                audioInfo,
                 audioPlayer,
+                translationEnabled: translationEnabled,
               );
             } else if (e is PersonMsgListModel) {
               return OwnMsgBubble(e);

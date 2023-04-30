@@ -220,4 +220,42 @@ export const generateTextToSpeech = functions.https.onCall(async (data, context)
     return response.audioContent.toString('base64');
 });
 
+export const onboardingGetChatGPTResponse = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
+    // Check if current user is allowed to do so
+    const uid = context.auth?.uid;
+    if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
+    functions.logger.info("Get getChatGPTResponse called: " + data.toString());
+
+    let system_message = `You'll try to find out what Language the user wants to learn and what the reason for that is. Nothing more. For both only one selection is possible. Stay in the language of the conversation. The Languages are: DE, ES, EN, FR. The Reasons are: WORK, TRAVEL, STUDIES, INTEREST, MOVE. When you have found them out simply write "END: [language] [reason]"`;
+
+    const configuration = new Configuration({
+        apiKey: openAIKey.value(),
+    });
+    const openai = new OpenAIApi(configuration);
+    let new_data: Array<any> = [{ role: "system", content: system_message }].concat(data["messages"]);
+
+    let comp: CreateChatCompletionResponse = (await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        max_tokens: 100,
+        messages: new_data,
+        user: uid,
+    })).data
+    functions.logger.info("Returning response: " + comp.choices[0].message?.content);
+    let out: String = comp.choices[0].message?.content!;
+
+    if (out.search("END:") != -1) {
+        let content = out.split("END:")[0].trim();
+        let end = out.split("END:")[1].trim();
+        let language = end.split(" ")[0].trim().toLowerCase();
+        let reason = end.split(" ")[1].trim().toLowerCase().replace(/[^a-z]/g, '');
+        return {
+            message: content,
+            language: language,
+            reason: reason
+        }
+    }
+    return {
+        message: out,
+    }
+});
 
