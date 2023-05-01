@@ -11,6 +11,7 @@ import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/components/big_selectable_button.dart';
 import 'package:poly_app/auth/logic/auth_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:poly_app/common/logic/learn_track_provider.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/frosted_effect.dart';
 import 'package:poly_app/common/ui/measure_size.dart';
@@ -59,8 +60,15 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       _conv.addMsg(AIMsgModel(value.message));
       _loading = false;
       if (value.language != null) {
-        // TODO: Save to user
-        print("Language: ${value.language!.englishName} ${value.useCase}");
+        // TODO: Maybe add Alert
+        // TODO: Add AppLang
+        thisUser.learnTrackList = [
+          "${value.useCase}_en_${value.language!.code}"
+        ];
+        ref
+            .read(currentLearnTrackProvider.notifier)
+            .setLearnTrackId(thisUser.learnTrackList[0]);
+        ref.read(userProvider.notifier).setUserModel(thisUser);
       } else {
         _enabled = true;
       }

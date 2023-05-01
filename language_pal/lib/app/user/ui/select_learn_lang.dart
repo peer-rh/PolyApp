@@ -175,7 +175,7 @@ class AddLearnLangPage extends ConsumerWidget {
                   title: lang.getName(context),
                   onTap: () {
                     UserModel newU = ref.read(userProvider).user!;
-                    newU.learnLangList.add(lang.code);
+                    newU.learnTrackList.add(lang.code);
                     ref.read(userProvider).setUserModel(newU);
 
                     Navigator.of(context).pop();

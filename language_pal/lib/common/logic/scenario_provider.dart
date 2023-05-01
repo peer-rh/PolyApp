@@ -4,7 +4,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:poly_app/app/user/logic/learn_language_provider.dart';
-import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/data/scenario_model.dart';
 
 final scenarioMap =

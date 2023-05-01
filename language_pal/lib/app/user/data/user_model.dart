@@ -2,16 +2,16 @@ class UserModel {
   String uid;
   String email;
   bool premiumCustomer = false; // TODO
-  List<String> learnLangList;
+  List<String> learnTrackList;
   String useCase;
 
-  UserModel(this.uid, this.email, this.learnLangList, this.useCase);
+  UserModel(this.uid, this.email, this.learnTrackList, this.useCase);
 
   factory UserModel.fromMap(String uid, Map<String, dynamic> map) {
     return UserModel(
       uid,
       map["email"] ?? "",
-      (map["learnLangList"] ?? []).cast<String>(),
+      (map["learnTrackList"] ?? []).cast<String>(),
       map["useCase"] ?? "",
     );
   }
@@ -19,7 +19,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       "email": email,
-      "learnLangList": learnLangList,
+      "learnTrackList": learnTrackList,
       "useCase": useCase,
     };
   }

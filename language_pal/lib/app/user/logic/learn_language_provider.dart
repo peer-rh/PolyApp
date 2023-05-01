@@ -5,7 +5,7 @@ import 'package:poly_app/common/logic/languages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final learnLangListProvider = Provider<List<LanguageModel>>((ref) {
-  final codes = ref.watch(userProvider).user?.learnLangList;
+  final codes = ref.watch(userProvider).user?.learnTrackList;
   if (codes == null) return [];
   return codes.map((code) => LanguageModel.fromCode(code)).toList();
 });
