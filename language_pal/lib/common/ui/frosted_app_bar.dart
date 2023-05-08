@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 
 class FrostedAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
-  final Widget? leading;
-  final Widget? trailing;
+  final Widget? action;
 
-  FrostedAppBar({
+  const FrostedAppBar({
     super.key,
     required this.title,
-    this.leading,
-    this.trailing,
+    this.action,
   });
 
   @override
@@ -21,13 +19,14 @@ class FrostedAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return ClipRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 50),
+        filter:
+            ImageFilter.blur(sigmaX: 20, sigmaY: 8, tileMode: TileMode.mirror),
         child: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor:
               Theme.of(context).colorScheme.background.withOpacity(0.8),
           title: title,
-          leading: leading,
-          actions: trailing != null ? [trailing!] : null,
+          actions: action != null ? [action!] : null,
         ),
       ),
     );

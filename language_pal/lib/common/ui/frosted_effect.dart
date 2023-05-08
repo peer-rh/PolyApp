@@ -10,9 +10,9 @@ class FrostedEffect extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRect(
         child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 50),
+      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
       child: Container(
-          color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+          color: Theme.of(context).colorScheme.background.withOpacity(0.6),
           child: child),
     ));
   }

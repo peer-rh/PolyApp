@@ -1,0 +1,70 @@
+{
+    "type": "vocab",
+    "title": "Basic Phrases",
+    "content": [
+        {
+            "id": "6f664f8d-fd22-48da-a1fe-d13c75b993ad",
+            "content": "Hello"
+        },
+        {
+            "id": "4450545d-c0ec-42bc-8ce2-5582e26fefa0",
+            "content": "yes"
+        },
+        {
+            "id": "dd8fe9ae-7223-4d2c-b183-8d5b0f46c916",
+            "content": "no"
+        },
+        {
+            "id": "de5ec1a4-7719-450d-8d73-51f1c40aa4cc",
+            "content": "Thank you"
+        },
+        {
+            "id": "72f72c9a-5509-4b55-813d-227650ace128",
+            "content": "Please"
+        },
+        {
+            "id": "a1bbd0da-9eef-4a06-b27c-11e253765012",
+            "content": "No Problem"
+        },
+        {
+            "id": "23d915ee-86df-48ce-85c1-9e4440352dcd",
+            "content": "I "
+        },
+        {
+            "id": "a19a685e-8c43-4c5b-8d33-55cf6fc9ab33",
+            "content": "You "
+        },
+        {
+            "id": "b9a2987f-d9cc-471a-b92e-0159f219d592",
+            "content": "He"
+        },
+        {
+            "id": "24cb8be8-c9be-48f5-bee9-f93641f9fe23",
+            "content": "She"
+        },
+        {
+            "id": "86695299-738d-4d37-8bb0-9a5c5ba5bc7e",
+            "content": "We"
+        },
+        {
+            "id": "ff896f27-7093-4f4b-9b31-45d6cdab21ba",
+            "content": "You (plural)"
+        },
+        {
+            "id": "2838f2df-be86-44db-b9d1-8ed83753565a",
+            "content": "Sorry"
+        },
+        {
+            "id": "d4595255-bb64-4366-bd0b-0e6a3584e0a7",
+            "content": "What is"
+        },
+        {
+            "id": "391e65d4-6e09-4238-bcd4-91841cc1ee83",
+            "content": "How do you say … in {{}}"
+        },
+        {
+            "id": "6f534464-ffce-4749-901f-b7affdf1abe3",
+            "content": "What is … in {}"
+        }
+    ]
+}

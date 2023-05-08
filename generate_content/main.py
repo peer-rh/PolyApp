@@ -1,205 +1,162 @@
+# TODO: Only assign non computed values
+
 # {} - App Lang english name
 # {{}} - Learn Lang english name
 # [] - App Lang Country
 # [[]] - Learn Lang Country
 # /// - Generate audio url
 import json
-import random
-import deepl
 import os
-from google.cloud import texttospeech
 import uuid
+from firebase_connector import set_lesson, set_subchapter, set_learn_track
+from convert_data import translate, generateVoiceUrl, save_cache, avatar_to_voice, convert_text, load_cache
 
-SKIP_VOICE = True
-
-avatar_to_voice = {
-    "man": {
-        "de": {
-            "name": "de-DE-Neural2-B",
-            "language_code": "de-DE",
-            "pitch": -4
-        },
-        "en": {
-            "name": "en-US-Neural2-A",
-            "language_code": "en-US",
-            "pitch": -4
-        },
-        "es": {
-            "name": "es-ES-Neural2-B",
-            "language_code": "es-ES",
-            "pitch": -4
-        }
-    },
-    "woman": {
-        "de": {
-            "name": "de-DE-Neural2-F",
-            "language_code": "de-DE",
-            "pitch": 0
-        },
-        "en": {
-            "name": "en-US-Neural2-F",
-            "language_code": "en-US",
-            "pitch": 0
-        },
-        "es": {
-            "name": "es-ES-Neural2-D",
-            "language_code": "es-ES",
-            "pitch": 0
-        }
-    }
-}
+learn_langs = ["de", "en", "es"]
+app_langs = ["en", "de"]
 
 
-class Lang:
-    def __init__(self, code, contry_name, english_name):
-        self.code = code
-        self.contry_name = contry_name
-        self.english_name = english_name
+def gen_lessons():
+    def store_new_lesson(lesson_name: str, lesson_data: dict, gen_content):
+        for al in app_langs:
+            for ll in learn_langs:
+                new_lesson = {
+                    "type": lesson_data["type"],
+                    "title": translate(lesson_data["title"], al),
+                    "content": gen_content(al, ll)
+                }
+                set_lesson(lesson_name + "_" + al + "_" + ll, new_lesson)
+
+    def add_ids(items):
+        all_ids = []
+        for i in range(len(items)):
+            msg = items[i]
+            if isinstance(msg, str):
+                msg = {
+                    "id": str(uuid.uuid4()),
+                    "content": msg
+                }
+                items[i] = msg
+            all_ids.append(msg["id"])
+        return all_ids, items
+
+    def comprehensive_translate(txt: str, al: str, ll: str):
+        conv = convert_text(txt, ll, al)
+        return translate(conv, al), translate(conv, ll)
+
+    for lesson in os.listdir("in/lessons"):
+        print("start lesson: " + lesson + "")
+        lesson_data = json.load(open(f"in/lessons/{lesson}", "r"))
+        if lesson_data["type"] == "vocab":
+            all_ids, lesson_data["content"] = add_ids(lesson_data["content"])
+            json.dump(lesson_data, open(
+                f"in/lessons/{lesson}", "w"), indent=4, ensure_ascii=False)
+
+            def gen_vocab(i, al, ll):
+                al_tran, ll_tran = comprehensive_translate(
+                    i["content"], al, ll)
+                return {
+                    "id": i["id"],
+                    "app_lang": al_tran,
+                    "learn_lang": ll_tran,
+                    "audio_url": generateVoiceUrl(ll_tran, "random", ll),
+                }
+            store_new_lesson(lesson.split(".")[0], lesson_data, lambda al, ll: {
+                "vocab_list": [
+                    gen_vocab(i, al, ll) for i in lesson_data["content"]
+                ]})
+        elif lesson_data["type"] == "mock_chat":
+            all_ids, lesson_data["content"] = add_ids(lesson_data["content"])
+            json.dump(lesson_data, open(
+                f"in/lessons/{lesson}", "w"), indent=4, ensure_ascii=False)
+            isAi = lesson_data["starts_with_ai"]
+
+            def gen_msg(i, al, ll):
+                nonlocal isAi
+                isAi = not isAi
+                al_tran, ll_tran = comprehensive_translate(
+                    i["content"], al, ll)
+                return {
+                    "id": i["id"],
+                    "is_ai": not isAi,
+                    "app_lang": al_tran,
+                    "learn_lang": ll_tran,
+                    "audio_url": generateVoiceUrl(ll_tran, lesson_data["avatar"], ll),
+                }
+
+            store_new_lesson(lesson.split(".")[0], lesson_data, lambda al, ll: {
+                "avatar": lesson_data["avatar"],
+                "msg_list": [
+                    gen_msg(i, al, ll) for i in lesson_data["content"]
+                ]})
+
+        elif lesson_data["type"] == "ai_chat":
+            store_new_lesson(lesson.split(".")[0], lesson_data, lambda al, ll: {
+                "avatar": lesson_data["avatar"],
+                "voice_settings": avatar_to_voice[lesson_data["avatar"]][ll],
+                "prompt_desc": lesson_data["prompt_desc"],
+                "goal_desc": lesson_data["goal_desc"],
+                "starting_msg": comprehensive_translate(lesson_data["starting_msg"], al, ll)[0],
+            })
 
 
-translator = deepl.Translator(
-    auth_key="32aa29e2-c61e-8085-14b1-b448e7dcf353:fx")
-cache_translate = {}
+def gen_subchapters():
+    for subchap in os.listdir("in/subchapters"):
+        print("start subchapter: " + subchap + "")
+
+        def gen_lesson_meta(i, al, ll):
+            lesson_data = json.load(open(f"in/lessons/{i}.json", "r"))
+            return {
+                "id": f"{i}_{al}_{ll}",
+                "title": translate(lesson_data["title"], al),
+                "type": lesson_data["type"]
+            }
+
+        subchap_data = json.load(open(f"in/subchapters/{subchap}", "r"))
+        for al in app_langs:
+            for ll in learn_langs:
+                set_subchapter(subchap.split(".")[0] + "_" + al + "_" + ll, {
+                    "title": translate(subchap_data["title"], al),
+                    "description": translate(subchap_data["description"], al),
+                    "lessons": list(map(lambda x: gen_lesson_meta(x, al, ll),
+                                        subchap_data["lessons"]))
+                })
 
 
-def translate(text: str, lang: str) -> str:
-    if cache_translate.get((text, lang)):
-        return cache_translate[(text, lang)]
-    if lang == "en":
-        lang = "EN-US"
-    result = translator.translate_text(text, target_lang=lang)
-    cache_translate[(text, lang)] = result.text
-    return result.text
+def gen_tracks():
+    for track in os.listdir("in/tracks"):
+        print("start track: " + track + "")
 
+        def gen_subchapter_meta(i, al, ll):
+            subchap_data = json.load(open(f"in/subchapters/{i}.json", "r"))
+            return {
+                "id": f"{i}_{al}_{ll}",
+                "title": translate(subchap_data["title"], al),
+            }
 
-def getRandomVoiceSetting(lang: str) -> dict:
-    return random.choice(list(avatar_to_voice.values()))[lang]
-
-
-client = texttospeech.TextToSpeechClient()
-cache_audio = {}
-
-
-def generateVoiceUrl(text: str, voice_settings: dict) -> str:
-    if SKIP_VOICE:
-        return ""
-    if cache_audio.get((text, voice_settings)):
-        return cache_audio[text]
-    input_text = texttospeech.SynthesisInput(text=text)
-    voice = texttospeech.VoiceSelectionParams(
-        language_code=voice_settings["language_code"],
-        name=voice_settings["name"],
-    )
-
-    audio_config = texttospeech.AudioConfig(
-        pitch=voice_settings["pitch"],
-        audio_encoding=texttospeech.AudioEncoding.MP3
-    )
-    out = client.synthesize_speech(
-        input=input_text,
-        voice=voice,
-        audio_config=audio_config
-    )
-
-    this_id = str(uuid.uuid4())
-
-    with open(f"out/audio/{this_id}.mp3", "wb") as out_file:
-        out_file.write(out.audio_content)
-
-    cache_audio[(text, voice_settings)] = f"audio/{this_id}.mp3"
-    return f"audio/{this_id}.mp3"
-
-
-def convertToFinal(data: dict, app_lang: Lang, learn_lang: Lang) -> dict:
-    data = data.copy()
-
-    def convLang(txt: str) -> str:
-        txt = txt.replace("{{}}", learn_lang.english_name)
-        txt = txt.replace("{}", app_lang.english_name)
-        txt = txt.replace("[[]]", learn_lang.contry_name)
-        txt = txt.replace("[]", app_lang.contry_name)
-        return txt
-
-    for chap in data:
-        chap["id"] = str(uuid.uuid4())
-        for subchap in chap["items"]:
-            subchap["id"] = str(uuid.uuid4())
-            for item in subchap["items"]:
-                item["id"] = str(uuid.uuid4())
-                if (item["type"] == "vocab"):
-                    for i in range(len(item["items"])):
-                        vocab = item["items"][i]
-                        vocab = convLang(vocab)
-                        learn_lang_translated = translate(
-                            vocab, learn_lang.code)
-                        item["items"][i] = {
-                            "id": str(uuid.uuid4()),
-                            "app_lang": translate(vocab, app_lang.code),
-                            "learn_lang": learn_lang_translated,
-                            "audio_url": generateVoiceUrl(
-                                learn_lang_translated,
-                                getRandomVoiceSetting(learn_lang.code),
-                            ),
+        track_data = json.load(open(f"in/tracks/{track}", "r"))
+        for al in app_langs:
+            for ll in learn_langs:
+                set_learn_track(track.split(".")[0] + "_" + al + "_" + ll, {
+                    "chapters": [
+                        {
+                            "title": chap["title"],
+                            "subchapters": list(map(lambda x: gen_subchapter_meta(x, al, ll), chap["subchapters"]))
                         }
+                        for chap in track_data["chapters"]
+                    ]
+                })
 
-                elif (item["type"] == "mock_chat"):
-                    isAI = item["starts_with_ai"]
-                    for i in range(len(item["items"])):
-                        vocab = item["items"][i]
-                        vocab = convLang(vocab)
-                        learn_lang_translated = translate(
-                            vocab, learn_lang.code)
-                        item["items"][i] = {
-                            "id": str(uuid.uuid4()),
-                            "type": "ai" if (isAI) else "user",
-                            "app_lang": translate(vocab, app_lang.code),
-                            "learn_lang": learn_lang_translated,
-                            "audio_url": generateVoiceUrl(
-                                learn_lang_translated,
-                                avatar_to_voice[item["avatar"]
-                                                ][learn_lang.code],
-                            ),
-                        }
-                        isAI = not isAI
-
-                elif (item["type"] == "ai_chat"):
-                    item["starting_msg"] = translate(
-                        convLang(item["starting_msg"]), learn_lang.code)
-                    item["prompt_desc"] = convLang(item["prompt_desc"])
-                    item["goal_desc"] = convLang(item["goal_desc"])
-                    item["voice_info"] = avatar_to_voice[item["avatar"]
-                                                         ][learn_lang.code]
-
-    return data
-
-
-learn_langs = [
-    Lang("en", "United States", "English"),
-    Lang("de", "Germany", "German"),
-    Lang("es", "Spain", "Spanish"),
-]
-
-app_langs = [
-    Lang("en", "United States", "English"),
-    Lang("de", "Germany", "German"),
-]
 
 if __name__ == "__main__":
-    if (os.path.exists("out")):
-        import shutil
-        shutil.move("out", "out_old")
+    if (not os.path.exists("out")):
+        os.mkdir("out")
+        os.mkdir("out/audio")
 
-    os.mkdir("out")
-    os.mkdir("out/audio")
+    load_cache()
 
-    scenario = "travel"
-    app_lang = Lang("en", "United States", "English")
-    final_out = {}
-    for app_lang in app_langs:
-        for learn_lang in learn_langs:
-            data = json.load(open(f"in/{scenario}.json", "r"))
-            out = convertToFinal(data, app_lang, learn_lang)
-            final_out[f"{scenario}_{app_lang.code}_{learn_lang.code}"] = out
-    json.dump(final_out, open(
-        "out/generated.json", "w"),
-        ensure_ascii=False)
+    gen_lessons()
+    gen_subchapters()
+    gen_tracks()
+    save_cache()
+    # gen_subchapter(al, ll)
+    # gen_track(al, ll)

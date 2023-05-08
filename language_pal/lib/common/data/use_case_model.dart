@@ -16,12 +16,16 @@ class UseCaseModel {
   }
 }
 
+// new
 enum UseCaseType {
-  travel,
-  job,
-  studies,
-  interest,
-  move;
+  travel("travel"),
+  job("job"),
+  studies("studies"),
+  interest("interest"),
+  move("move");
+
+  const UseCaseType(this.code);
+  final String code;
 
   factory UseCaseType.fromCode(String code) {
     switch (code) {

@@ -1,0 +1,36 @@
+{
+    "man": {
+        "de": {
+            "name": "de-DE-Neural2-B",
+            "language_code": "de-DE",
+            "pitch": -4
+        },
+        "en": {
+            "name": "en-US-Neural2-A",
+            "language_code": "en-US",
+            "pitch": -4
+        },
+        "es": {
+            "name": "es-ES-Neural2-B",
+            "language_code": "es-ES",
+            "pitch": -4
+        }
+    },
+    "woman": {
+        "de": {
+            "name": "de-DE-Neural2-F",
+            "language_code": "de-DE",
+            "pitch": 0
+        },
+        "en": {
+            "name": "en-US-Neural2-F",
+            "language_code": "en-US",
+            "pitch": 0
+        },
+        "es": {
+            "name": "es-ES-Neural2-D",
+            "language_code": "es-ES",
+            "pitch": 0
+        }
+    }
+}

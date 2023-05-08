@@ -56,6 +56,8 @@ dependencies:
   firebase_remote_config: ^4.0.0
   speech_to_text: ^6.1.1
   shared_preferences: ^2.1.0
+  firebase_storage: ^11.1.2
+  reorderables: ^0.6.0
 
 dev_dependencies:
   flutter_test:
@@ -99,7 +101,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-      - family: MyFlutterApp
+      - family: CustomIcons
         fonts:
           - asset: fonts/CustomIcons.ttf
   # fonts:

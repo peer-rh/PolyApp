@@ -3,3 +3,6 @@ language_pal/macos/Runner/GoogleService-Info.plist
 language_pal/macos/firebase_app_id_file.json
 language_pal/ios/firebase_app_id_file.json
 language_pal/ios/Flutter/Env.xcconfig
+generate_content/.env
+generate_content/__pycache__
+generate_content/settings/firebase_service.json

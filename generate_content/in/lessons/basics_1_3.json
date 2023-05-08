@@ -1,0 +1,44 @@
+{
+    "type": "mock_chat",
+    "title": "First Steps",
+    "avatar": "man",
+    "starts_with_ai": false,
+    "content": [
+        {
+            "id": "72a84fd7-d088-46b8-b740-9dc2a3db7b92",
+            "content": "Hello"
+        },
+        {
+            "id": "1b0e12df-9cec-419c-8e04-cb115bc8cbef",
+            "content": "Good Morning, how are you?"
+        },
+        {
+            "id": "8aeb145c-8d23-4972-8df6-dcf049c4d533",
+            "content": "I am doing good, thank you. And you?"
+        },
+        {
+            "id": "27750e48-2498-47ca-83fd-b7d4bcd03423",
+            "content": "I am doing good as well, thankyou. What is your name?"
+        },
+        {
+            "id": "0f2ea0ff-d2f7-4515-bfa6-954b77955dbd",
+            "content": "My name is Peter. What is your name?"
+        },
+        {
+            "id": "96e81711-4008-4e68-9033-14a6988dcf1c",
+            "content": "My Name is John. Do you speak {{}}?"
+        },
+        {
+            "id": "4d1354ef-f60b-4d03-bb3c-2174b8056335",
+            "content": "I sadly only speak a little {{}}"
+        },
+        {
+            "id": "624e5b6f-ef91-4494-a7ae-77c3947a81fe",
+            "content": "Ok. See you later"
+        },
+        {
+            "id": "323dbed9-e56a-4843-af3f-e937074e540a",
+            "content": "Bye"
+        }
+    ]
+}
