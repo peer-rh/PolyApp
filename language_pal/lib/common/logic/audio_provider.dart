@@ -15,6 +15,7 @@ class AudioProvider {
   }
 
   void initAudio() async {
+    await audioPlayer.setPlayerMode(PlayerMode.lowLatency);
     await AudioPlayer.global.setGlobalAudioContext(const AudioContext(
         iOS: AudioContextIOS(options: [
           AVAudioSessionOptions.allowBluetooth,
@@ -32,7 +33,7 @@ class AudioProvider {
     isPlaying = false;
   }
 
-  void playAsset(String asset) async {
+  void playLocal(String asset) async {
     if (isPlaying) return;
     isPlaying = true;
     await audioPlayer.play(DeviceFileSource(asset));

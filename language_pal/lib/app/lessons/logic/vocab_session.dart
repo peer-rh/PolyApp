@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/lessons/data/vocab_lesson_model.dart';
 import 'package:poly_app/app/lessons/logic/lesson_providers.dart';
@@ -46,6 +49,7 @@ class ActiveVocabSession extends ChangeNotifier {
   }
 
   void _initState() async {
+    cacheAudio();
     final doc = await FirebaseFirestore.instance
         .collection("users")
         .doc(_uid)
@@ -213,6 +217,16 @@ class ActiveVocabSession extends ChangeNotifier {
     if (_currentStep != _steps.length - 1) {
       _currentStep = _currentStep! + 1;
       notifyListeners();
+    }
+  }
+
+  void cacheAudio() async {
+    final tmpDir = await getTemporaryDirectory();
+    for (VocabModel v in lesson.vocabList) {
+      final file = File("${tmpDir.path}/${v.audioUrl}");
+      print(file.path);
+      file.create(recursive: true);
+      FirebaseStorage.instance.ref(v.audioUrl).writeToFile(file);
     }
   }
 }

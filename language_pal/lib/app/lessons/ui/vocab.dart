@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/lessons/logic/vocab_session.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
 import 'package:poly_app/app/lessons/ui/input_methods/compose.dart';
@@ -115,9 +116,9 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
   }
 
   void playAudio(String path) async {
-    final url = await FirebaseStorage.instance.ref(path).getDownloadURL();
-    print(url);
-    ref.read(audioProvider).playNet(url);
+    final temp = await getTemporaryDirectory();
+    final file = "${temp.path}/$path";
+    ref.read(audioProvider).playLocal(file);
   }
 
   @override

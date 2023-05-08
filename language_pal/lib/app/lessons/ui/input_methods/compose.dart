@@ -97,6 +97,7 @@ class _ComposeInputState extends State<ComposeInput> {
     return Column(children: [
       CustomBox(
         borderColor: Theme.of(context).colorScheme.surface,
+        minHeight: 100,
         child: (boxes.isNotEmpty) ? wrap : const Text("Tap on items to add"),
       ),
       const SizedBox(height: 32),
