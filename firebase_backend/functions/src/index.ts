@@ -259,3 +259,29 @@ export const onboardingGetChatGPTResponse = functions.runWith({ secrets: ["OPENA
     }
 });
 
+export const getWhisperPronounciationResult = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
+
+    // Check if current user is allowed to do so
+    const uid = context.auth?.uid;
+    if (uid == null) throw new functions.https.HttpsError('unauthenticated', "The User must be authorized")
+
+    const configuration = new Configuration({
+        apiKey: openAIKey.value(),
+    });
+    const openai = new OpenAIApi(configuration);
+    const blob = new File([await (await fetch(data["data"])).blob()], "audio.mp3");
+
+    const response = await openai.createTranscription(
+        blob,
+        "whisper-1",
+        `The user is trying to say: ${data["text"]}`,
+        undefined,
+        undefined,
+        data["language"]
+    );
+
+    let result = response.data;
+    return result["text"];
+
+});
+

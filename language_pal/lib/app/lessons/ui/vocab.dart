@@ -6,8 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/lessons/logic/vocab_session.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
 import 'package:poly_app/app/lessons/ui/input_methods/compose.dart';
+import 'package:poly_app/app/lessons/ui/input_methods/pronounce.dart';
 import 'package:poly_app/app/lessons/ui/input_methods/selection.dart';
 import 'package:poly_app/app/lessons/ui/input_methods/write.dart';
+import 'package:poly_app/common/logic/abilities.dart';
 import 'package:poly_app/common/logic/audio_provider.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
@@ -109,6 +111,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
   Widget? currentInputWidget;
   Widget? prompt;
   String promptSub = "";
+  Widget? disableButton;
 
   @override
   void initState() {
@@ -131,6 +134,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
       case VocabStepType.select:
       case VocabStepType.write:
       case VocabStepType.compose:
+        disableButton = null;
         promptSub = "Translate this phrase";
         prompt = Text(
           session.currentStep!.prompt,
@@ -138,6 +142,12 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
         );
         break;
       case VocabStepType.listen:
+        disableButton = TextButton(
+            onPressed: () {
+              ref.read(cantListenProvider.notifier).setOn();
+              // TODO: Alert
+            },
+            child: const Text("I can't listen right now"));
         promptSub = "Listen to this phrase";
         prompt = FilledButton(
           onPressed: () {
@@ -148,6 +158,12 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
         break;
       case VocabStepType.pronounce:
         promptSub = "Pronounce this phrase";
+        disableButton = TextButton(
+            onPressed: () {
+              ref.read(cantTalkProvider.notifier).setOn();
+              // TODO: Alert
+            },
+            child: const Text("I can't talk right now"));
         prompt = Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,12 +214,25 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
           disabled: session.currentStep!.userAnswer != null,
         );
         break;
+      case VocabStepType.pronounce:
+        currentInputWidget = PronounciationInput(
+          (p0) {
+            session.currentAnswer = p0;
+            session.submitAnswer();
+          },
+          key: ValueKey(session.currentStep!.prompt),
+          disabled: session.currentStep!.userAnswer != null,
+        );
+        break;
       default:
         currentInputWidget = FilledButton(
             onPressed: () {
               session.nextStep();
             },
-            child: const Text("Next"));
+            child: Text(
+              "Next",
+              style: Theme.of(context).textTheme.bodySmall,
+            ));
     }
     setState(() {});
 
@@ -221,6 +250,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
                 ),
                 const SizedBox(height: 4),
                 prompt!,
+                disableButton ?? const SizedBox()
               ],
             )),
         const SizedBox(height: 32),

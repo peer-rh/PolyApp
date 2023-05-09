@@ -6,8 +6,7 @@ class ComposeInput extends StatefulWidget {
   final List<String> options;
   final void Function(String) onAnswer;
   final bool disabled;
-  const ComposeInput(this.options, this.onAnswer,
-      {this.disabled = false, super.key});
+  ComposeInput(this.options, this.onAnswer, {this.disabled = false, super.key});
 
   @override
   State<ComposeInput> createState() => _ComposeInputState();
@@ -63,7 +62,7 @@ class _ComposeInputState extends State<ComposeInput> {
         alignment: WrapAlignment.center,
         children: widget.options
             .map((e) => InkWell(
-                  onTap: widget.disabled
+                  onTap: widget.disabled || boxes.contains(e)
                       ? null
                       : () {
                           setState(() {

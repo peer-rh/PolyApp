@@ -20,9 +20,11 @@ class SelectionInput extends StatelessWidget {
   Widget selectableBox(BuildContext context, int index) {
     bool thisSelected = selected == options[index];
     return InkWell(
-        onTap: disabled ? null : () {
-          onSelected(options[index]);
-        },
+        onTap: disabled
+            ? null
+            : () {
+                onSelected(options[index]);
+              },
         child: CustomBox(
           borderColor: thisSelected
               ? Theme.of(context).colorScheme.primary

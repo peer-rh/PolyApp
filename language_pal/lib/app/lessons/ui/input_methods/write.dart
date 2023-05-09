@@ -4,7 +4,7 @@ import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
 class WriteInput extends StatefulWidget {
   final void Function(String) onChange;
   final bool disabled;
-  WriteInput(this.onChange, {this.disabled =false, super.key});
+  WriteInput(this.onChange, {this.disabled = false, super.key});
 
   @override
   State<WriteInput> createState() => _WriteInputState();
@@ -28,6 +28,11 @@ class _WriteInputState extends State<WriteInput> {
       borderColor: Theme.of(context).colorScheme.surface,
       child: TextField(
         readOnly: widget.disabled,
+        autocorrect: false,
+        onSubmitted: (s) {
+          widget.onChange(s);
+        },
+        textInputAction: TextInputAction.done,
         controller: _cont,
         textAlignVertical: TextAlignVertical.top,
         maxLines: 5,

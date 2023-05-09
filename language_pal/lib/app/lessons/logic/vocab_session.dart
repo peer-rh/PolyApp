@@ -11,6 +11,7 @@ import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/lessons/data/vocab_lesson_model.dart';
 import 'package:poly_app/app/lessons/logic/lesson_providers.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
+import 'package:poly_app/common/logic/abilities.dart';
 
 final activeVocabSession =
     ChangeNotifierProvider.family<ActiveVocabSession?, String>((ref, id) {
@@ -21,7 +22,10 @@ final activeVocabSession =
   if (lesson == null || trackId == null || uid == null) {
     return null;
   }
-  return ActiveVocabSession(trackId, lesson, uid);
+  final out = ActiveVocabSession(trackId, lesson, uid);
+  ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
+  ref.listen(cantListenProvider, (_, newVal) => out.cantListen = newVal);
+  return out;
 });
 
 class ActiveVocabSession extends ChangeNotifier {
@@ -32,6 +36,18 @@ class ActiveVocabSession extends ChangeNotifier {
   String? _currentAnswer;
   String get currentAnswer => _currentAnswer ?? "";
 
+  bool _cantTalk = false;
+  set cantTalk(bool newVal) {
+    _cantTalk = newVal;
+    notifyListeners();
+  }
+
+  bool _cantListen = false;
+  set cantListen(bool newVal) {
+    _cantListen = newVal;
+    notifyListeners();
+  }
+
   set currentAnswer(String? answer) {
     _currentAnswer = answer;
     notifyListeners();
@@ -41,15 +57,25 @@ class ActiveVocabSession extends ChangeNotifier {
   int? _currentStep;
 
   int get currentStepIndex => _currentStep ?? 0;
-  VocabStep? get currentStep =>
-      _currentStep == null ? null : _steps[_currentStep!];
+  VocabStep? get currentStep {
+    if (_currentStep == null) {
+      return null;
+    }
+    if (_steps[_currentStep!].type == VocabStepType.listen && _cantListen) {
+      _steps[_currentStep!].type = VocabStepType.select;
+    } else if (_steps[_currentStep!].type == VocabStepType.pronounce &&
+        _cantTalk) {
+      _currentStep = _currentStep! + 1;
+    }
+    return _steps[_currentStep!];
+  }
 
   ActiveVocabSession(this._trackId, this.lesson, this._uid) {
     _initState();
   }
 
   void _initState() async {
-    cacheAudio();
+    cacheAudio(); // TODO: See if actually faster
     final doc = await FirebaseFirestore.instance
         .collection("users")
         .doc(_uid)
@@ -224,7 +250,6 @@ class ActiveVocabSession extends ChangeNotifier {
     final tmpDir = await getTemporaryDirectory();
     for (VocabModel v in lesson.vocabList) {
       final file = File("${tmpDir.path}/${v.audioUrl}");
-      print(file.path);
       file.create(recursive: true);
       FirebaseStorage.instance.ref(v.audioUrl).writeToFile(file);
     }
@@ -260,7 +285,9 @@ class VocabStep {
       required this.type,
       this.userAnswer,
       this.audioUrl,
-      this.options});
+      this.options}) {
+    options?.shuffle();
+  }
 
   factory VocabStep.fromJson(Map<String, dynamic> json) {
     return VocabStep(
@@ -295,4 +322,9 @@ List<int> generateRandomIntegers(int n, int max, {int min = 0}) {
     }
   }
   return list;
+}
+
+String getNormifiedString(String str) {
+  var newStr = str.toLowerCase().trim().replaceAll(RegExp(r'[^\w\s]+'), '');
+  return newStr;
 }
