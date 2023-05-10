@@ -260,6 +260,8 @@ export const onboardingGetChatGPTResponse = functions.runWith({ secrets: ["OPENA
 });
 
 export const getWhisperPronounciationResult = functions.runWith({ secrets: ["OPENAI_KEY"] }).https.onCall(async (data, context) => {
+    const fs = require('fs');
+    const os = require('os');
 
     // Check if current user is allowed to do so
     const uid = context.auth?.uid;
@@ -269,10 +271,11 @@ export const getWhisperPronounciationResult = functions.runWith({ secrets: ["OPE
         apiKey: openAIKey.value(),
     });
     const openai = new OpenAIApi(configuration);
-    const blob = new File([await (await fetch(data["data"])).blob()], "audio.mp3");
-
+    const file_path = os.tmpdir() + "/audio.m4a";
+    console.log(file_path);
+    fs.writeFileSync(file_path, Buffer.from(data["data"], "base64"));
     const response = await openai.createTranscription(
-        blob,
+        fs.createReadStream(file_path),
         "whisper-1",
         `The user is trying to say: ${data["text"]}`,
         undefined,

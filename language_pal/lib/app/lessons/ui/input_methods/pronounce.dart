@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
@@ -9,12 +12,15 @@ import 'package:poly_app/common/logic/get_audio_vis.dart';
 import 'package:poly_app/common/ui/audio_visualizer.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
+import 'package:record/record.dart';
 import 'package:sound_stream/sound_stream.dart';
 
 class PronounciationInput extends StatefulWidget {
   final void Function(String) onSubmit;
   final bool disabled;
-  const PronounciationInput(this.onSubmit, {this.disabled = false, super.key});
+  final String wanted;
+  const PronounciationInput(this.onSubmit, this.wanted,
+      {this.disabled = false, super.key});
 
   @override
   State<PronounciationInput> createState() => _PronounciationInputState();
@@ -43,6 +49,8 @@ class _PronounciationInputState extends State<PronounciationInput> {
     sensibility: 8.0,
   );
   StreamController<List<double>?> audioFFT = StreamController<List<double>?>();
+
+  final _fileRecord = Record();
 
   @override
   void initState() {
@@ -86,6 +94,26 @@ class _PronounciationInputState extends State<PronounciationInput> {
     await _audioStream.cancel();
   }
 
+  void record() {
+    _recorder.start();
+    _fileRecord.start();
+  }
+
+  void stop() async {
+    _recorder.stop();
+    final file = await _fileRecord.stop();
+    List<int> fileBytes = await File.fromUri(Uri.parse(file!)).readAsBytes();
+    String base64String = base64Encode(fileBytes);
+    final out = await FirebaseFunctions.instance
+        .httpsCallable("getWhisperPronounciationResult")
+        .call({
+      "data": base64String,
+      "language": "es",
+      "text": widget.wanted,
+    });
+    print(out.data);
+  }
+
   @override
   Widget build(BuildContext context) {
     final visualizer = StreamBuilder(
@@ -119,7 +147,7 @@ class _PronounciationInputState extends State<PronounciationInput> {
                     size: 24,
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
-                  onPressed: isRecording ? _recorder.stop : _recorder.start,
+                  onPressed: isRecording ? stop : record,
                   size: 48))
         ]));
   }

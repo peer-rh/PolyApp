@@ -232,6 +232,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
             session.currentAnswer = p0;
             session.submitAnswer();
           },
+          session.currentStep!.answer,
           key: ValueKey(session.currentStep!.prompt),
           disabled: session.currentStep!.userAnswer != null,
         );

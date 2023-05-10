@@ -58,10 +58,10 @@ dependencies:
   shared_preferences: ^2.1.0
   firebase_storage: ^11.1.2
   reorderables: ^0.6.0
-  mic_stream: ^0.6.5
   permission_handler: ^10.2.0
   complex: ^0.7.2
   sound_stream: ^0.3.0
+  record: ^4.4.4
 
 dev_dependencies:
   flutter_test:
