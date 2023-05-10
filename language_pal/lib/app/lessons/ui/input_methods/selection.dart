@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
+import 'package:poly_app/common/ui/custom_ink_well.dart';
 
 class SelectionInput extends StatelessWidget {
   final String? selected;
@@ -19,13 +20,17 @@ class SelectionInput extends StatelessWidget {
 
   Widget selectableBox(BuildContext context, int index) {
     bool thisSelected = selected == options[index];
-    return InkWell(
+    return CustomInkWell(
+        borderRadius: 8,
         onTap: disabled
             ? null
             : () {
                 onSelected(options[index]);
               },
         child: CustomBox(
+          backgroundColor: thisSelected
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+              : null,
           borderColor: thisSelected
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.surface,

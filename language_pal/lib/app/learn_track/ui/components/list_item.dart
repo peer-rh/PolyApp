@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poly_app/common/ui/custom_ink_well.dart';
 
 class ListItem extends StatelessWidget {
   final bool highlighted;
@@ -18,8 +19,8 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
+    return CustomInkWell(
+      borderRadius: 8,
       onTap: onTap,
       child: Container(
         width: double.infinity,

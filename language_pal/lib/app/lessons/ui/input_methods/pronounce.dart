@@ -95,7 +95,7 @@ class _PronounciationInputState extends State<PronounciationInput> {
           final wave = buffer.map((e) => max(0.0, e - 0.15)).toList();
 
           return CustomPaint(
-            painter: BarVisualizer(
+            painter: AudioBars(
               waveData: wave,
               color: Theme.of(context).colorScheme.primary,
             ),

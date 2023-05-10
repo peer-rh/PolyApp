@@ -147,7 +147,13 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
               ref.read(cantListenProvider.notifier).setOn();
               // TODO: Alert
             },
-            child: const Text("I can't listen right now"));
+            child: Text(
+              "I can't listen right now",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ));
         promptSub = "Listen to this phrase";
         prompt = FilledButton(
           onPressed: () {
@@ -163,7 +169,13 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
               ref.read(cantTalkProvider.notifier).setOn();
               // TODO: Alert
             },
-            child: const Text("I can't talk right now"));
+            child: Text(
+              "I can't talk right now",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ));
         prompt = Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

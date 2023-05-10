@@ -1,13 +1,13 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class BarVisualizer extends CustomPainter {
+class AudioBars extends CustomPainter {
   final List<double> waveData;
   final Color color;
   final Paint wavePaint;
   final double barWidth;
 
-  BarVisualizer({
+  AudioBars({
     required this.waveData,
     required this.color,
     this.barWidth = 8.0,
