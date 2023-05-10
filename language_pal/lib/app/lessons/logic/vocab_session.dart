@@ -272,11 +272,9 @@ class VocabStep {
   final List<String>? options;
   String? userAnswer;
   bool? get isCorrect {
-    final ansNorm =
-        answer.toLowerCase().trim().replaceAll(RegExp(r'[^\w\s]+'), '');
-    final userNorm =
-        userAnswer?.toLowerCase().trim().replaceAll(RegExp(r'[^\w\s]+'), '');
-    return userAnswer == null ? null : ansNorm == userNorm;
+    return userAnswer == null
+        ? null
+        : getNormifiedString(answer) == getNormifiedString(userAnswer!);
   }
 
   VocabStep(
@@ -325,6 +323,21 @@ List<int> generateRandomIntegers(int n, int max, {int min = 0}) {
 }
 
 String getNormifiedString(String str) {
-  var newStr = str.toLowerCase().trim().replaceAll(RegExp(r'[^\w\s]+'), '');
-  return newStr;
+  return str
+      .toLowerCase()
+      .trim()
+      .replaceAll(RegExp(r'[^\w\s]+'), '')
+      .withoutDiacriticalMarks;
+}
+
+extension DiacriticsAwareString on String {
+  static const diacritics =
+      'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËĚèéêëěðČÇçčÐĎďÌÍÎÏìíîïĽľÙÚÛÜŮùúûüůŇÑñňŘřŠšŤťŸÝÿýŽž';
+  static const nonDiacritics =
+      'AAAAAAaaaaaaOOOOOOOooooooEEEEEeeeeeeCCccDDdIIIIiiiiLlUUUUUuuuuuNNnnRrSsTtYYyyZz';
+
+  String get withoutDiacriticalMarks => splitMapJoin('',
+      onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
+          ? nonDiacritics[diacritics.indexOf(char)]
+          : char);
 }

@@ -20,6 +20,7 @@ class App extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       home: ref.watch(authStateChangesProvider).when(
             data: (user) {
+              print(user);
               if (user == null) {
                 return const AuthPage();
               } else {

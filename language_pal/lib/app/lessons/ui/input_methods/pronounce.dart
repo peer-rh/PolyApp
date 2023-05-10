@@ -100,6 +100,9 @@ class _PronounciationInputState extends State<PronounciationInput> {
   }
 
   void stop() async {
+    // TODO: Have max len
+    // TODO: Redo when wrong
+    // TODO: Show loading
     _recorder.stop();
     final file = await _fileRecord.stop();
     List<int> fileBytes = await File.fromUri(Uri.parse(file!)).readAsBytes();
@@ -112,6 +115,7 @@ class _PronounciationInputState extends State<PronounciationInput> {
       "text": widget.wanted,
     });
     print(out.data);
+    widget.onSubmit(out.data);
   }
 
   @override

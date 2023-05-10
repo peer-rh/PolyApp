@@ -45,7 +45,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                       IconButton(
                         icon: const Icon(Icons.logout),
                         onPressed: () {
-                          Navigator.pop(context);
                           ref.read(authProvider).signOut();
                         },
                       )
