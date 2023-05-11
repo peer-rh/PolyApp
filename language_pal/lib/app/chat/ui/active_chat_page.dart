@@ -68,7 +68,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 parent: AlwaysScrollableScrollPhysics()),
             child: Column(
               children: [
-                ConversationColumn(
+                ConversationColumnOld(
                   conv: conv.conv,
                   aiAvatar: conv.scenario.avatar,
                   audioInfo: conv.scenario.voiceSettings,

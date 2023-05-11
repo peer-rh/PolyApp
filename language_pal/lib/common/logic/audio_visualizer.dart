@@ -114,7 +114,7 @@ enum BandType {
   ThirtyOneBand
 }
 
-class AudioVisualizer {
+class AudioVisualizerTransformer {
   // https://github.com/keijiro/unity-audio-spectrum/blob/master/AudioSpectrum.cs
   final BandType bandType;
   final int sampleRate;
@@ -203,7 +203,7 @@ class AudioVisualizer {
   late List<double> peakLevels;
   late List<double> meanLevels;
 
-  AudioVisualizer({
+  AudioVisualizerTransformer({
     this.windowSize = 2048,
     this.bandType = BandType.EightBand,
     this.sampleRate = 44100,

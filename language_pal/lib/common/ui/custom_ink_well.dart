@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomInkWell extends StatelessWidget {
   final Widget child;
-  final double borderRadius;
+  final BorderRadius borderRadius;
   final void Function()? onTap;
   const CustomInkWell(
       {required this.child, required this.borderRadius, this.onTap, super.key});
@@ -10,7 +10,7 @@ class CustomInkWell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(borderRadius),
+      borderRadius: borderRadius,
       splashFactory: NoSplash.splashFactory,
       overlayColor: MaterialStateProperty.all(
           Theme.of(context).colorScheme.primary.withOpacity(0.2)),

@@ -8,13 +8,13 @@ import 'package:poly_app/app/chat/ui/components/chat_bubble.dart';
 import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ConversationColumn extends StatelessWidget {
+class ConversationColumnOld extends StatelessWidget {
   AudioPlayer audioPlayer = AudioPlayer();
   Conversation conv;
   Map<String, dynamic>? audioInfo;
   bool translationEnabled;
   String aiAvatar;
-  ConversationColumn({
+  ConversationColumnOld({
     super.key,
     required this.conv,
     this.translationEnabled = false,

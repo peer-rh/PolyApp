@@ -20,7 +20,7 @@ class ListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomInkWell(
-      borderRadius: 8,
+      borderRadius: BorderRadius.circular(8),
       onTap: onTap,
       child: Container(
         width: double.infinity,

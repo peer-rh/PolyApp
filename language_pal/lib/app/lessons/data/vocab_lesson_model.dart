@@ -16,6 +16,7 @@ class VocabLessonModel {
           title: json["title"],
           vocabList: json["content"]["vocab_list"]
               .map((x) => VocabModel(
+                    id: x["id"],
                     appLang: x["app_lang"],
                     learnLang: x["learn_lang"],
                     audioUrl: x["audio_url"],
@@ -28,8 +29,10 @@ class VocabModel {
   String appLang;
   String learnLang;
   String audioUrl;
+  String id;
 
   VocabModel({
+    required this.id,
     required this.appLang,
     required this.learnLang,
     required this.audioUrl,

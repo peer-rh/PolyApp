@@ -95,7 +95,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     parent: AlwaysScrollableScrollPhysics()),
                 child: Column(
                   children: [
-                    ConversationColumn(
+                    ConversationColumnOld(
                       conv: _conv,
                       aiAvatar: "assets/avatars/Poly.png",
                     ),

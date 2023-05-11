@@ -8,7 +8,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
-import 'package:poly_app/common/logic/get_audio_vis.dart';
+import 'package:poly_app/common/logic/audio_visualizer.dart';
 import 'package:poly_app/common/ui/audio_visualizer.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
@@ -29,81 +29,28 @@ class PronounciationInput extends StatefulWidget {
 class _PronounciationInputState extends State<PronounciationInput> {
   bool loading = false;
 
-  static const int bufferSize = 2048;
-  static const int sampleRate = 44100;
-
-  final RecorderStream _recorder = RecorderStream();
-  late StreamSubscription _recorderStatus;
-  late StreamSubscription _audioStream;
-
   bool isRecording = false;
-  bool isPlaying = false;
-  final List<Uint8List> _micChunks = [];
-
-  final viz = AudioVisualizer(
-    windowSize: bufferSize,
-    bandType: BandType.EightBand,
-    sampleRate: sampleRate,
-    zeroHzScale: 0.05,
-    fallSpeed: 0.08,
-    sensibility: 8.0,
-  );
-  StreamController<List<double>?> audioFFT = StreamController<List<double>?>();
-
   final _fileRecord = Record();
 
-  @override
-  void initState() {
-    super.initState();
-    init();
-  }
-
-  @override
-  void dispose() {
-    cleanUp();
-    super.dispose();
-  }
-
-  Future<void> init() async {
-    var status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      throw Exception('Microphone permission not granted');
-    }
-
-    _recorderStatus = _recorder.status.listen((status) {
-      if (mounted) {
-        setState(() {
-          isRecording = status == SoundStreamStatus.Playing;
-          if (status == SoundStreamStatus.Stopped) {
-            audioFFT.add(null);
-          }
-        });
-      }
-    });
-
-    _audioStream = _recorder.audioStream.listen((data) {
-      _micChunks.add(data);
-      audioFFT.add(viz.transform(data, minRange: 0, maxRange: 255));
-    });
-
-    await _recorder.initialize();
-  }
-
-  Future<void> cleanUp() async {
-    await _recorderStatus.cancel();
-    await _audioStream.cancel();
-  }
-
   void record() {
-    _recorder.start();
+    if (widget.disabled) return;
+    setState(() {
+      isRecording = true;
+    });
     _fileRecord.start();
+    Future.delayed(const Duration(seconds: 10), () {
+      // TOOD: Alert what happened
+      stop();
+    });
   }
 
   void stop() async {
     // TODO: Have max len
     // TODO: Redo when wrong
     // TODO: Show loading
-    _recorder.stop();
+    setState(() {
+      isRecording = false;
+    });
     final file = await _fileRecord.stop();
     List<int> fileBytes = await File.fromUri(Uri.parse(file!)).readAsBytes();
     String base64String = base64Encode(fileBytes);
@@ -114,33 +61,22 @@ class _PronounciationInputState extends State<PronounciationInput> {
       "language": "es",
       "text": widget.wanted,
     });
-    print(out.data);
     widget.onSubmit(out.data);
   }
 
   @override
   Widget build(BuildContext context) {
-    final visualizer = StreamBuilder(
-        stream: audioFFT.stream,
-        builder: (context, snapshot) {
-          final buffer = snapshot.data ?? List.filled(8, 0.0);
-          final wave = buffer.map((e) => max(0.0, e - 0.15)).toList();
-
-          return CustomPaint(
-            painter: AudioBars(
-              waveData: wave,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            child: const SizedBox(width: double.infinity, height: 64),
-          );
-        });
     return CustomBox(
         borderColor: Theme.of(context).colorScheme.surface,
         child: Column(children: [
           Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 64),
-              child: visualizer),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 64),
+            child: AudioVisualizer(
+              const Size(double.infinity, 100),
+              isRecording,
+            ),
+          ),
           const SizedBox(height: 16),
           Align(
               alignment: Alignment.topCenter,

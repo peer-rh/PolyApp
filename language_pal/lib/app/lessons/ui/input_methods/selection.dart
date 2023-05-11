@@ -21,7 +21,7 @@ class SelectionInput extends StatelessWidget {
   Widget selectableBox(BuildContext context, int index) {
     bool thisSelected = selected == options[index];
     return CustomInkWell(
-        borderRadius: 8,
+        borderRadius: BorderRadius.circular(8),
         onTap: disabled
             ? null
             : () {

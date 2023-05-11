@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poly_app/app/chat/data/conversation_rating.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:poly_app/common/ui/score_circle.dart';
 
 class ChatSummaryPage extends StatelessWidget {
   final ConversationRating rating;
@@ -86,12 +85,12 @@ class ChatSummaryPage extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CustomPaint(
-                        painter: ScoreCircle(rating.totalScore, context,
-                            strokeWidth: 16),
-                        size: Size(MediaQuery.of(context).size.width - 128,
-                            MediaQuery.of(context).size.width - 128),
-                      ),
+                      // CustomPaint(
+                      //   painter: ScoreCircle(rating.totalScore, context,
+                      //       strokeWidth: 16),
+                      //   size: Size(MediaQuery.of(context).size.width - 128,
+                      //       MediaQuery.of(context).size.width - 128),
+                      // ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

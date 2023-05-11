@@ -1,8 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:poly_app/app/learn_track/data/status.dart';
+import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
+import 'package:poly_app/app/lessons/data/input_step.dart';
 import 'package:poly_app/app/lessons/logic/vocab_session.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
 import 'package:poly_app/app/lessons/ui/input_methods/compose.dart';
@@ -46,11 +47,25 @@ class _VocabPageState extends ConsumerState<VocabPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (ref.read(userProgressProvider).getStatus(widget.id) ==
+        UserProgressStatus.notStarted) {
+      ref
+          .read(userProgressProvider)
+          .setStatus(widget.id, UserProgressStatus.inProgress);
+    }
+
     final session = ref.watch(activeVocabSession(widget.id));
-    if (session == null || session.currentStep == null) {
+    if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
 
+    if (session.finished) {
+      Future(() {
+        ref
+            .read(userProgressProvider)
+            .setStatus(widget.id, UserProgressStatus.completed);
+      });
+    }
     return Scaffold(
         appBar: FrostedAppBar(
           title: Text(session.lesson.title),
@@ -62,30 +77,35 @@ class _VocabPageState extends ConsumerState<VocabPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(),
-                currentStep,
+                session.finished
+                    ? const Text("DONE!!!")
+                    : currentStep, // TODO: Done UI
                 const Spacer(),
                 InkWell(
-                  onTap: session.currentStep!.isCorrect != null
-                      ? () {
-                          session.nextStep();
-                        }
-                      : session.currentAnswer == ""
-                          ? null
-                          : () {
-                              checkAnswer();
-                            },
+                  onTap: session.finished
+                      ? () => Navigator.pop(context)
+                      : session.currentStep!.isCorrect != null
+                          ? session.nextStep
+                          : session.currentAnswer == ""
+                              ? null
+                              : checkAnswer,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     alignment: Alignment.center,
                     width: double.infinity,
                     decoration: BoxDecoration(
                         color: session.currentAnswer == "" &&
-                                session.currentStep!.isCorrect == null
+                                session.currentStep?.isCorrect == null &&
+                                !session.finished
                             ? Theme.of(context).colorScheme.surfaceVariant
                             : Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.circular(8)),
                     child: Text(
-                      session.currentStep!.isCorrect != null ? 'Next' : 'Check',
+                      session.finished
+                          ? "Finish"
+                          : session.currentStep!.isCorrect != null
+                              ? 'Next'
+                              : 'Check',
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),
@@ -131,9 +151,9 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
       return const Text("Loading...");
     }
     switch (session.currentStep!.type) {
-      case VocabStepType.select:
-      case VocabStepType.write:
-      case VocabStepType.compose:
+      case InputType.select:
+      case InputType.write:
+      case InputType.compose:
         disableButton = null;
         promptSub = "Translate this phrase";
         prompt = Text(
@@ -141,7 +161,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
           style: Theme.of(context).textTheme.titleSmall,
         );
         break;
-      case VocabStepType.listen:
+      case InputType.listen:
         disableButton = TextButton(
             onPressed: () {
               ref.read(cantListenProvider.notifier).setOn();
@@ -155,14 +175,32 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
                   .copyWith(color: Theme.of(context).colorScheme.onSurface),
             ));
         promptSub = "Listen to this phrase";
-        prompt = FilledButton(
-          onPressed: () {
+        prompt = GestureDetector(
+          onTap: () {
             playAudio(session.currentStep!.audioUrl!);
           },
-          child: const Text("Play"),
+          child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(CustomIcons.volume,
+                    size: 24, color: Theme.of(context).colorScheme.onPrimary),
+                const SizedBox(width: 8),
+                Text(
+                  "Listen",
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                )
+              ])),
         );
         break;
-      case VocabStepType.pronounce:
+      case InputType.pronounce:
         promptSub = "Pronounce this phrase";
         disableButton = TextButton(
             onPressed: () {
@@ -196,8 +234,8 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
     }
 
     switch (session.currentStep!.type) {
-      case VocabStepType.select:
-      case VocabStepType.listen:
+      case InputType.select:
+      case InputType.listen:
         currentInputWidget = SelectionInput(
           session.currentAnswer,
           session.currentStep!.options!,
@@ -207,7 +245,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
           disabled: session.currentStep!.userAnswer != null,
         );
         break;
-      case VocabStepType.write:
+      case InputType.write:
         currentInputWidget = WriteInput(
           (p0) {
             session.currentAnswer = p0;
@@ -216,7 +254,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
           disabled: session.currentStep!.userAnswer != null,
         );
         break;
-      case VocabStepType.compose:
+      case InputType.compose:
         currentInputWidget = ComposeInput(
           session.currentStep!.options!,
           (p0) {
@@ -226,7 +264,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
           disabled: session.currentStep!.userAnswer != null,
         );
         break;
-      case VocabStepType.pronounce:
+      case InputType.pronounce:
         currentInputWidget = PronounciationInput(
           (p0) {
             session.currentAnswer = p0;

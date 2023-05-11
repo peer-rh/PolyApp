@@ -37,6 +37,7 @@ class UserProgressProvider extends ChangeNotifier {
       } else {
         _userMap = value.data()!.map(
             (key, value) => MapEntry(key, UserProgressStatus.fromCode(value)));
+        notifyListeners();
       }
     });
   }
@@ -47,12 +48,12 @@ class UserProgressProvider extends ChangeNotifier {
 
   void setStatus(String id, UserProgressStatus status) {
     _userMap[id] = status;
+    notifyListeners();
     FirebaseFirestore.instance
         .collection("users")
         .doc(_uid)
         .collection("tracks")
         .doc(_trackId)
         .set(_userMap.map((key, value) => MapEntry(key, value.code)));
-    notifyListeners();
   }
 }

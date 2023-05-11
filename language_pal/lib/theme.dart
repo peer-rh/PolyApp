@@ -5,6 +5,7 @@ ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   colorScheme: lightColorScheme,
   textTheme: textTheme,
+  splashFactory: NoSplash.splashFactory,
 );
 
 ThemeData darkTheme = ThemeData(

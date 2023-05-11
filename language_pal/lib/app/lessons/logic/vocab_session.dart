@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -8,8 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
+import 'package:poly_app/app/lessons/data/input_step.dart';
 import 'package:poly_app/app/lessons/data/vocab_lesson_model.dart';
 import 'package:poly_app/app/lessons/logic/lesson_providers.dart';
+import 'package:poly_app/app/lessons/logic/util.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 
@@ -53,18 +54,19 @@ class ActiveVocabSession extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<VocabStep> _steps = [];
+  List<InputStep> _steps = [];
   int? _currentStep;
 
+  bool get finished => _currentStep == _steps.length;
+
   int get currentStepIndex => _currentStep ?? 0;
-  VocabStep? get currentStep {
-    if (_currentStep == null) {
+  InputStep? get currentStep {
+    if (_currentStep == null || _currentStep! >= _steps.length) {
       return null;
     }
-    if (_steps[_currentStep!].type == VocabStepType.listen && _cantListen) {
-      _steps[_currentStep!].type = VocabStepType.select;
-    } else if (_steps[_currentStep!].type == VocabStepType.pronounce &&
-        _cantTalk) {
+    if (_steps[_currentStep!].type == InputType.listen && _cantListen) {
+      _steps[_currentStep!].type = InputType.select;
+    } else if (_steps[_currentStep!].type == InputType.pronounce && _cantTalk) {
       _currentStep = _currentStep! + 1;
     }
     return _steps[_currentStep!];
@@ -85,7 +87,7 @@ class ActiveVocabSession extends ChangeNotifier {
     if (doc.exists) {
       final json = doc.data()!;
       _steps = json['steps']
-          .map<VocabStep>((e) => VocabStep.fromJson(e))
+          .map<InputStep>((e) => InputStep.fromJson(e))
           .toList(growable: false);
       _currentStep = json['currentStep'];
     } else {
@@ -95,12 +97,8 @@ class ActiveVocabSession extends ChangeNotifier {
   }
 
   void _genProgram() {
-    final stage_1 = [VocabStepType.select, VocabStepType.listen];
-    final stage_2 = [
-      VocabStepType.compose,
-      VocabStepType.pronounce,
-      VocabStepType.write
-    ];
+    final stage_1 = [InputType.select, InputType.listen];
+    final stage_2 = [InputType.compose, InputType.pronounce, InputType.write];
     List<List<VocabModel>> groups = [];
     for (int i = 0; i < lesson.vocabList.length; i += 4) {
       groups.add(
@@ -108,7 +106,7 @@ class ActiveVocabSession extends ChangeNotifier {
     }
 
     final random = Random();
-    List<List<List<VocabStep>>> stepsGrouped = [];
+    List<List<List<InputStep>>> stepsGrouped = [];
 
     List<String> allWords = [];
     for (VocabModel v in lesson.vocabList) {
@@ -117,11 +115,11 @@ class ActiveVocabSession extends ChangeNotifier {
       }
     }
 
-    VocabStep? genVocabStep(VocabStepType type, VocabModel vocab) {
+    InputStep? genInputStep(InputType type, VocabModel vocab) {
       switch (type) {
-        case VocabStepType.select:
+        case InputType.select:
           // TODO: Add Audio to options
-          return VocabStep(
+          return InputStep(
               prompt: vocab.appLang,
               answer: vocab.learnLang,
               type: type,
@@ -133,8 +131,8 @@ class ActiveVocabSession extends ChangeNotifier {
                     .take(3)
                     .toList()
               ]);
-        case VocabStepType.listen:
-          return VocabStep(
+        case InputType.listen:
+          return InputStep(
             prompt: vocab.appLang,
             answer: vocab.learnLang,
             type: type,
@@ -148,10 +146,10 @@ class ActiveVocabSession extends ChangeNotifier {
             ],
             audioUrl: vocab.audioUrl,
           );
-        case VocabStepType.compose:
+        case InputType.compose:
           if (vocab.learnLang.split(" ").length == 1) return null;
           final correctOptions = vocab.learnLang.split(" ");
-          return VocabStep(
+          return InputStep(
               prompt: vocab.appLang,
               answer: vocab.learnLang,
               type: type,
@@ -164,16 +162,16 @@ class ActiveVocabSession extends ChangeNotifier {
                     .toList()
               ]);
 
-        case VocabStepType.pronounce:
-          return VocabStep(
+        case InputType.pronounce:
+          return InputStep(
             prompt: vocab.learnLang,
             answer: vocab.learnLang,
             type: type,
             audioUrl: vocab.audioUrl,
           );
 
-        case VocabStepType.write:
-          return VocabStep(
+        case InputType.write:
+          return InputStep(
             prompt: vocab.appLang,
             answer: vocab.learnLang,
             type: type,
@@ -190,12 +188,12 @@ class ActiveVocabSession extends ChangeNotifier {
         if (s2I == s3I) {
           s3I = (s3I + 1) % stage_2.length;
         }
-        stepsGrouped[i][0].add(genVocabStep(stage_1[s1I], v)!);
-        final s2 = genVocabStep(stage_2[s2I], v);
+        stepsGrouped[i][0].add(genInputStep(stage_1[s1I], v)!);
+        final s2 = genInputStep(stage_2[s2I], v);
         if (s2 != null) {
           stepsGrouped[i][1].add(s2);
         }
-        final s3 = genVocabStep(stage_2[s3I], v);
+        final s3 = genInputStep(stage_2[s3I], v);
         if (s3 != null) {
           stepsGrouped[i][1].add(s3);
         }
@@ -204,7 +202,7 @@ class ActiveVocabSession extends ChangeNotifier {
       stepsGrouped[i][2].shuffle();
     }
 
-    List<VocabStep> steps = [];
+    List<InputStep> steps = [];
     steps.addAll(stepsGrouped[0][0]);
     steps.addAll(stepsGrouped[0][1]);
     for (int i = 1; i < stepsGrouped.length; i++) {
@@ -226,24 +224,21 @@ class ActiveVocabSession extends ChangeNotifier {
         .doc(lesson.id)
         .set({
       "steps": _steps.map((e) => e.toJson()).toList(),
-      "currentStep": _currentStep,
+      "currentStep": _currentStep! + 1,
     });
   }
 
   void submitAnswer() {
     // TODO: Add Error logging
     currentStep!.userAnswer = _currentAnswer;
+    saveState();
     notifyListeners();
   }
 
   void nextStep() {
-    // TODO: implement Review and finish
-
     _currentAnswer = null;
-    if (_currentStep != _steps.length - 1) {
-      _currentStep = _currentStep! + 1;
-      notifyListeners();
-    }
+    _currentStep = _currentStep! + 1;
+    notifyListeners();
   }
 
   void cacheAudio() async {
@@ -254,90 +249,4 @@ class ActiveVocabSession extends ChangeNotifier {
       FirebaseStorage.instance.ref(v.audioUrl).writeToFile(file);
     }
   }
-}
-
-enum VocabStepType {
-  write,
-  compose,
-  pronounce,
-  select,
-  listen,
-}
-
-class VocabStep {
-  VocabStepType type;
-  final String prompt;
-  final String answer;
-  final String? audioUrl;
-  final List<String>? options;
-  String? userAnswer;
-  bool? get isCorrect {
-    return userAnswer == null
-        ? null
-        : getNormifiedString(answer) == getNormifiedString(userAnswer!);
-  }
-
-  VocabStep(
-      {required this.prompt,
-      required this.answer,
-      required this.type,
-      this.userAnswer,
-      this.audioUrl,
-      this.options}) {
-    options?.shuffle();
-  }
-
-  factory VocabStep.fromJson(Map<String, dynamic> json) {
-    return VocabStep(
-      prompt: json['prompt'],
-      answer: json['answer'],
-      type: VocabStepType.values[json['stepType']],
-      audioUrl: json['audioUrl'],
-      options: json['options'],
-      userAnswer: json['userAnswer'],
-    );
-  }
-
-  String toJson() {
-    return jsonEncode({
-      "prompt": prompt,
-      "answer": answer,
-      "stepType": type.index,
-      "audioUrl": audioUrl,
-      "options": options,
-      "userAnswer": userAnswer,
-    });
-  }
-}
-
-List<int> generateRandomIntegers(int n, int max, {int min = 0}) {
-  final random = Random();
-  final List<int> list = [];
-  while (list.length < n) {
-    final r = random.nextInt(max - min) + min;
-    if (!list.contains(r)) {
-      list.add(r);
-    }
-  }
-  return list;
-}
-
-String getNormifiedString(String str) {
-  return str
-      .toLowerCase()
-      .trim()
-      .replaceAll(RegExp(r'[^\w\s]+'), '')
-      .withoutDiacriticalMarks;
-}
-
-extension DiacriticsAwareString on String {
-  static const diacritics =
-      'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËĚèéêëěðČÇçčÐĎďÌÍÎÏìíîïĽľÙÚÛÜŮùúûüůŇÑñňŘřŠšŤťŸÝÿýŽž';
-  static const nonDiacritics =
-      'AAAAAAaaaaaaOOOOOOOooooooEEEEEeeeeeeCCccDDdIIIIiiiiLlUUUUUuuuuuNNnnRrSsTtYYyyZz';
-
-  String get withoutDiacriticalMarks => splitMapJoin('',
-      onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
-          ? nonDiacritics[diacritics.indexOf(char)]
-          : char);
 }
