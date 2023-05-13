@@ -29,11 +29,6 @@ class _ComposeInputState extends State<ComposeInput> {
         runSpacing: 8.0,
         onReorder: _onReorder,
         enableReorder: !widget.disabled,
-        onNoReorder: (int index) {
-          //this callback is optional
-          debugPrint(
-              '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
-        },
         children: boxes
             .map((e) => GestureDetector(
                   onTap: widget.disabled

@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/learn_track/data/status.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/data/input_step.dart';
 import 'package:poly_app/app/lessons/logic/vocab_session.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
-import 'package:poly_app/app/lessons/ui/input_methods/compose.dart';
-import 'package:poly_app/app/lessons/ui/input_methods/pronounce.dart';
-import 'package:poly_app/app/lessons/ui/input_methods/selection.dart';
-import 'package:poly_app/app/lessons/ui/input_methods/write.dart';
+import 'package:poly_app/app/lessons/ui/input_methods/lib.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 import 'package:poly_app/common/logic/audio_provider.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
@@ -17,9 +13,7 @@ import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
 class VocabPage extends ConsumerStatefulWidget {
-  final String id;
-
-  const VocabPage(this.id, {super.key});
+  const VocabPage({super.key});
 
   @override
   _VocabPageState createState() => _VocabPageState();
@@ -30,15 +24,20 @@ class _VocabPageState extends ConsumerState<VocabPage> {
   int? currentStepIndex;
 
   void checkAnswer() {
-    final session = ref.read(activeVocabSession(widget.id));
+    final session = ref.read(activeVocabSession);
     session!.submitAnswer();
     setState(() {});
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   void initState() {
     setState(() {
-      currentStep = CurrentStepWidget(widget.id);
+      currentStep = CurrentStepWidget();
     });
     super.initState();
   }
@@ -47,14 +46,16 @@ class _VocabPageState extends ConsumerState<VocabPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (ref.read(userProgressProvider).getStatus(widget.id) ==
+    final id = ref.read(activeVocabId)!;
+    if (ref.read(userProgressProvider).getStatus(id) ==
         UserProgressStatus.notStarted) {
       ref
           .read(userProgressProvider)
-          .setStatus(widget.id, UserProgressStatus.inProgress);
+          .setStatus(id, UserProgressStatus.inProgress);
     }
 
-    final session = ref.watch(activeVocabSession(widget.id));
+    final session = ref.watch(activeVocabSession);
+    print(session?.currentStep);
     if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
@@ -63,9 +64,11 @@ class _VocabPageState extends ConsumerState<VocabPage> {
       Future(() {
         ref
             .read(userProgressProvider)
-            .setStatus(widget.id, UserProgressStatus.completed);
+            .setStatus(id, UserProgressStatus.completed);
       });
     }
+
+    print(session.currentStep);
     return Scaffold(
         appBar: FrostedAppBar(
           title: Text(session.lesson.title),
@@ -120,8 +123,7 @@ class _VocabPageState extends ConsumerState<VocabPage> {
 }
 
 class CurrentStepWidget extends ConsumerStatefulWidget {
-  final String id;
-  const CurrentStepWidget(this.id, {super.key});
+  const CurrentStepWidget({super.key});
 
   @override
   ConsumerState<CurrentStepWidget> createState() => _CurrentStepWidgetState();
@@ -139,14 +141,12 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
   }
 
   void playAudio(String path) async {
-    final temp = await getTemporaryDirectory();
-    final file = "${temp.path}/$path";
-    ref.read(audioProvider).playLocal(file);
+    ref.read(cachedVoiceProvider).play(path);
   }
 
   @override
   Widget build(BuildContext context) {
-    final session = ref.watch(activeVocabSession(widget.id));
+    final session = ref.watch(activeVocabSession);
     if (session == null || session.currentStep == null) {
       return const Text("Loading...");
     }
@@ -164,8 +164,14 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
       case InputType.listen:
         disableButton = TextButton(
             onPressed: () {
-              ref.read(cantListenProvider.notifier).setOn();
-              // TODO: Alert
+              customAlert(
+                  context: context,
+                  title: "Can't listen",
+                  content:
+                      "This will disable all listening exercises for the next 15 minutes",
+                  onConfirm: () {
+                    ref.read(cantListenProvider.notifier).setOn();
+                  });
             },
             child: Text(
               "I can't listen right now",
@@ -204,8 +210,14 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
         promptSub = "Pronounce this phrase";
         disableButton = TextButton(
             onPressed: () {
-              ref.read(cantTalkProvider.notifier).setOn();
-              // TODO: Alert
+              customAlert(
+                  context: context,
+                  title: "Can't talk",
+                  content:
+                      "This will disable all pronunciation exercises for the next 15 minutes",
+                  onConfirm: () {
+                    ref.read(cantTalkProvider.notifier).setOn();
+                  });
             },
             child: Text(
               "I can't talk right now",
@@ -232,59 +244,14 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
             ]);
         break;
     }
+    currentInputWidget = InputWidget(
+      step: session.currentStep!,
+      onChange: (String ans) {
+        session.currentAnswer = ans;
+      },
+      currentAnswer: session.currentAnswer,
+    );
 
-    switch (session.currentStep!.type) {
-      case InputType.select:
-      case InputType.listen:
-        currentInputWidget = SelectionInput(
-          session.currentAnswer,
-          session.currentStep!.options!,
-          (p0) {
-            session.currentAnswer = p0;
-          },
-          disabled: session.currentStep!.userAnswer != null,
-        );
-        break;
-      case InputType.write:
-        currentInputWidget = WriteInput(
-          (p0) {
-            session.currentAnswer = p0;
-          },
-          key: ValueKey(session.currentStep!.prompt),
-          disabled: session.currentStep!.userAnswer != null,
-        );
-        break;
-      case InputType.compose:
-        currentInputWidget = ComposeInput(
-          session.currentStep!.options!,
-          (p0) {
-            session.currentAnswer = p0;
-          },
-          key: ValueKey(session.currentStep!.prompt),
-          disabled: session.currentStep!.userAnswer != null,
-        );
-        break;
-      case InputType.pronounce:
-        currentInputWidget = PronounciationInput(
-          (p0) {
-            session.currentAnswer = p0;
-            session.submitAnswer();
-          },
-          session.currentStep!.answer,
-          key: ValueKey(session.currentStep!.prompt),
-          disabled: session.currentStep!.userAnswer != null,
-        );
-        break;
-      default:
-        currentInputWidget = FilledButton(
-            onPressed: () {
-              session.nextStep();
-            },
-            child: Text(
-              "Next",
-              style: Theme.of(context).textTheme.bodySmall,
-            ));
-    }
     setState(() {});
 
     return Column(
@@ -320,6 +287,42 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
             ),
           ),
       ],
+    );
+  }
+
+  void customAlert(
+      {required BuildContext context,
+      required String title,
+      required String content,
+      required void Function() onConfirm}) {
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FilledButton(
+      child: const Text("Confirm"),
+      onPressed: () {
+        onConfirm();
+        Navigator.of(context).pop();
+      },
+    );
+
+    // Create the dialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // Show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => alert,
     );
   }
 }

@@ -18,7 +18,6 @@ Future<OnboardingResponse> getAIOnboardingResponse(Conversation conv) async {
   });
 
   Map<String, dynamic> res = response.data;
-  print(res);
   if (res["language"] != null) {
     return OnboardingResponse(res["message"]!,
         language: LanguageModel.fromCode(res["language"]!),

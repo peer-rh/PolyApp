@@ -1,11 +1,8 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/lessons/data/input_step.dart';
 import 'package:poly_app/app/lessons/data/vocab_lesson_model.dart';
@@ -14,23 +11,33 @@ import 'package:poly_app/app/lessons/logic/util.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 
-final activeVocabSession =
+final vocabSession =
     ChangeNotifierProvider.family<ActiveVocabSession?, String>((ref, id) {
   final vocabLesson = ref.watch(vocabLessonProvider(id));
-  final lesson = vocabLesson.value;
+  final lesson = vocabLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
   final uid = ref.watch(uidProvider);
   if (lesson == null || trackId == null || uid == null) {
     return null;
   }
-  final out = ActiveVocabSession(trackId, lesson, uid);
+  final out = ActiveVocabSession(lesson, uid);
   ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
   ref.listen(cantListenProvider, (_, newVal) => out.cantListen = newVal);
   return out;
 });
 
+final activeVocabId = StateProvider<String?>((ref) => null);
+
+final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
+  final learnId = ref.watch(activeVocabId);
+  if (learnId == null) {
+    return null;
+  }
+  final out = ref.watch(vocabSession(learnId));
+  return out;
+});
+
 class ActiveVocabSession extends ChangeNotifier {
-  final String _trackId;
   final VocabLessonModel lesson;
   final String _uid;
 
@@ -72,12 +79,11 @@ class ActiveVocabSession extends ChangeNotifier {
     return _steps[_currentStep!];
   }
 
-  ActiveVocabSession(this._trackId, this.lesson, this._uid) {
+  ActiveVocabSession(this.lesson, this._uid) {
     _initState();
   }
 
   void _initState() async {
-    cacheAudio(); // TODO: See if actually faster
     final doc = await FirebaseFirestore.instance
         .collection("users")
         .doc(_uid)
@@ -86,14 +92,15 @@ class ActiveVocabSession extends ChangeNotifier {
         .get();
     if (doc.exists) {
       final json = doc.data()!;
-      _steps = json['steps']
+      _steps = await json['steps']
           .map<InputStep>((e) => InputStep.fromJson(e))
           .toList(growable: false);
-      _currentStep = json['currentStep'];
+      _currentStep = await json['currentStep'];
+      notifyListeners();
     } else {
       _genProgram();
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void _genProgram() {
@@ -239,14 +246,5 @@ class ActiveVocabSession extends ChangeNotifier {
     _currentAnswer = null;
     _currentStep = _currentStep! + 1;
     notifyListeners();
-  }
-
-  void cacheAudio() async {
-    final tmpDir = await getTemporaryDirectory();
-    for (VocabModel v in lesson.vocabList) {
-      final file = File("${tmpDir.path}/${v.audioUrl}");
-      file.create(recursive: true);
-      FirebaseStorage.instance.ref(v.audioUrl).writeToFile(file);
-    }
   }
 }

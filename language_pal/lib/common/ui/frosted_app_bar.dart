@@ -20,7 +20,7 @@ class FrostedAppBar extends StatelessWidget implements PreferredSizeWidget {
     return ClipRect(
       child: BackdropFilter(
         filter:
-            ImageFilter.blur(sigmaX: 20, sigmaY: 8, tileMode: TileMode.mirror),
+            ImageFilter.blur(sigmaX: 20, sigmaY: 16, tileMode: TileMode.mirror),
         child: AppBar(
           scrolledUnderElevation: 0,
           backgroundColor:

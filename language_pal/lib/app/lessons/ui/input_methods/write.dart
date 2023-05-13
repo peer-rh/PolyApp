@@ -4,7 +4,7 @@ import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
 class WriteInput extends StatefulWidget {
   final void Function(String) onChange;
   final bool disabled;
-  WriteInput(this.onChange, {this.disabled = false, super.key});
+  WriteInput(this.onChange, this.disabled, {super.key});
 
   @override
   State<WriteInput> createState() => _WriteInputState();

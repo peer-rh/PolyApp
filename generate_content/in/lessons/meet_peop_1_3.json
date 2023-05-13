@@ -1,0 +1,20 @@
+{
+    "type": "mock_chat",
+    "title": "Meeting Someone",
+    "avatar": "woman",
+    "starts_with_ai": true,
+    "content": [
+        "Hello",
+        "Good evening, how are you?",
+        "I am doing good, thank you. And you?",
+        "I am doing good as well, thankyou.",
+        "What is your name?",
+        "My name is John. And yours?",
+        "My name is Jane. Where are you from?",
+        "I am from []. And you?",
+        "I am from [[]]. How old are you?",
+        "I am 25 years old",
+        "I have to go. Goodbye, have a great day",
+        "See you later"
+    ]
+}

@@ -1,35 +1,43 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
-import 'package:poly_app/app/lessons/data/mock_chat_lesson_model.dart';
+import 'package:poly_app/app/lessons/data/input_step.dart';
+import 'package:poly_app/app/lessons/data/vocab_lesson_model.dart';
 import 'package:poly_app/app/lessons/logic/lesson_providers.dart';
 import 'package:poly_app/app/lessons/logic/util.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 
-final activeMockChatProvider =
+final mockChatSession =
     ChangeNotifierProvider.family<ActiveMockChatSession?, String>((ref, id) {
-  final vocabLesson = ref.watch(mockChatLessonProvider(id));
-  final lesson = vocabLesson.value;
+  final vocabLesson = ref.watch(vocabLessonProvider(id));
+  final lesson = vocabLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
   final uid = ref.watch(uidProvider);
   if (lesson == null || trackId == null || uid == null) {
     return null;
   }
-  final out = ActiveMockChatSession(trackId, lesson, uid);
+  final out = ActiveMockChatSession(lesson, uid);
   ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
   return out;
 });
 
+final activeMockChatId = StateProvider<String?>((ref) => null);
+
+final activeVocabSession = ChangeNotifierProvider<ActiveMockChatSession?>((ref) {
+  final learnId = ref.watch(activeMockChatId);
+  if (learnId == null) {
+    return null;
+  }
+  final out = ref.watch(mockChatSession(learnId));
+  return out;
+});
+
 class ActiveMockChatSession extends ChangeNotifier {
-  final String _trackId;
-  final MockChatLessonModel lesson;
+  final VocabLessonModel lesson;
   final String _uid;
 
   String? _currentAnswer;
@@ -46,29 +54,29 @@ class ActiveMockChatSession extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<InputStep> _steps = [];
   int? _currentStep;
 
+  bool get finished => _currentStep == _steps.length;
+
   int get currentStepIndex => _currentStep ?? 0;
-
-  List<MockChatStep> _steps = [];
-
-  MockChatStep? get currentStep {
-    if (_currentStep == null) {
+  InputStep? get currentStep {
+    if (_currentStep == null || _currentStep! >= _steps.length) {
       return null;
     }
-    if (_steps[_currentStep!].isAi) _currentStep = _currentStep! + 1;
-    if (_steps[_currentStep!].type == MockChatType.pronounce && _cantTalk) {
-      _steps[_currentStep!].type = MockChatType.select;
+    if (_steps[_currentStep!].type == InputType.listen && _cantListen) {
+      _steps[_currentStep!].type = InputType.select;
+    } else if (_steps[_currentStep!].type == InputType.pronounce && _cantTalk) {
+      _currentStep = _currentStep! + 1;
     }
     return _steps[_currentStep!];
   }
 
-  ActiveMockChatSession(this._trackId, this.lesson, this._uid) {
+  ActiveMockChatSession(this.lesson, this._uid) {
     _initState();
   }
 
   void _initState() async {
-    cacheAudio(); // TODO: See if actually faster
     final doc = await FirebaseFirestore.instance
         .collection("users")
         .doc(_uid)
@@ -77,38 +85,133 @@ class ActiveMockChatSession extends ChangeNotifier {
         .get();
     if (doc.exists) {
       final json = doc.data()!;
-      _currentStep = json['currentStep'];
-      _steps = json['steps']
-          .map<MockChatStep>((e) => MockChatStep.fromJson(e))
+      _steps = await json['steps']
+          .map<InputStep>((e) => InputStep.fromJson(e))
           .toList(growable: false);
+      _currentStep = await json['currentStep'];
+      notifyListeners();
     } else {
       _genProgram();
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void _genProgram() {
-    _currentStep = 0;
-    final steps = <MockChatStep>[];
-    for (int i = 0; i < lesson.msgList.length; i++) {
-      final msg = lesson.msgList[i];
-      if (msg.isAi) {
-        steps.add(MockChatStep(
-          isAi: true,
-          appLang: msg.appLang,
-          learnLang: msg.learnLang,
-          audioUrl: msg.audioUrl,
-        ));
-      } else {
-        steps.add(MockChatStep(
-          isAi: false,
-          appLang: msg.appLang,
-          learnLang: msg.learnLang,
-          audioUrl: msg.audioUrl,
-          type: MockChatType.select, // TODO: Add Pronounce
-        ));
+    List<List<VocabModel>> groups = [];
+    for (int i = 0; i < lesson.vocabList.length; i += 4) {
+      groups.add(
+          lesson.vocabList.sublist(i, min(i + 4, lesson.vocabList.length)));
+    }
+
+    final random = Random();
+    List<List<List<InputStep>>> stepsGrouped = [];
+
+    List<String> allWords = [];
+    for (VocabModel v in lesson.vocabList) {
+      for (String s in v.learnLang.split(" ")) {
+        allWords.add(s);
       }
     }
+
+    InputStep? genInputStep(InputType type, VocabModel vocab) {
+      switch (type) {
+        case InputType.select:
+          // TODO: Add Audio to options
+          return InputStep(
+              prompt: vocab.appLang,
+              answer: vocab.learnLang,
+              type: type,
+              options: [
+                vocab.learnLang,
+                ...generateRandomIntegers(4, lesson.vocabList.length)
+                    .map((e) => lesson.vocabList[e].learnLang)
+                    .where((e) => e != vocab.learnLang)
+                    .take(3)
+                    .toList()
+              ]);
+        case InputType.listen:
+          return InputStep(
+            prompt: vocab.appLang,
+            answer: vocab.learnLang,
+            type: type,
+            options: [
+              vocab.learnLang,
+              ...generateRandomIntegers(4, lesson.vocabList.length)
+                  .map((e) => lesson.vocabList[e].learnLang)
+                  .where((e) => e != vocab.learnLang)
+                  .take(3)
+                  .toList()
+            ],
+            audioUrl: vocab.audioUrl,
+          );
+        case InputType.compose:
+          if (vocab.learnLang.split(" ").length == 1) return null;
+          final correctOptions = vocab.learnLang.split(" ");
+          return InputStep(
+              prompt: vocab.appLang,
+              answer: vocab.learnLang,
+              type: type,
+              options: [
+                ...correctOptions,
+                ...generateRandomIntegers(8, allWords.length)
+                    .map((e) => allWords[e])
+                    .where((e) => !correctOptions.contains(e))
+                    .take(8)
+                    .toList()
+              ]);
+
+        case InputType.pronounce:
+          return InputStep(
+            prompt: vocab.learnLang,
+            answer: vocab.learnLang,
+            type: type,
+            audioUrl: vocab.audioUrl,
+          );
+
+        case InputType.write:
+          return InputStep(
+            prompt: vocab.appLang,
+            answer: vocab.learnLang,
+            type: type,
+          );
+      }
+    }
+
+    for (int i = 0; i < groups.length; i++) {
+      stepsGrouped.add([[], [], []]);
+      for (VocabModel v in groups[i]) {
+        final s1I = random.nextInt(stage_1.length);
+        final s2I = random.nextInt(stage_2.length);
+        var s3I = random.nextInt(stage_2.length);
+        if (s2I == s3I) {
+          s3I = (s3I + 1) % stage_2.length;
+        }
+        stepsGrouped[i][0].add(genInputStep(stage_1[s1I], v)!);
+        final s2 = genInputStep(stage_2[s2I], v);
+        if (s2 != null) {
+          stepsGrouped[i][1].add(s2);
+        }
+        final s3 = genInputStep(stage_2[s3I], v);
+        if (s3 != null) {
+          stepsGrouped[i][1].add(s3);
+        }
+      }
+      stepsGrouped[i][1].shuffle();
+      stepsGrouped[i][2].shuffle();
+    }
+
+    List<InputStep> steps = [];
+    steps.addAll(stepsGrouped[0][0]);
+    steps.addAll(stepsGrouped[0][1]);
+    for (int i = 1; i < stepsGrouped.length; i++) {
+      steps.addAll(stepsGrouped[i][0]);
+      steps.addAll(stepsGrouped[i - 1][2]);
+      steps.addAll(stepsGrouped[i][1]);
+    }
+    steps.addAll(stepsGrouped[stepsGrouped.length - 1][2]);
+
+    _steps = steps;
+    _currentStep = 0;
   }
 
   void saveState() async {
@@ -118,80 +221,21 @@ class ActiveMockChatSession extends ChangeNotifier {
         .collection("lessons")
         .doc(lesson.id)
         .set({
-      "currentStep": _currentStep,
+      "steps": _steps.map((e) => e.toJson()).toList(),
+      "currentStep": _currentStep! + 1,
     });
   }
 
   void submitAnswer() {
     // TODO: Add Error logging
     currentStep!.userAnswer = _currentAnswer;
+    saveState();
     notifyListeners();
   }
 
   void nextStep() {
-    // TODO: implement Review and finish
-
     _currentAnswer = null;
     _currentStep = _currentStep! + 1;
     notifyListeners();
-  }
-
-  void cacheAudio() async {
-    final tmpDir = await getTemporaryDirectory();
-    for (MockChatMsgModel v in lesson.msgList) {
-      final file = File("${tmpDir.path}/${v.audioUrl}");
-      file.create(recursive: true);
-      FirebaseStorage.instance.ref(v.audioUrl).writeToFile(file);
-    }
-  }
-}
-
-enum MockChatType {
-  pronounce,
-  select,
-}
-
-class MockChatStep {
-  final bool isAi;
-  final String appLang;
-  final String learnLang;
-  final String audioUrl;
-  MockChatType? type;
-  String? userAnswer;
-
-  bool? get isCorrect {
-    return userAnswer == null
-        ? null
-        : getNormifiedString(learnLang) == getNormifiedString(userAnswer!);
-  }
-
-  MockChatStep({
-    required this.isAi,
-    required this.appLang,
-    required this.learnLang,
-    required this.audioUrl,
-    this.type,
-    this.userAnswer,
-  });
-  factory MockChatStep.fromJson(Map<String, dynamic> json) {
-    return MockChatStep(
-      isAi: json['isAi'],
-      appLang: json['applang'],
-      learnLang: json['learnlang'],
-      type: MockChatType.values[json['type']],
-      audioUrl: json['audioUrl'],
-      userAnswer: json['userAnswer'],
-    );
-  }
-
-  String toJson() {
-    return jsonEncode({
-      "isAi": isAi,
-      "applang": appLang,
-      "learnlang": learnLang,
-      "type": type!.index,
-      "audioUrl": audioUrl,
-      "userAnswer": userAnswer,
-    });
   }
 }

@@ -5,6 +5,7 @@ import 'package:poly_app/app/learn_track/data/sub_chapter_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/learn_track/ui/components/list_item.dart';
+import 'package:poly_app/app/lessons/logic/vocab_session.dart';
 import 'package:poly_app/app/lessons/ui/vocab.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
@@ -71,9 +72,10 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
             icon: getLessonIcon(lesson.type),
             onTap: () {
               if (lesson.type == "vocab") {
+                ref.read(activeVocabId.notifier).state = lesson.id;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VocabPage(lesson.id)),
+                  MaterialPageRoute(builder: (context) => VocabPage()),
                 );
               }
             }));
