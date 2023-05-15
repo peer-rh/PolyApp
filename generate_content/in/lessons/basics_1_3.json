@@ -2,12 +2,33 @@
     "type": "vocab",
     "title": "Important Phrases",
     "content": [
-        "I'm sorry",
-        "I'm sorry I only speak a little []",
-        "You're welcome",
-        "What is",
-        "How do you say ... in {{}}",
-        "What is ... in {}",
-        "And you?"
+        {
+            "id": "cce19fd1-64ff-4ca0-a3bc-cd26c1d37ecb",
+            "content": "I'm sorry"
+        },
+        {
+            "id": "bf67665d-e66f-4ec2-b2e8-ab8fde4e090d",
+            "content": "I'm sorry I only speak a little []"
+        },
+        {
+            "id": "fa206fc2-6afb-4e63-b3a2-71246a41c049",
+            "content": "You're welcome"
+        },
+        {
+            "id": "e628926c-f10a-4b2f-b03d-fbd8166e4693",
+            "content": "What is"
+        },
+        {
+            "id": "ee9d3e76-6f64-4372-847e-175183f7e4b8",
+            "content": "How do you say ... in {{}}"
+        },
+        {
+            "id": "1a9bed4b-da53-4ef7-9614-e45f010e7e86",
+            "content": "What is ... in {}"
+        },
+        {
+            "id": "30a1f3f8-34f7-47af-84b1-0e557894e070",
+            "content": "And you?"
+        }
     ]
 }

@@ -8,9 +8,9 @@ import 'package:poly_app/app/chat/ui/components/ai_avatar.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/loading_three_dots.dart';
 
-class OwnMsgBubbleFrame extends StatelessWidget {
+class UserMsgBubbleFrame extends StatelessWidget {
   final Widget child;
-  const OwnMsgBubbleFrame({required this.child, super.key});
+  const UserMsgBubbleFrame({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +106,7 @@ class _AIMsgBubbleState extends State<AIMsgBubble> {
             ),
             Row(mainAxisSize: MainAxisSize.min, children: [
               IconButton(
+                color: Theme.of(context).colorScheme.onSurface,
                 onPressed: () async {
                   setState(() {
                     _loadingAudio = true;
@@ -124,6 +125,7 @@ class _AIMsgBubbleState extends State<AIMsgBubble> {
                     : const Icon(CustomIcons.volume, size: 18),
               ),
               IconButton(
+                color: Theme.of(context).colorScheme.onSurface,
                 onPressed: () async {
                   setState(() {
                     _loadingTranslation = true;
@@ -133,7 +135,7 @@ class _AIMsgBubbleState extends State<AIMsgBubble> {
                     _loadingTranslation = false;
                   });
                 },
-                icon: _loadingAudio
+                icon: _loadingTranslation
                     ? const SizedBox(
                         width: 18,
                         height: 18,

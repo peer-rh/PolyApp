@@ -55,7 +55,6 @@ class _VocabPageState extends ConsumerState<VocabPage> {
     }
 
     final session = ref.watch(activeVocabSession);
-    print(session?.currentStep);
     if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
@@ -68,7 +67,6 @@ class _VocabPageState extends ConsumerState<VocabPage> {
       });
     }
 
-    print(session.currentStep);
     return Scaffold(
         appBar: FrostedAppBar(
           title: Text(session.lesson.title),
@@ -244,10 +242,16 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
             ]);
         break;
     }
-    currentInputWidget = InputWidget(
+    currentInputWidget = VocabInputWidget(
       step: session.currentStep!,
       onChange: (String ans) {
         session.currentAnswer = ans;
+      },
+      onSubmit: session.submitAnswer,
+      onSkip: () {
+        session.currentAnswer = "";
+        session.submitAnswer();
+        session.nextStep();
       },
       currentAnswer: session.currentAnswer,
     );

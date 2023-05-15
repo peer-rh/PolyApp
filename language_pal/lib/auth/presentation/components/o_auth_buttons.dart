@@ -1,6 +1,5 @@
 // Sign in Button with option for google, apple and default
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poly_app/auth/logic/auth_provider.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';

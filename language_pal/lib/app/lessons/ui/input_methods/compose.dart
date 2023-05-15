@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
+import 'package:poly_app/common/ui/custom_circular_button.dart';
+import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:reorderables/reorderables.dart';
 
 class ComposeInput extends StatefulWidget {
   final List<String> options;
   final void Function(String) onAnswer;
   final bool disabled;
-  ComposeInput(this.options, this.onAnswer, {this.disabled = false, super.key});
+  final void Function()? onSubmit;
+  final bool showSendBtn;
+  const ComposeInput(this.options, this.onAnswer,
+      {this.disabled = false,
+      this.onSubmit,
+      this.showSendBtn = false,
+      super.key});
 
   @override
   State<ComposeInput> createState() => _ComposeInputState();
@@ -91,8 +99,21 @@ class _ComposeInputState extends State<ComposeInput> {
     return Column(children: [
       CustomBox(
         borderColor: Theme.of(context).colorScheme.surface,
-        minHeight: 100,
-        child: (boxes.isNotEmpty) ? wrap : const Text("Tap on items to add"),
+        child: Row(children: [
+          (boxes.isNotEmpty) ? wrap : const Text("Tap on items to add"),
+          const Spacer(),
+          if (widget.showSendBtn)
+            Align(
+              alignment: Alignment.center,
+              child: CustomCircularButton(
+                  color: boxes.isNotEmpty
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.surface,
+                  icon: const Icon(CustomIcons.arrow_up),
+                  onPressed: boxes.isNotEmpty ? widget.onSubmit : null,
+                  size: 32),
+            )
+        ]),
       ),
       const SizedBox(height: 32),
       items

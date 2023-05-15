@@ -45,7 +45,9 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
     if (learnTrack == null) {
       return const LoadingPage();
     }
-    ensureFirstSubchapterInProgress();
+    Future(() {
+      ensureFirstSubchapterInProgress();
+    });
     List<Widget> itemList = [];
     for (var chap in learnTrack!.chapters) {
       itemList.add(
@@ -72,7 +74,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
           final isPrimary =
               userProgress.getStatus(chap.subchapters[i ~/ 2].id) ==
                       UserProgressStatus.notStarted ||
-                  userProgress.getStatus(chap.subchapters[i ~/ 2 - 1].id) ==
+                  userProgress.getStatus(chap.subchapters[i ~/ 2 + 1].id) ==
                       UserProgressStatus.notStarted;
           itemList.add(Container(
               alignment: Alignment.centerLeft,

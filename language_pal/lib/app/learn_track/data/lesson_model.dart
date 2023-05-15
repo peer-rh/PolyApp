@@ -1,5 +1,3 @@
-import 'package:poly_app/app/learn_track/data/status.dart';
-
 class LessonMetadataModel {
   String id;
   String title;

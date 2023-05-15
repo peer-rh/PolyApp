@@ -7,7 +7,6 @@ import 'package:poly_app/app/chat/logic/conversation_provider.dart';
 import 'package:poly_app/common/data/scenario_model.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
-import 'package:poly_app/common/ui/frosted_effect.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 

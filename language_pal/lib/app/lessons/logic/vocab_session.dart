@@ -11,9 +11,14 @@ import 'package:poly_app/app/lessons/logic/util.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 
-final vocabSession =
-    ChangeNotifierProvider.family<ActiveVocabSession?, String>((ref, id) {
-  final vocabLesson = ref.watch(vocabLessonProvider(id));
+final activeVocabId = StateProvider<String?>((ref) => null);
+
+final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
+  final learnId = ref.watch(activeVocabId);
+  if (learnId == null) {
+    return null;
+  }
+  final vocabLesson = ref.watch(vocabLessonProvider(learnId));
   final lesson = vocabLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
   final uid = ref.watch(uidProvider);
@@ -23,17 +28,6 @@ final vocabSession =
   final out = ActiveVocabSession(lesson, uid);
   ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
   ref.listen(cantListenProvider, (_, newVal) => out.cantListen = newVal);
-  return out;
-});
-
-final activeVocabId = StateProvider<String?>((ref) => null);
-
-final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
-  final learnId = ref.watch(activeVocabId);
-  if (learnId == null) {
-    return null;
-  }
-  final out = ref.watch(vocabSession(learnId));
   return out;
 });
 

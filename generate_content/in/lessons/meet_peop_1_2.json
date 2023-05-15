@@ -2,11 +2,29 @@
     "title": "Getting to know someone",
     "type": "vocab",
     "content": [
-        "How are you called?",
-        "My name is...",
-        "How old are you",
-        "I am twenty years old",
-        "Where are you from?",
-        "I'm from []"
+        {
+            "id": "1de96fe3-6710-4fd8-b432-058e8fa4475d",
+            "content": "How are you called?"
+        },
+        {
+            "id": "8d07eacc-e8fd-477f-bee6-901311e6afaf",
+            "content": "My name is..."
+        },
+        {
+            "id": "638fc7a2-6771-4d2c-8a23-70ddaead5144",
+            "content": "How old are you"
+        },
+        {
+            "id": "7fea9c45-0ab4-45ad-b43b-e8a800b7d1d8",
+            "content": "I am twenty years old"
+        },
+        {
+            "id": "d3816440-2048-48c4-a7cb-d95ac8a19f5f",
+            "content": "Where are you from?"
+        },
+        {
+            "id": "51f08e96-6f3d-4af4-9fd2-f405caf335d1",
+            "content": "I'm from []"
+        }
     ]
 }

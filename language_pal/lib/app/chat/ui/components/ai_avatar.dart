@@ -8,7 +8,7 @@ class AIAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       foregroundImage: AssetImage(
-        "assets/avatars/$avatar",
+        "assets/avatars/$avatar.png",
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
     );

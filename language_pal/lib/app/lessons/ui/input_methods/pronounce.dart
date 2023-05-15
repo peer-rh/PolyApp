@@ -1,25 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
-import 'package:poly_app/common/logic/audio_visualizer.dart';
 import 'package:poly_app/common/ui/audio_visualizer.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:record/record.dart';
-import 'package:sound_stream/sound_stream.dart';
 
 class PronounciationInput extends StatefulWidget {
-  final void Function(String) onSubmit;
+  final void Function(String) onAnswer;
   final bool disabled;
   final String wanted;
-  const PronounciationInput(this.onSubmit, this.wanted,
+  final void Function() onSubmit;
+  final void Function() onSkip;
+  const PronounciationInput(
+      this.onAnswer, this.onSubmit, this.onSkip, this.wanted,
       {this.disabled = false, super.key});
 
   @override
@@ -28,6 +26,7 @@ class PronounciationInput extends StatefulWidget {
 
 class _PronounciationInputState extends State<PronounciationInput> {
   bool loading = false;
+  bool skip = false;
 
   bool isRecording = false;
   final _fileRecord = Record();
@@ -45,10 +44,8 @@ class _PronounciationInputState extends State<PronounciationInput> {
   }
 
   void stop() async {
-    // TODO: Have max len
-    // TODO: Redo when wrong
-    // TODO: Show loading
     setState(() {
+      loading = true;
       isRecording = false;
     });
     final file = await _fileRecord.stop();
@@ -61,7 +58,15 @@ class _PronounciationInputState extends State<PronounciationInput> {
       "language": "es",
       "text": widget.wanted,
     });
-    widget.onSubmit(out.data);
+    if (out.data == widget.wanted) {
+      widget.onAnswer(out.data);
+      widget.onSubmit();
+    } else {
+      skip = true;
+    }
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -82,13 +87,37 @@ class _PronounciationInputState extends State<PronounciationInput> {
               alignment: Alignment.topCenter,
               child: CustomCircularButton(
                   color: Theme.of(context).colorScheme.primary,
-                  icon: Icon(
-                    !isRecording ? CustomIcons.mic : CustomIcons.check,
-                    size: 24,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  onPressed: isRecording ? stop : record,
-                  size: 48))
+                  icon: loading
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        )
+                      : Icon(
+                          !isRecording ? CustomIcons.mic : CustomIcons.check,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                  onPressed: loading
+                      ? null
+                      : isRecording
+                          ? stop
+                          : record,
+                  size: 48)),
+          const SizedBox(height: 16),
+          if (skip) const Text("Try again"),
+          if (skip)
+            Align(
+              alignment: Alignment.topRight,
+              child: TextButton(
+                onPressed: widget.onSkip,
+                child: Text("Skip",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary)),
+              ),
+            )
         ]));
   }
 }

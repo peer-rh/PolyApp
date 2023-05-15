@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:poly_app/app/lessons/logic/util.dart';
 
 enum InputType {
@@ -34,6 +32,7 @@ class InputStep {
   }
 
   factory InputStep.fromJson(Map<String, dynamic> json) {
+    print(json);
     return InputStep(
       prompt: json['prompt'],
       answer: json['answer'],

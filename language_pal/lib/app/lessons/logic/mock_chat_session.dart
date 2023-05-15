@@ -5,16 +5,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/lessons/data/input_step.dart';
-import 'package:poly_app/app/lessons/data/vocab_lesson_model.dart';
+import 'package:poly_app/app/lessons/data/mock_chat_lesson_model.dart';
 import 'package:poly_app/app/lessons/logic/lesson_providers.dart';
 import 'package:poly_app/app/lessons/logic/util.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 
-final mockChatSession =
-    ChangeNotifierProvider.family<ActiveMockChatSession?, String>((ref, id) {
-  final vocabLesson = ref.watch(vocabLessonProvider(id));
-  final lesson = vocabLesson.asData?.value;
+final activeMockChatId = StateProvider<String?>((ref) => null);
+
+final activeMockChatSession =
+    ChangeNotifierProvider<ActiveMockChatSession?>((ref) {
+  final id = ref.watch(activeMockChatId);
+  if (id == null) {
+    return null;
+  }
+  final mockChatLesson = ref.watch(mockChatLessonProvider(id));
+  final lesson = mockChatLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
   final uid = ref.watch(uidProvider);
   if (lesson == null || trackId == null || uid == null) {
@@ -25,19 +31,8 @@ final mockChatSession =
   return out;
 });
 
-final activeMockChatId = StateProvider<String?>((ref) => null);
-
-final activeVocabSession = ChangeNotifierProvider<ActiveMockChatSession?>((ref) {
-  final learnId = ref.watch(activeMockChatId);
-  if (learnId == null) {
-    return null;
-  }
-  final out = ref.watch(mockChatSession(learnId));
-  return out;
-});
-
 class ActiveMockChatSession extends ChangeNotifier {
-  final VocabLessonModel lesson;
+  final MockChatLessonModel lesson;
   final String _uid;
 
   String? _currentAnswer;
@@ -54,7 +49,7 @@ class ActiveMockChatSession extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<InputStep> _steps = [];
+  List<MockChatMsg> _steps = [];
   int? _currentStep;
 
   bool get finished => _currentStep == _steps.length;
@@ -64,13 +59,16 @@ class ActiveMockChatSession extends ChangeNotifier {
     if (_currentStep == null || _currentStep! >= _steps.length) {
       return null;
     }
-    if (_steps[_currentStep!].type == InputType.listen && _cantListen) {
-      _steps[_currentStep!].type = InputType.select;
-    } else if (_steps[_currentStep!].type == InputType.pronounce && _cantTalk) {
-      _currentStep = _currentStep! + 1;
+
+    final step = _steps[_currentStep!].step!;
+
+    if (step.type == InputType.pronounce && _cantTalk) {
+      step.type = InputType.select;
     }
-    return _steps[_currentStep!];
+    return step;
   }
+
+  List<MockChatMsg> get pastConv => _steps.sublist(0, _currentStep);
 
   ActiveMockChatSession(this.lesson, this._uid) {
     _initState();
@@ -86,7 +84,7 @@ class ActiveMockChatSession extends ChangeNotifier {
     if (doc.exists) {
       final json = doc.data()!;
       _steps = await json['steps']
-          .map<InputStep>((e) => InputStep.fromJson(e))
+          .map<MockChatMsg>((e) => MockChatMsg.fromJson(e))
           .toList(growable: false);
       _currentStep = await json['currentStep'];
       notifyListeners();
@@ -97,59 +95,38 @@ class ActiveMockChatSession extends ChangeNotifier {
   }
 
   void _genProgram() {
-    List<List<VocabModel>> groups = [];
-    for (int i = 0; i < lesson.vocabList.length; i += 4) {
-      groups.add(
-          lesson.vocabList.sublist(i, min(i + 4, lesson.vocabList.length)));
-    }
-
     final random = Random();
-    List<List<List<InputStep>>> stepsGrouped = [];
 
     List<String> allWords = [];
-    for (VocabModel v in lesson.vocabList) {
+    for (MockChatMsgModel v in lesson.msgList) {
       for (String s in v.learnLang.split(" ")) {
         allWords.add(s);
       }
     }
 
-    InputStep? genInputStep(InputType type, VocabModel vocab) {
+    InputStep genInputStep(InputType type, MockChatMsgModel msg) {
       switch (type) {
         case InputType.select:
-          // TODO: Add Audio to options
           return InputStep(
-              prompt: vocab.appLang,
-              answer: vocab.learnLang,
+              prompt: msg.appLang,
+              answer: msg.learnLang,
               type: type,
               options: [
-                vocab.learnLang,
-                ...generateRandomIntegers(4, lesson.vocabList.length)
-                    .map((e) => lesson.vocabList[e].learnLang)
-                    .where((e) => e != vocab.learnLang)
+                msg.learnLang,
+                ...generateRandomIntegers(4, lesson.msgList.length)
+                    .map((e) => lesson.msgList[e].learnLang)
+                    .where((e) => e != msg.learnLang)
                     .take(3)
                     .toList()
               ]);
-        case InputType.listen:
-          return InputStep(
-            prompt: vocab.appLang,
-            answer: vocab.learnLang,
-            type: type,
-            options: [
-              vocab.learnLang,
-              ...generateRandomIntegers(4, lesson.vocabList.length)
-                  .map((e) => lesson.vocabList[e].learnLang)
-                  .where((e) => e != vocab.learnLang)
-                  .take(3)
-                  .toList()
-            ],
-            audioUrl: vocab.audioUrl,
-          );
         case InputType.compose:
-          if (vocab.learnLang.split(" ").length == 1) return null;
-          final correctOptions = vocab.learnLang.split(" ");
+          if (msg.learnLang.split(" ").length == 1) {
+            return genInputStep(InputType.select, msg);
+          }
+          final correctOptions = msg.learnLang.split(" ");
           return InputStep(
-              prompt: vocab.appLang,
-              answer: vocab.learnLang,
+              prompt: msg.appLang,
+              answer: msg.learnLang,
               type: type,
               options: [
                 ...correctOptions,
@@ -162,56 +139,36 @@ class ActiveMockChatSession extends ChangeNotifier {
 
         case InputType.pronounce:
           return InputStep(
-            prompt: vocab.learnLang,
-            answer: vocab.learnLang,
-            type: type,
-            audioUrl: vocab.audioUrl,
-          );
+              prompt: msg.learnLang,
+              answer: msg.learnLang,
+              type: type,
+              audioUrl: msg.audioUrl,
+              options: [
+                msg.learnLang,
+                ...generateRandomIntegers(4, lesson.msgList.length)
+                    .map((e) => lesson.msgList[e].learnLang)
+                    .where((e) => e != msg.learnLang)
+                    .take(3)
+                    .toList()
+              ]);
 
-        case InputType.write:
-          return InputStep(
-            prompt: vocab.appLang,
-            answer: vocab.learnLang,
-            type: type,
-          );
+        default:
+          throw Exception("Invalid input type");
       }
     }
 
-    for (int i = 0; i < groups.length; i++) {
-      stepsGrouped.add([[], [], []]);
-      for (VocabModel v in groups[i]) {
-        final s1I = random.nextInt(stage_1.length);
-        final s2I = random.nextInt(stage_2.length);
-        var s3I = random.nextInt(stage_2.length);
-        if (s2I == s3I) {
-          s3I = (s3I + 1) % stage_2.length;
-        }
-        stepsGrouped[i][0].add(genInputStep(stage_1[s1I], v)!);
-        final s2 = genInputStep(stage_2[s2I], v);
-        if (s2 != null) {
-          stepsGrouped[i][1].add(s2);
-        }
-        final s3 = genInputStep(stage_2[s3I], v);
-        if (s3 != null) {
-          stepsGrouped[i][1].add(s3);
-        }
-      }
-      stepsGrouped[i][1].shuffle();
-      stepsGrouped[i][2].shuffle();
+    for (MockChatMsgModel m in lesson.msgList) {
+      _steps.add(MockChatMsg(m.learnLang, m.appLang, m.isAi, m.audioUrl,
+          step: m.isAi
+              ? null
+              : switch (random.nextInt(2)) {
+                  0 => genInputStep(InputType.select, m),
+                  1 => genInputStep(InputType.compose, m),
+                  2 => genInputStep(InputType.pronounce, m),
+                  _ => throw Exception("Invalid input type"),
+                }));
     }
-
-    List<InputStep> steps = [];
-    steps.addAll(stepsGrouped[0][0]);
-    steps.addAll(stepsGrouped[0][1]);
-    for (int i = 1; i < stepsGrouped.length; i++) {
-      steps.addAll(stepsGrouped[i][0]);
-      steps.addAll(stepsGrouped[i - 1][2]);
-      steps.addAll(stepsGrouped[i][1]);
-    }
-    steps.addAll(stepsGrouped[stepsGrouped.length - 1][2]);
-
-    _steps = steps;
-    _currentStep = 0;
+    _currentStep = _steps[0].isAi ? 1 : 0;
   }
 
   void saveState() async {
@@ -222,20 +179,45 @@ class ActiveMockChatSession extends ChangeNotifier {
         .doc(lesson.id)
         .set({
       "steps": _steps.map((e) => e.toJson()).toList(),
-      "currentStep": _currentStep! + 1,
+      "currentStep": _currentStep!,
     });
   }
 
   void submitAnswer() {
     // TODO: Add Error logging
     currentStep!.userAnswer = _currentAnswer;
+    _currentAnswer = null;
+    _currentStep = _currentStep! + 2;
     saveState();
     notifyListeners();
   }
+}
 
-  void nextStep() {
-    _currentAnswer = null;
-    _currentStep = _currentStep! + 1;
-    notifyListeners();
+class MockChatMsg {
+  bool isAi;
+  String learnLang;
+  String appLang;
+  InputStep? step;
+  String audioUrl;
+
+  MockChatMsg(this.learnLang, this.appLang, this.isAi, this.audioUrl,
+      {this.step});
+
+  factory MockChatMsg.fromJson(Map<String, dynamic> json) {
+    return MockChatMsg(
+        json['learnLang'], json['appLang'], json['isAi'], json['audioUrl'],
+        step: json['inputStep'] != null
+            ? InputStep.fromJson(json['inputStep'])
+            : null);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "learnLang": learnLang,
+      "appLang": appLang,
+      "isAi": isAi,
+      "audioUrl": audioUrl,
+      "inputStep": step?.toJson(),
+    };
   }
 }

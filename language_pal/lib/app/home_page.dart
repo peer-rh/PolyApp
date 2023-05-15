@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat/ui/past_conversation_page.dart';
 import 'package:poly_app/app/learn_track/ui/learn_track.dart';
-import 'package:poly_app/app/scenario/ui/select_scenario_page.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/onboarding.dart';
 import 'package:poly_app/app/user/ui/user_page.dart';

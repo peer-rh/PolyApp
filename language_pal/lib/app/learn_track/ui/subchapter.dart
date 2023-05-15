@@ -5,7 +5,9 @@ import 'package:poly_app/app/learn_track/data/sub_chapter_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/learn_track/ui/components/list_item.dart';
+import 'package:poly_app/app/lessons/logic/mock_chat_session.dart';
 import 'package:poly_app/app/lessons/logic/vocab_session.dart';
+import 'package:poly_app/app/lessons/ui/mock_chat.dart';
 import 'package:poly_app/app/lessons/ui/vocab.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
@@ -75,8 +77,14 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
                 ref.read(activeVocabId.notifier).state = lesson.id;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VocabPage()),
+                  MaterialPageRoute(builder: (context) => const VocabPage()),
                 );
+              } else if (lesson.type == "mock_chat") {
+                ref.read(activeMockChatId.notifier).state = lesson.id;
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MockChatPage()));
               }
             }));
       } else {

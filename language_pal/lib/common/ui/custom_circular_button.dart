@@ -26,6 +26,7 @@ class CustomCircularButton extends StatelessWidget {
       child: Container(
           width: size,
           height: size,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(size / 2),

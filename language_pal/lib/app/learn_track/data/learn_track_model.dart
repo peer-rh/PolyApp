@@ -1,6 +1,4 @@
-import 'package:poly_app/app/learn_track/data/status.dart';
 import 'package:poly_app/app/learn_track/data/sub_chapter_model.dart';
-import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 
 class LearnTrackModel {
   String id;
