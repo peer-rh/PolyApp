@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat/ui/components/chat_bubble.dart';
-import 'package:poly_app/app/learn_track/data/status.dart';
-import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/data/input_step.dart';
 import 'package:poly_app/app/lessons/logic/mock_chat_session.dart';
 import 'package:poly_app/app/lessons/ui/input_methods/lib.dart';
@@ -13,13 +11,14 @@ import 'package:poly_app/common/ui/loading_page.dart';
 import 'package:poly_app/common/ui/measure_size.dart';
 
 class MockChatPage extends ConsumerStatefulWidget {
-  const MockChatPage({Key? key}) : super(key: key);
+  final void Function() onFinished;
+  const MockChatPage({required this.onFinished, Key? key}) : super(key: key);
 
   @override
   _MockChatPageState createState() => _MockChatPageState();
 }
 
-class _MockChatPageState extends ConsumerState {
+class _MockChatPageState extends ConsumerState<MockChatPage> {
   double offset = 0;
   final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,
@@ -28,25 +27,13 @@ class _MockChatPageState extends ConsumerState {
 
   @override
   Widget build(BuildContext context) {
-    final id = ref.read(activeMockChatId)!;
-    if (ref.read(userProgressProvider).getStatus(id) ==
-        UserProgressStatus.notStarted) {
-      ref
-          .read(userProgressProvider)
-          .setStatus(id, UserProgressStatus.inProgress);
-    }
-
     final session = ref.watch(activeMockChatSession);
     if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
 
     if (session.finished) {
-      Future(() {
-        ref
-            .read(userProgressProvider)
-            .setStatus(id, UserProgressStatus.completed);
-      });
+      widget.onFinished();
     }
     return Scaffold(
       appBar: FrostedAppBar(
@@ -97,6 +84,8 @@ class _MockChatPageState extends ConsumerState {
                               ),
                             ),
                         }),
+                    if (session.pastConv.isEmpty)
+                      Text("Select a fitting starting message"),
                     SizedBox(height: offset),
                   ].reversed.toList()),
               Align(

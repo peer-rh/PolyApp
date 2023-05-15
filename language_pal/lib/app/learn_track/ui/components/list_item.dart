@@ -6,14 +6,14 @@ class ListItem extends StatelessWidget {
   final bool enabled;
   final String title;
   final IconData icon;
-  final void Function() onTap;
+  final void Function()? onTap;
 
   const ListItem({
     this.highlighted = false,
     required this.enabled,
     required this.title,
     required this.icon,
-    required this.onTap,
+    this.onTap,
     super.key,
   });
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/learn_track/data/status.dart';
-import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/data/input_step.dart';
 import 'package:poly_app/app/lessons/logic/vocab_session.dart';
 import 'package:poly_app/app/lessons/ui/components/custom_box.dart';
@@ -13,7 +11,8 @@ import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
 class VocabPage extends ConsumerStatefulWidget {
-  const VocabPage({super.key});
+  final void Function() onFinished;
+  const VocabPage({required this.onFinished, super.key});
 
   @override
   _VocabPageState createState() => _VocabPageState();
@@ -37,7 +36,7 @@ class _VocabPageState extends ConsumerState<VocabPage> {
   @override
   void initState() {
     setState(() {
-      currentStep = CurrentStepWidget();
+      currentStep = const CurrentStepWidget();
     });
     super.initState();
   }
@@ -46,25 +45,13 @@ class _VocabPageState extends ConsumerState<VocabPage> {
 
   @override
   Widget build(BuildContext context) {
-    final id = ref.read(activeVocabId)!;
-    if (ref.read(userProgressProvider).getStatus(id) ==
-        UserProgressStatus.notStarted) {
-      ref
-          .read(userProgressProvider)
-          .setStatus(id, UserProgressStatus.inProgress);
-    }
-
     final session = ref.watch(activeVocabSession);
     if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
 
     if (session.finished) {
-      Future(() {
-        ref
-            .read(userProgressProvider)
-            .setStatus(id, UserProgressStatus.completed);
-      });
+      widget.onFinished();
     }
 
     return Scaffold(
@@ -254,6 +241,7 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
         session.nextStep();
       },
       currentAnswer: session.currentAnswer,
+      key: Key(session.currentStep!.answer),
     );
 
     setState(() {});
@@ -300,12 +288,24 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
       required String content,
       required void Function() onConfirm}) {
     Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        )),
+      ),
       onPressed: () {
         Navigator.of(context).pop();
       },
+      child: const Text("Cancel"),
     );
     Widget continueButton = FilledButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        )),
+      ),
       child: const Text("Confirm"),
       onPressed: () {
         onConfirm();
@@ -315,6 +315,9 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
 
     // Create the dialog
     AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       title: Text(title),
       content: Text(content),
       actions: [

@@ -32,7 +32,6 @@ class InputStep {
   }
 
   factory InputStep.fromJson(Map<String, dynamic> json) {
-    print(json);
     return InputStep(
       prompt: json['prompt'],
       answer: json['answer'],

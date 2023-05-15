@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
-import 'package:poly_app/app/learn_track/data/status.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/learn_track/ui/components/list_item.dart';
@@ -20,15 +19,6 @@ class LearnTrackPage extends ConsumerStatefulWidget {
 class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
   LearnTrackModel? learnTrack;
 
-  void ensureFirstSubchapterInProgress() {
-    final userProgress = ref.read(userProgressProvider);
-    if (userProgress.getStatus(learnTrack!.chapters[0].subchapters[0].id) ==
-        UserProgressStatus.notStarted) {
-      userProgress.setStatus(learnTrack!.chapters[0].subchapters[0].id,
-          UserProgressStatus.inProgress);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     ref.watch(currentLearnTrackProvider).when(
@@ -37,18 +27,15 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
             learnTrack = data;
           });
         },
-        error: (err, __) {
-          print(err);
-        },
+        error: (_, __) {},
         loading: () {});
     final userProgress = ref.watch(userProgressProvider);
     if (learnTrack == null) {
       return const LoadingPage();
     }
-    Future(() {
-      ensureFirstSubchapterInProgress();
-    });
     List<Widget> itemList = [];
+    bool done = userProgress.getStatus(learnTrack!.id) != null;
+    bool inProgress = !done;
     for (var chap in learnTrack!.chapters) {
       itemList.add(
         Text(chap.title, style: Theme.of(context).textTheme.headlineLarge),
@@ -60,28 +47,33 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
         if (i % 2 == 0) {
           final subchap = chap.subchapters[i ~/ 2];
           itemList.add(ListItem(
-              enabled: userProgress.getStatus(subchap.id) !=
-                  UserProgressStatus.notStarted,
-              title: subchap.title,
-              highlighted: userProgress.getStatus(subchap.id) ==
-                  UserProgressStatus.inProgress,
-              icon: getChapterIcon(userProgress.getStatus(subchap.id)),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => SubchapterPage(subchap.id)));
-              }));
+            enabled: done || inProgress,
+            title: subchap.title,
+            highlighted: inProgress,
+            icon: getChapterIcon(!(done || inProgress)),
+            onTap: inProgress || done
+                ? () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => SubchapterPage(subchap.id, () {
+                              userProgress.setStatus(
+                                  learnTrack!.id, subchap.id);
+                            })));
+                  }
+                : null,
+          ));
+          if (subchap.id == userProgress.getStatus(learnTrack!.id)) {
+            done = false;
+            inProgress = true;
+          } else {
+            inProgress = false;
+          }
         } else {
-          final isPrimary =
-              userProgress.getStatus(chap.subchapters[i ~/ 2].id) ==
-                      UserProgressStatus.notStarted ||
-                  userProgress.getStatus(chap.subchapters[i ~/ 2 + 1].id) ==
-                      UserProgressStatus.notStarted;
           itemList.add(Container(
               alignment: Alignment.centerLeft,
               child: Container(
                   width: 2,
                   height: 16,
-                  color: isPrimary
+                  color: done
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.surfaceVariant,
                   margin: const EdgeInsets.only(top: 4, bottom: 4, left: 28))));
@@ -113,13 +105,9 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
   }
 }
 
-IconData getChapterIcon(UserProgressStatus stat) {
-  switch (stat) {
-    case UserProgressStatus.notStarted:
-      return CustomIcons.lock;
-    case UserProgressStatus.inProgress:
-      return CustomIcons.check;
-    case UserProgressStatus.completed:
-      return CustomIcons.check;
-  }
+IconData getChapterIcon(bool locked) {
+  return switch (locked) {
+    true => CustomIcons.lock,
+    false => CustomIcons.check
+  };
 }
