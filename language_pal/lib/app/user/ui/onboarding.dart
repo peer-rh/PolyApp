@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/chat/data/conversation.dart';
-import 'package:poly_app/app/chat/data/messages.dart';
-import 'package:poly_app/app/chat/ui/components/chat_bubble.dart';
-import 'package:poly_app/app/chat/ui/components/conv_column.dart';
-import 'package:poly_app/app/chat/ui/components/input_area.dart';
-import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
-import 'package:poly_app/app/user/data/user_model.dart';
-import 'package:poly_app/app/user/logic/get_onboarding_response.dart';
-import 'package:poly_app/app/user/logic/user_provider.dart';
-import 'package:poly_app/auth/logic/auth_provider.dart';
+import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
+import 'package:poly_app/app/chat_common/components/chat_bubble.dart';
+import 'package:poly_app/app/chat_common/components/input_area.dart';
+import 'package:poly_app/app/user/logic/onboarding_session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/frosted_effect.dart';
@@ -23,64 +17,15 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  UserModel thisUser = UserModel("", "", [], "");
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
-  bool _enabled = true;
-  bool _loading = false;
   double _offset = 0;
-  final _conv =
-      Conversation("onboarding", "en"); // TODO: Set to user's language
-
-  @override
-  void didChangeDependencies() async {
-    thisUser.uid = ref.read(authProvider).currentUser!.uid;
-    thisUser.email = ref.read(authProvider).currentUser!.email ?? "";
-    super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    _conv.addMsg(AIMsgModel(
-        "Hello I'm Poly, your language learning assistant. Great to hear, that you are interested in learning a new language. What Language would you like to learn?")); // TODO: Localize
-    setState(() {});
-    super.initState();
-  }
-
-  void onSubmit() {
-    // TODO: Add Msg when there is an error in parsing
-    // TODO: Add Animation to next screen
-    setState(() {
-      _conv.addMsg(
-          PersonMsgListModel([SingularPersonMsgModel(_textController.text)]));
-      _textController.clear();
-      _enabled = false;
-      _loading = true;
-    });
-    getAIOnboardingResponse(_conv).then((value) {
-      _conv.addMsg(AIMsgModel(value.message));
-      _loading = false;
-      if (value.language != null) {
-        // TODO: Maybe add Alert
-        // TODO: Add AppLang
-        thisUser.learnTrackList = [
-          "${value.useCase!.code}_en_${value.language!.code}"
-        ];
-        ref.read(currentLearnTrackIdProvider.notifier).state =
-            thisUser.learnTrackList[0];
-        ref.read(userProvider.notifier).setUserModel(thisUser);
-      } else {
-        _enabled = true;
-      }
-
-      setState(() {});
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final session = ref.watch(activeOnboardingSession);
     return Scaffold(
-      appBar: FrostedAppBar(title: const Text("Welcome")), // TODO: Localize
+      appBar: const FrostedAppBar(title: Text("Welcome")),
       body: SafeArea(
         child: Stack(
           alignment: Alignment.bottomCenter,
@@ -95,12 +40,33 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     parent: AlwaysScrollableScrollPhysics()),
                 child: Column(
                   children: [
-                    ConversationColumnOld(
-                      conv: _conv,
-                      aiAvatar: "assets/avatars/Poly.png",
-                    ),
-                    _loading
-                        ? const AIMsgBubbleLoading("assets/avatars/Poly.png")
+                    ...session.msgs.map((e) => switch (e.isAi) {
+                          true => AiMsgBubbleFrame(
+                              avatar: AIAvatar("Poly"),
+                              child: Text(
+                                e.msg,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface),
+                              )),
+                          false => UserMsgBubbleFrame(
+                                child: Text(
+                              e.msg,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                            )),
+                        }),
+                    session.state == OnboardingState.waitingForAI
+                        ? const AIMsgBubbleLoading("Poly")
                         : const SizedBox(),
                     SizedBox(
                       height: _offset,
@@ -124,15 +90,20 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     Expanded(
                         child: ChatTextField(
                             controller: _textController,
-                            onSubmitted: (_) => onSubmit(),
+                            onSubmitted: session.state !=
+                                    OnboardingState.waitingForUser
+                                ? null
+                                : (_) =>
+                                    session.addUserMsg(_textController.text),
                             hintText: AppLocalizations.of(context)!
                                 .chat_input_hint_reg)),
                     const SizedBox(width: 8),
                     SendButton(
                         onPressed: () {
-                          onSubmit();
+                          session.addUserMsg(_textController.text);
                         },
-                        enabled: _enabled)
+                        enabled:
+                            session.state == OnboardingState.waitingForUser)
                   ]),
                 ),
               ),

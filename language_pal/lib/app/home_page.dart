@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/chat/ui/past_conversation_page.dart';
 import 'package:poly_app/app/learn_track/ui/learn_track.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/onboarding.dart';
@@ -15,15 +14,14 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userP = ref.watch(userProvider);
-
-    switch (userP.state) {
-      case UserState.loading:
-        return const LoadingPage();
-      case UserState.onboarding:
-        return const OnboardingPage();
-      case UserState.loaded:
-        return const NavigationPage();
+    if (userP == null) {
+      return const LoadingPage();
     }
+    if (userP.learnTrackList.isEmpty) {
+      return const OnboardingPage();
+    }
+
+    return const NavigationPage();
   }
 }
 
@@ -38,16 +36,12 @@ class _NavigationPageState extends State<NavigationPage> {
   int _selectedIndex = 0;
 
   Widget _getPage(int index) {
-    switch (index) {
-      case 0:
-        return const LearnTrackPage();
-      case 1:
-        return const PastConversationListPage();
-      case 2:
-        return const UserPage();
-      default:
-        return const Text("Error");
-    }
+    return switch (index) {
+      0 => const LearnTrackPage(),
+      1 => const LoadingPage(),
+      2 => const UserPage(),
+      _ => throw Exception("Unknown index: $index"),
+    };
   }
 
   @override

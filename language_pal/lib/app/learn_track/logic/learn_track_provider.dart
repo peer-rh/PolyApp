@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
 import 'package:poly_app/app/learn_track/data/sub_chapter_model.dart';
+import 'package:poly_app/common/logic/languages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final currentLearnTrackIdProvider =
@@ -32,6 +33,22 @@ class CurrentLearnTrackIdNotif extends StateNotifier<String?> {
     }
   }
 }
+
+final learnLangProvider = Provider<LanguageModel>((ref) {
+  final id = ref.watch(currentLearnTrackIdProvider);
+  if (id == null) {
+    return LanguageModel.fromCode("en");
+  }
+  return LanguageModel.fromCode(id.split("_").last);
+});
+
+final appLangProvider = Provider<LanguageModel>((ref) {
+  final id = ref.watch(currentLearnTrackIdProvider);
+  if (id == null) {
+    return LanguageModel.fromCode("en");
+  }
+  return LanguageModel.fromCode(id.split("_").reversed.skip(1).first);
+});
 
 final currentLearnTrackProvider = FutureProvider<LearnTrackModel?>((ref) async {
   final id = ref.watch(currentLearnTrackIdProvider);

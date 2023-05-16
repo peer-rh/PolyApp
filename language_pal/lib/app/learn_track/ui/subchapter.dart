@@ -1,13 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/sub_chapter_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/learn_track/ui/components/list_item.dart';
-import 'package:poly_app/app/lessons/logic/mock_chat_session.dart';
-import 'package:poly_app/app/lessons/logic/vocab_session.dart';
-import 'package:poly_app/app/lessons/ui/mock_chat.dart';
-import 'package:poly_app/app/lessons/ui/vocab.dart';
+import 'package:poly_app/app/lessons/ai_chat/logic.dart';
+import 'package:poly_app/app/lessons/mock_chat/logic.dart';
+import 'package:poly_app/app/lessons/mock_chat/ui.dart';
+import 'package:poly_app/app/lessons/vocab/logic.dart';
+import 'package:poly_app/app/lessons/vocab/ui.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
@@ -61,7 +63,7 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
             highlighted: inProgress,
             title: lesson.title,
             icon: getLessonIcon(lesson.type),
-            onTap: done || inProgress
+            onTap: done || inProgress || kDebugMode // TODO: Remove debug mode
                 ? () {
                     if (lesson.type == "vocab") {
                       ref.read(activeVocabId.notifier).state = lesson.id;
@@ -87,6 +89,9 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
                                         .read(userProgressProvider)
                                         .setStatus(subchapter!.id, lesson.id);
                                   })));
+                    } else if (lesson.type == "ai_chat") {
+                      ref.read(activeChatId.notifier).state = lesson.id;
+                      // TODO: Navigate to page
                     }
                   }
                 : null));

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
@@ -51,7 +52,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
             title: subchap.title,
             highlighted: inProgress,
             icon: getChapterIcon(!(done || inProgress)),
-            onTap: inProgress || done
+            onTap: inProgress || done || kDebugMode
                 ? () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => SubchapterPage(subchap.id, () {
