@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
@@ -71,7 +72,24 @@ class _VocabPageState extends ConsumerState<VocabPage> {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Congratulations"),
+                      const Align(
+                          alignment: Alignment.center,
+                          child: AIAvatar(
+                            "Poly",
+                            radius: 64,
+                          )),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Congratulations!",
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      Text(
+                        "You've just completed \"${session.lesson.title}\"",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 64),
+                      // TODO: Review Errors
                       NextStepWidget(
                           nextStepTitle: widget.nextStepTitle,
                           onNextStep: widget.onNextStep)
