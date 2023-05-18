@@ -54,7 +54,7 @@ class ChatTextField extends StatelessWidget {
               maxLines: 5,
               minLines: 1,
               textInputAction: TextInputAction.send,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyLarge,
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding:
@@ -65,6 +65,7 @@ class ChatTextField extends StatelessWidget {
             ),
           ),
           trailing != null ? trailing! : const SizedBox(),
+          trailing != null ? const SizedBox(width: 8) : const SizedBox(),
         ],
       ),
     );

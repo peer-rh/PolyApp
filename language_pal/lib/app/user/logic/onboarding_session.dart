@@ -5,17 +5,23 @@ import 'package:poly_app/common/data/use_case_model.dart';
 import 'package:poly_app/common/logic/languages.dart';
 
 final activeOnboardingSession =
-    ChangeNotifierProvider.autoDispose<OnboardingSession>(
-        (ref) => OnboardingSession());
+    ChangeNotifierProvider.autoDispose<OnboardingSession>((ref) {
+  return OnboardingSession();
+});
 
 class OnboardingSession extends ChangeNotifier {
   final List<OnboardingMsgModel> _msgs = [];
   List<OnboardingMsgModel> get msgs => _msgs;
   final ValueNotifier<OnboardingState> _state =
       ValueNotifier(OnboardingState.waitingForUser);
+  // ValueNotifier(OnboardingState.finished);
   get state => _state.value;
 
   ({LanguageModel lang, UseCaseType useCase})? _result;
+  // ({LanguageModel lang, UseCaseType useCase})? _result = (
+  //   lang: LanguageModel.fromCode("en"),
+  //   useCase: UseCaseType.fromCode("travel")
+  // );
   ({LanguageModel lang, UseCaseType useCase})? get result => _result;
 
   OnboardingSession() {
@@ -30,7 +36,6 @@ class OnboardingSession extends ChangeNotifier {
     _msgs.add(OnboardingMsgModel(false, msg));
     _getAIResponse();
     _state.value = OnboardingState.waitingForAI;
-    notifyListeners();
   }
 
   void _getAIResponse() async {

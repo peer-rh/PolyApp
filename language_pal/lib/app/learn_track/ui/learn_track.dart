@@ -30,6 +30,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
         },
         error: (_, __) {},
         loading: () {});
+
     final userProgress = ref.watch(userProgressProvider);
     if (learnTrack == null) {
       return const LoadingPage();
@@ -38,6 +39,25 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
     bool done = userProgress.getStatus(learnTrack!.id) != null;
     bool inProgress = !done;
     for (var chap in learnTrack!.chapters) {
+      void goToSubchap(int idx) {
+        final subchap = chap.subchapters[idx];
+        final next = idx + 1 < chap.subchapters.length
+            ? chap.subchapters[idx + 1]
+            : null;
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => SubchapterPage(subchap.id, () {
+            userProgress.setStatus(learnTrack!.id, subchap.id);
+          },
+              nextSubchapterTitle: next?.title,
+              onNextSubchapter: next == null
+                  ? null
+                  : (context) {
+                      Navigator.pop(context);
+                      goToSubchap(idx + 1);
+                    }),
+        ));
+      }
+
       itemList.add(
         Text(chap.title, style: Theme.of(context).textTheme.headlineLarge),
       );
@@ -49,16 +69,13 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
           final subchap = chap.subchapters[i ~/ 2];
           itemList.add(ListItem(
             enabled: done || inProgress,
-            title: subchap.title,
+            title: Text(subchap.title,
+                style: Theme.of(context).textTheme.titleSmall),
             highlighted: inProgress,
             icon: getChapterIcon(!(done || inProgress)),
             onTap: inProgress || done || kDebugMode
                 ? () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => SubchapterPage(subchap.id, () {
-                              userProgress.setStatus(
-                                  learnTrack!.id, subchap.id);
-                            })));
+                    goToSubchap(i ~/ 2);
                   }
                 : null,
           ));

@@ -37,7 +37,8 @@ class ActiveChatSession extends ChangeNotifier {
 
   final ValueNotifier<ChatStatus> _status =
       ValueNotifier(ChatStatus.initialising);
-  get status => _status.value;
+  ChatStatus get status => _status.value;
+  set status(ChatStatus newVal) => _status.value = newVal;
 
   // TODO: Maybe make late and not optional
   List<ChatMsg>? _msgs;
@@ -46,15 +47,15 @@ class ActiveChatSession extends ChangeNotifier {
   String? _finalRating;
   String? get finalRating => _finalRating;
 
-  ({String learnLang, String appLang})? get currentSuggestion {
+  ({String learnLang, String appLang})? get currentCorrectedVersion {
     if (_msgs?.last is UserChatMsg) {
       final rating = (_msgs!.last as UserChatMsg).rating;
       if (rating == null) {
         return null;
       }
       return (
-        learnLang: rating.suggestion!,
-        appLang: rating.suggestionTranslated!
+        learnLang: rating.meCorrected!,
+        appLang: rating.meCorrectedTranslated!
       );
     }
     return null;
@@ -129,7 +130,7 @@ class ActiveChatSession extends ChangeNotifier {
         isAi = !isAi;
       }
     }
-    return out;
+    return out.reversed.toList();
   }
 
   void addMsg(UserChatMsg msg, {skipRating = false}) async {

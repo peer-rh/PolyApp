@@ -20,4 +20,12 @@ class UserModel {
       "learnTrackList": learnTrackList,
     };
   }
+
+  UserModel copyWithAddedLearnTrack(String learnTrackId) {
+    return UserModel(
+      uid,
+      email,
+      [...learnTrackList, learnTrackId],
+    );
+  }
 }

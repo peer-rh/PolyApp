@@ -18,11 +18,17 @@ class MeasureSize extends StatefulWidget {
 
 class MeasureSizeState extends State<MeasureSize> {
   var widgetKey = GlobalKey();
+  Size lastSize = Size.zero;
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => widget.onChange(widgetKey.currentContext!.size!));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final size = widgetKey.currentContext!.size!;
+      if (lastSize != size) {
+        lastSize = size;
+        widget.onChange(size);
+      }
+    });
 
     return Container(
       key: widgetKey,

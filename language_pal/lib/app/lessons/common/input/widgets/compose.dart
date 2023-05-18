@@ -100,8 +100,10 @@ class _ComposeInputState extends State<ComposeInput> {
       CustomBox(
         borderColor: Theme.of(context).colorScheme.surface,
         child: Row(children: [
-          (boxes.isNotEmpty) ? wrap : const Text("Tap on items to add"),
-          const Spacer(),
+          Expanded(
+            child:
+                (boxes.isNotEmpty) ? wrap : const Text("Tap on items to add"),
+          ),
           if (widget.showSendBtn)
             Align(
               alignment: Alignment.center,

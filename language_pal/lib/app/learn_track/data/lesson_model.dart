@@ -17,6 +17,7 @@ class AiChatLessonModel {
   String startingMsg;
   String promptDesc;
   String goalDesc;
+  Map<String, dynamic> voiceSettings;
 
   AiChatLessonModel({
     required this.id,
@@ -25,6 +26,7 @@ class AiChatLessonModel {
     required this.startingMsg,
     required this.promptDesc,
     required this.goalDesc,
+    required this.voiceSettings,
   });
 
   factory AiChatLessonModel.fromJson(Map<String, dynamic> map, String id) {
@@ -35,6 +37,7 @@ class AiChatLessonModel {
       startingMsg: map["content"]["starting_msg"],
       promptDesc: map["content"]["prompt_desc"],
       goalDesc: map["content"]["goal_desc"],
+      voiceSettings: map["content"]["voice_settings"].cast<String, dynamic>(),
     );
   }
 }

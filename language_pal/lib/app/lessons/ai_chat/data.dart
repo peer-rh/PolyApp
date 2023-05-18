@@ -34,7 +34,7 @@ class AIChatMsg extends ChatMsg {
 }
 
 class UserChatMsg extends ChatMsg {
-  UserChatMsg(msg) : super(msg, false);
+  UserChatMsg(msg, {this.rating}) : super(msg, false);
   UserMsgRating? rating;
 
   @override
@@ -48,21 +48,28 @@ class UserChatMsg extends ChatMsg {
   }
 
   factory UserChatMsg.fromJson(Map<String, dynamic> json) {
-    return UserChatMsg(json["text"] as String);
+    return UserChatMsg(json["text"] as String,
+        rating: json["rating"] != null
+            ? UserMsgRating.fromJson(json["rating"])
+            : null);
   }
 }
 
 enum ChatStatus {
-  initialising("initialising"),
-  waitingForUser("waitingForUser"),
-  waitingForUserRedo("waitingForUserRedo"),
-  waitingForUserMsgRating("waitingForUserMsgRating"),
-  waitingForAIResponse("waitingForAIResponse"),
-  waitingForConvRating("waitingForConvRating"),
-  finished("finished");
+  initialising("initialising", false),
+  waitingForUser(
+    "waitingForUser",
+    true,
+  ),
+  waitingForUserRedo("waitingForUserRedo", false),
+  waitingForUserMsgRating("waitingForUserMsgRating", false),
+  waitingForAIResponse("waitingForAIResponse", false),
+  waitingForConvRating("waitingForConvRating", false),
+  finished("finished", false);
 
-  const ChatStatus(this.name);
+  const ChatStatus(this.name, this.allowUserInput);
   final String name;
+  final bool allowUserInput;
 
   factory ChatStatus.fromString(String name) {
     return ChatStatus.values.firstWhere((e) => e.name == name);
@@ -72,19 +79,17 @@ enum ChatStatus {
 class UserMsgRating {
   final MsgRatingType type;
   final String? suggestion;
-  final String? suggestionTranslated;
   final String explanation;
   final String? meCorrected;
   final String? meCorrectedTranslated;
 
-  UserMsgRating(this.type, this.suggestion, this.suggestionTranslated,
-      this.meCorrected, this.meCorrectedTranslated, this.explanation);
+  UserMsgRating(this.type, this.suggestion, this.meCorrected,
+      this.meCorrectedTranslated, this.explanation);
 
   Map<String, dynamic> toJson() {
     return {
       "type": type.index,
       "suggestion": suggestion,
-      "suggestion_translated": suggestionTranslated,
       "me_corrected": meCorrected,
       "me_corrected_translated": meCorrectedTranslated,
       "explanation": explanation,
@@ -95,7 +100,6 @@ class UserMsgRating {
     return UserMsgRating(
       MsgRatingType.values[data["type"]],
       data["suggestion"],
-      data["suggestion_translated"],
       data["me_corrected"],
       data["me_corrected_translated"],
       data["explanation"],

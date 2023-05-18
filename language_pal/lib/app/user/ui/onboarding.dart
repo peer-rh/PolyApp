@@ -5,6 +5,7 @@ import 'package:poly_app/app/chat_common/components/chat_bubble.dart';
 import 'package:poly_app/app/chat_common/components/input_area.dart';
 import 'package:poly_app/app/user/logic/onboarding_session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/frosted_effect.dart';
 import 'package:poly_app/common/ui/measure_size.dart';
@@ -24,6 +25,14 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(activeOnboardingSession);
+    if (session.state == OnboardingState.finished) {
+      Future(() {
+        final newU = ref.read(userProvider)!.copyWithAddedLearnTrack(
+            "${session.result!.useCase.code}_en_${session.result!.lang.code}");
+        ref.read(userProvider.notifier).setUser(newU);
+      });
+    }
+
     return Scaffold(
       appBar: const FrostedAppBar(title: Text("Welcome")),
       body: SafeArea(
@@ -42,9 +51,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   children: [
                     ...session.msgs.map((e) => switch (e.isAi) {
                           true => AiMsgBubbleFrame(
-                              avatar: AIAvatar("Poly"),
+                              avatar: const AIAvatar("Poly"),
                               child: Text(
                                 e.msg,
+                                textWidthBasis: TextWidthBasis.longestLine,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -56,6 +66,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                           false => UserMsgBubbleFrame(
                                 child: Text(
                               e.msg,
+                              textWidthBasis: TextWidthBasis.longestLine,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -78,6 +89,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             // ConversationColumn(conv: conv, scenario: scenario),
             MeasureSize(
               onChange: (size) {
+                if (_offset == size.height) return;
                 setState(() {
                   _offset = size.height;
                 });
@@ -93,14 +105,17 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             onSubmitted: session.state !=
                                     OnboardingState.waitingForUser
                                 ? null
-                                : (_) =>
-                                    session.addUserMsg(_textController.text),
+                                : (_) {
+                                    session.addUserMsg(_textController.text);
+                                    _textController.clear();
+                                  },
                             hintText: AppLocalizations.of(context)!
                                 .chat_input_hint_reg)),
                     const SizedBox(width: 8),
                     SendButton(
                         onPressed: () {
                           session.addUserMsg(_textController.text);
+                          _textController.clear();
                         },
                         enabled:
                             session.state == OnboardingState.waitingForUser)

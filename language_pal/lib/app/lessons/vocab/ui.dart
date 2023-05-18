@@ -12,7 +12,13 @@ import 'package:poly_app/common/ui/loading_page.dart';
 
 class VocabPage extends ConsumerStatefulWidget {
   final void Function() onFinished;
-  const VocabPage({required this.onFinished, super.key});
+  final String nextStepTitle;
+  final void Function(BuildContext) onNextStep;
+  const VocabPage(
+      {required this.onFinished,
+      required this.nextStepTitle,
+      required this.onNextStep,
+      super.key});
 
   @override
   _VocabPageState createState() => _VocabPageState();
@@ -61,47 +67,55 @@ class _VocabPageState extends ConsumerState<VocabPage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Spacer(),
-                session.finished
-                    ? const Text("DONE!!!")
-                    : currentStep, // TODO: Done UI
-                const Spacer(),
-                InkWell(
-                  onTap: session.finished
-                      ? () => Navigator.pop(context)
-                      : session.currentStep!.isCorrect != null
-                          ? session.nextStep
-                          : session.currentAnswer == ""
-                              ? null
-                              : checkAnswer,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: session.currentAnswer == "" &&
-                                session.currentStep?.isCorrect == null &&
-                                !session.finished
-                            ? Theme.of(context).colorScheme.surfaceVariant
-                            : Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Text(
-                      session.finished
-                          ? "Finish"
-                          : session.currentStep!.isCorrect != null
-                              ? 'Next'
-                              : 'Check',
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
+            child: session.finished
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Congratulations"),
+                      NextStepWidget(
+                          nextStepTitle: widget.nextStepTitle,
+                          onNextStep: widget.onNextStep)
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Spacer(),
+                      currentStep, // TODO: Done UI
+                      const Spacer(),
+                      InkWell(
+                        onTap: session.currentStep!.isCorrect != null
+                            ? session.nextStep
+                            : session.currentAnswer == ""
+                                ? null
+                                : checkAnswer,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: session.currentAnswer == "" &&
+                                      session.currentStep?.isCorrect == null
+                                  ? Theme.of(context).colorScheme.surfaceVariant
+                                  : Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            session.currentStep!.isCorrect != null
+                                ? 'Next'
+                                : 'Check',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 24),
-              ],
-            ),
           ),
         ));
   }

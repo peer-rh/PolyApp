@@ -18,6 +18,8 @@ class UserProvider extends StateNotifier<UserModel?> {
     }
   }
 
+  get user => state;
+
   void _loadUser(User fbUser) async {
     final doc = await FirebaseFirestore.instance
         .collection("users")

@@ -9,25 +9,28 @@ class UserMsgBubbleFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Theme.of(context).colorScheme.primary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  child: child),
             ),
-            child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: child),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -40,27 +43,30 @@ class AiMsgBubbleFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        avatar,
-        const SizedBox(width: 4),
-        Container(
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Theme.of(context).colorScheme.surface,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          avatar,
+          const SizedBox(width: 4),
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.surface,
+              ),
+              child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  child: child),
             ),
-            child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: child),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -99,46 +105,73 @@ class _AIMsgBubbleState extends State<AIMsgBubble> {
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
             ),
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              IconButton(
-                color: Theme.of(context).colorScheme.onSurface,
-                onPressed: () async {
-                  setState(() {
-                    _loadingAudio = true;
-                  });
-                  await widget.onPlayAudio();
-                  setState(() {
-                    _loadingAudio = false;
-                  });
-                },
-                icon: _loadingAudio
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(),
-                      )
-                    : const Icon(CustomIcons.volume, size: 18),
-              ),
-              IconButton(
-                color: Theme.of(context).colorScheme.onSurface,
-                onPressed: () async {
-                  setState(() {
-                    _loadingTranslation = true;
-                  });
-                  await widget.onTranslate();
-                  setState(() {
-                    _loadingTranslation = false;
-                  });
-                },
-                icon: _loadingTranslation
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(),
-                      )
-                    : const Icon(Icons.translate, size: 18),
-              ),
-            ])
+            const SizedBox(height: 4),
+            Material(
+              color: Colors.transparent,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: _loadingAudio
+                      ? null
+                      : () async {
+                          setState(() {
+                            _loadingAudio = true;
+                          });
+                          await widget.onPlayAudio();
+                          setState(() {
+                            _loadingAudio = false;
+                          });
+                        },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 32,
+                    height: 32,
+                    child: _loadingAudio
+                        ? SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : Icon(CustomIcons.volume,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.onSurface),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: _loadingTranslation
+                      ? null
+                      : () async {
+                          setState(() {
+                            _loadingTranslation = true;
+                          });
+                          await widget.onTranslate();
+                          setState(() {
+                            _loadingTranslation = false;
+                          });
+                        },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 32,
+                    height: 32,
+                    child: _loadingTranslation
+                        ? SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : const Icon(Icons.translate, size: 18),
+                  ),
+                ),
+              ]),
+            )
           ]),
     );
   }

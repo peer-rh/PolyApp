@@ -4,7 +4,7 @@ import 'package:poly_app/common/ui/custom_ink_well.dart';
 class ListItem extends StatelessWidget {
   final bool highlighted;
   final bool enabled;
-  final String title;
+  final Widget title;
   final IconData icon;
   final void Function()? onTap;
 
@@ -50,7 +50,7 @@ class ListItem extends StatelessWidget {
                         ? Theme.of(context).colorScheme.onPrimary
                         : Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(width: 8),
-            Text(title, style: Theme.of(context).textTheme.titleSmall!),
+            title,
             const Spacer(),
             const Icon(Icons.chevron_right)
           ],
