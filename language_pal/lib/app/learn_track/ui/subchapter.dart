@@ -61,7 +61,6 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
     void goToLesson(int i) {
       final lesson = subchapter!.lessons[i];
       onFinished() {
-        print("onFinished");
         Future(() {
           ref.read(userProgressProvider).setStatus(subchapter!.id, lesson.id);
         });
@@ -180,7 +179,7 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
               : null));
     }
 
-    if (done) {
+    if (inProgress) {
       widget.onFinished();
     }
     return Scaffold(
@@ -200,8 +199,6 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
                           .withOpacity(0.6))),
               const SizedBox(height: 24),
               ...itemList,
-
-              // TODO: Skip to next subchapter
             ],
           ),
         ));

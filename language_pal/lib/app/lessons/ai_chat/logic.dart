@@ -194,7 +194,6 @@ class ActiveChatSession extends ChangeNotifier {
   }
 
   void _getFinalRating() async {
-    print("getFinalRating");
     final response = await FirebaseFunctions.instance
         .httpsCallable("getConversationRating")
         .call({

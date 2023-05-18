@@ -79,15 +79,50 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                               },
                               avatar: session.lesson.avatar),
                           false => UserMsgBubbleFrame(
-                              child: Text(
-                                e.learnLang,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
+                              color: e.step!.isCorrect!
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.primary,
+                              child: IntrinsicWidth(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      e.learnLang,
+                                      textWidthBasis:
+                                          TextWidthBasis.longestLine,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary),
+                                    ),
+                                    if (!e.step!.isCorrect!)
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 2),
+                                        height: 1,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .onPrimary),
+                                            .onPrimary
+                                            .withOpacity(0.6),
+                                      ),
+                                    if (!e.step!.isCorrect!)
+                                      Text(
+                                        e.step!.userAnswer!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                    .withOpacity(0.8)),
+                                      ),
+                                  ],
+                                ),
                               ),
                             ),
                         }),

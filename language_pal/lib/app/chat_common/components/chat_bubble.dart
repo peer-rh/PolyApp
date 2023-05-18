@@ -5,7 +5,8 @@ import 'package:poly_app/common/ui/loading_three_dots.dart';
 
 class UserMsgBubbleFrame extends StatelessWidget {
   final Widget child;
-  const UserMsgBubbleFrame({required this.child, super.key});
+  final Color? color;
+  const UserMsgBubbleFrame({required this.child, this.color, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class UserMsgBubbleFrame extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Theme.of(context).colorScheme.primary,
+                color: color ?? Theme.of(context).colorScheme.primary,
               ),
               child: Padding(
                   padding:
