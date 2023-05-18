@@ -48,6 +48,9 @@ class ActiveChatSession extends ChangeNotifier {
   String? get finalRating => _finalRating;
 
   ({String learnLang, String appLang})? get currentCorrectedVersion {
+    if (status != ChatStatus.waitingForUserRedo) {
+      return null;
+    }
     if (_msgs?.last is UserChatMsg) {
       final rating = (_msgs!.last as UserChatMsg).rating;
       if (rating == null) {
@@ -65,6 +68,7 @@ class ActiveChatSession extends ChangeNotifier {
 
   ActiveChatSession(this.lesson, this._uid, this.learnLang, this.appLang) {
     _status.addListener(() {
+      saveState();
       notifyListeners();
       switch (_status.value) {
         case ChatStatus.waitingForAIResponse:
@@ -145,7 +149,6 @@ class ActiveChatSession extends ChangeNotifier {
   void _getRating() async {
     final response =
         await FirebaseFunctions.instance.httpsCallable('getAnswerRating').call({
-      "prompt_desc": lesson.promptDesc,
       "messages": getLastMessages(4), // Remove Scenario Msg
       "app_lang": appLang.englishName,
       "learn_lang": learnLang.englishName,
@@ -191,13 +194,13 @@ class ActiveChatSession extends ChangeNotifier {
   }
 
   void _getFinalRating() async {
+    print("getFinalRating");
     final response = await FirebaseFunctions.instance
         .httpsCallable("getConversationRating")
         .call({
       "learn_lang": learnLang.englishName,
       "app_lang": appLang.englishName,
       "messages": getLastMessages(msgs!.length),
-      "prompt_desc": lesson.promptDesc,
     });
 
     _finalRating = response.data;

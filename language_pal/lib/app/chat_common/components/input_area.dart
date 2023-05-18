@@ -25,6 +25,7 @@ class ChatTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final Widget? trailing;
+  final bool enabled;
   final void Function(String)? onSubmitted;
 
   const ChatTextField(
@@ -32,6 +33,7 @@ class ChatTextField extends StatelessWidget {
       required this.hintText,
       this.onSubmitted,
       this.trailing,
+      this.enabled = true,
       super.key});
 
   @override
@@ -47,6 +49,8 @@ class ChatTextField extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              autofocus: true,
+              enabled: enabled,
               autocorrect: false,
               onSubmitted: onSubmitted,
               controller: controller,

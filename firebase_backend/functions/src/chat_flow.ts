@@ -51,7 +51,6 @@ export const getAnswerRating = functions
     .runWith({ secrets: ["OPENAI_KEY"] })
     .https.onCall(async (data, context) => {
         /* {
-            "prompt_desc",
             "messages",
             "app_lang",
             "learn_lang"
@@ -75,7 +74,7 @@ export const getAnswerRating = functions
 
         console.log(text);
 
-        let system_prompt = `You are a teacher, teaching me ${data["learn_lang"]}, by looking over a dialogue between me and your assistant. ${data["prompt_desc"]}. Rate my previous last response based on the following criteria: 
+        let system_prompt = `You are a teacher, teaching me ${data["learn_lang"]}, by looking over a dialogue between me and your assistant. Rate my previous last response based on the following criteria: 
     - accuracy
     - grammar (Ignore punctuation, accents and capital letters)
     - conventions
@@ -89,7 +88,7 @@ The result is only "correct" if it meets all the criteria. Provide:
     - Only One category from the result list
 Use this format: 
 "explanation:...(2 Sentences; Max 18 words)
-suggestion: ...(1 Sentence; ; Max 10 words; in ${data["app_lang"]})
+suggestion: ...(1 Sentence; Max 10 words; in ${data["app_lang"]})
 corrected_me: ... (in ${data["learn_lang"]})
 corrected_me_translated: ... (in ${data["appL_lang"]})
 result:"grammar_error"/"incomplete"/"unclear"/"impolite"/"correct" (1 Word)"`;
@@ -139,7 +138,9 @@ result:"grammar_error"/"incomplete"/"unclear"/"impolite"/"correct" (1 Word)"`;
             else if (ans[i].startsWith("corrected_me_translated:"))
                 me_corrected_translated = ans[i].substring(24).trim();
             else if (ans[i].startsWith("result:"))
-                result = ans[i].substring(7).trim().replace(".", "").toLowerCase();
+                result = ans[i].substring(7).trim().toLowerCase();
+            result = result.replace(/[^\w\s\']|_/g, "")
+                .replace(/\s+/g, " ");
         }
 
         let ret = {
@@ -159,7 +160,6 @@ export const getConversationRating = functions
         /*{
             app_lang
             messages
-            prompt_desc
             learn_lang
         }*/
         // Check if current user is allowed to do so
@@ -173,12 +173,12 @@ export const getConversationRating = functions
         for (let i = 0; i < data["messages"].length; i++) {
             if (data["messages"][i]["role"] == "assistant") {
                 text +=
-                    data["assistant_name"] + ": " + data["messages"][i]["content"] + "\n";
+                    "assistant: " + data["messages"][i]["content"] + "\n";
             } else {
-                text += "ME: " + data["messages"][i]["content"] + "\n";
+                text += "me: " + data["messages"][i]["content"] + "\n";
             }
         }
-        let system_prompt = `You are a teacher teaching me ${data["learn_lang"]}. Me and your assistant did a roleplay, where: ${data["prompt_desc"]}. Tell me what I did well and give me three things I could improve. Be encouraging and very nice. Give your answer in ${data["learn_lang"]}`;
+        let system_prompt = `You are a teacher teaching me ${data["learn_lang"]}. Me and your assistant did a roleplay. Tell me what I did well and give me only if applicable up to three things I did wrong in List Format. Be encouraging, very nice and consice (3-4 Sentences). Give your answer in ${data["app_lang"]}`;
 
         const configuration = new Configuration({
             apiKey: openAIKey.value(),
@@ -197,41 +197,5 @@ export const getConversationRating = functions
             })
         ).data;
         functions.logger.info("Response: " + comp.choices[0].message?.content);
-
-        let suggestion_1 = "";
-        let suggestion_2 = "";
-        let suggestion_3 = "";
-        let overall_score: number | null = null;
-        let goal_score: number | null = null;
-
-        let ans: string[] | undefined =
-            comp.choices[0].message?.content.split("\n");
-
-        if (ans == undefined) {
-            throw new functions.https.HttpsError(
-                "internal",
-                "Error while splitting answer"
-            );
-        }
-
-        for (let i = 0; i < ans.length; i++) {
-            if (ans[i].startsWith("SUGGESTION_1:"))
-                suggestion_1 = ans[i].substring(13).trim();
-            else if (ans[i].startsWith("SUGGESTION_2:"))
-                suggestion_2 = ans[i].substring(13).trim();
-            else if (ans[i].startsWith("SUGGESTION_3:"))
-                suggestion_3 = ans[i].substring(13).trim();
-            else if (ans[i].startsWith("OVERALL_SCORE:"))
-                overall_score = parseInt(ans[i].substring(15).split("/")[0].trim());
-            else if (ans[i].startsWith("GOAL_SCORE:"))
-                goal_score = parseInt(ans[i].substring(12).split("/")[0].trim());
-        }
-
-        return {
-            suggestion_1: suggestion_1,
-            suggestion_2: suggestion_2,
-            suggestion_3: suggestion_3,
-            overall_score: overall_score,
-            goal_score: goal_score,
-        };
+        return comp.choices[0].message?.content;
     });

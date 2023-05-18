@@ -61,7 +61,7 @@ enum ChatStatus {
     "waitingForUser",
     true,
   ),
-  waitingForUserRedo("waitingForUserRedo", false),
+  waitingForUserRedo("waitingForUserRedo", true),
   waitingForUserMsgRating("waitingForUserMsgRating", false),
   waitingForAIResponse("waitingForAIResponse", false),
   waitingForConvRating("waitingForConvRating", false),
