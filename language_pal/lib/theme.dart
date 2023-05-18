@@ -59,6 +59,7 @@ const lightColorScheme = ColorScheme(
   onPrimary: Color(0xFFF7F7F7),
   secondary: Color(0xFFA80003),
   onSecondary: Color(0xFFF7F7F7),
+  tertiary: Color(0xFF59A96A),
   error: Color(0xFFFF5154),
   onError: Color(0xFFF7F7F7),
   outline: Color(0xFFDBDBDB),

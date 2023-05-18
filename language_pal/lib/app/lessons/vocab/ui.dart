@@ -279,19 +279,6 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
             )),
         const SizedBox(height: 32),
         currentInputWidget!,
-        if (session.currentStep!.isCorrect != null) const SizedBox(height: 16),
-        if (session.currentStep!.isCorrect != null)
-          CustomBox(
-            backgroundColor: session.currentStep!.isCorrect!
-                ? Colors.green.withOpacity(0.2)
-                : Colors.red.withOpacity(0.2),
-            child: Text(
-              session.currentStep!.isCorrect!
-                  ? 'Correct!'
-                  : 'Incorrect: ${session.currentStep!.answer}',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-          ),
       ],
     );
   }
