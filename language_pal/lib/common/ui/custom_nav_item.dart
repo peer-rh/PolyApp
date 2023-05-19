@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:poly_app/common/ui/custom_ink_well.dart';
 
-class ListItem extends StatelessWidget {
+class CustomNavListItem extends StatelessWidget {
   final bool highlighted;
   final bool enabled;
   final Widget title;
   final IconData icon;
   final void Function()? onTap;
 
-  const ListItem({
+  const CustomNavListItem({
     this.highlighted = false,
     required this.enabled,
     required this.title,

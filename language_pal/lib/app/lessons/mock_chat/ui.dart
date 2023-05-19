@@ -6,7 +6,6 @@ import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/app/lessons/mock_chat/logic.dart';
 import 'package:poly_app/common/logic/audio_provider.dart';
-import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/divider.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/frosted_effect.dart';

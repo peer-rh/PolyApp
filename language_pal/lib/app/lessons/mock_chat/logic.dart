@@ -193,7 +193,7 @@ class ActiveMockChatSession extends ChangeNotifier {
     // TODO: Add Error logging
     currentStep!.userAnswer = _currentAnswer;
     _currentAnswer = null;
-    _currentStep = _currentStep! + 2;
+    _currentStep = min(_currentStep! + 2, _steps.length);
     saveState();
     notifyListeners();
   }

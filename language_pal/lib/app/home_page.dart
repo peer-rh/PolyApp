@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/ui/learn_track.dart';
+import 'package:poly_app/app/smart_review/ui/smart_review.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/onboarding.dart';
 import 'package:poly_app/app/user/ui/user_page.dart';
@@ -38,7 +39,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget _getPage(int index) {
     return switch (index) {
       0 => const LearnTrackPage(),
-      1 => const LoadingPage(),
+      1 => const SmartReviewPage(),
       2 => const UserPage(),
       _ => throw Exception("Unknown index: $index"),
     };

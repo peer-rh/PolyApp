@@ -52,4 +52,12 @@ class InputStep {
       "userAnswer": userAnswer,
     };
   }
+
+  InputStep copy() => InputStep(
+      prompt: prompt,
+      answer: answer,
+      type: type,
+      audioUrl: audioUrl,
+      options: options,
+      userAnswer: userAnswer);
 }

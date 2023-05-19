@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
-import 'package:poly_app/app/learn_track/ui/components/list_item.dart';
 import 'package:poly_app/app/learn_track/ui/subchapter.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
+import 'package:poly_app/common/ui/custom_nav_item.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
@@ -67,7 +67,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
       for (var i = 0; i < chap.subchapters.length * 2 - 1; i++) {
         if (i % 2 == 0) {
           final subchap = chap.subchapters[i ~/ 2];
-          itemList.add(ListItem(
+          itemList.add(CustomNavListItem(
             enabled: done || inProgress,
             title: Text(subchap.title,
                 style: Theme.of(context).textTheme.titleSmall),

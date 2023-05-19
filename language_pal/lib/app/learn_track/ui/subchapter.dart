@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/sub_chapter_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
-import 'package:poly_app/app/learn_track/ui/components/list_item.dart';
 import 'package:poly_app/app/lessons/ai_chat/logic.dart';
 import 'package:poly_app/app/lessons/ai_chat/ui.dart';
 import 'package:poly_app/app/lessons/mock_chat/logic.dart';
@@ -12,6 +11,7 @@ import 'package:poly_app/app/lessons/mock_chat/ui.dart';
 import 'package:poly_app/app/lessons/vocab/logic.dart';
 import 'package:poly_app/app/lessons/vocab/ui.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
+import 'package:poly_app/common/ui/custom_nav_item.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
@@ -121,7 +121,7 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
         i++) {
       if (i % 2 == 0) {
         final lesson = subchapter!.lessons[i ~/ 2];
-        itemList.add(ListItem(
+        itemList.add(CustomNavListItem(
             enabled: done || inProgress,
             highlighted: inProgress,
             title: Text(lesson.title,
@@ -151,7 +151,7 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
       }
     }
     if (widget.nextSubchapterTitle != null) {
-      itemList.add(ListItem(
+      itemList.add(CustomNavListItem(
           enabled: inProgress,
           highlighted: inProgress,
           title: Column(

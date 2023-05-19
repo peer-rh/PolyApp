@@ -76,8 +76,6 @@ class ActiveVocabSession extends ChangeNotifier {
     } else if (_steps[_currentStep!].type == InputType.pronounce && _cantTalk) {
       _currentStep = _currentStep! + 1;
       return currentStep;
-      // NOTE: To handle if bigger than length
-      // Should probably be handled better
     }
     return _steps[_currentStep!];
   }
@@ -239,7 +237,6 @@ class ActiveVocabSession extends ChangeNotifier {
   }
 
   void submitAnswer() {
-    // TODO: Add Error logging
     currentStep!.userAnswer = _currentAnswer;
     saveState();
     notifyListeners();
