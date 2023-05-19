@@ -11,7 +11,8 @@ import 'package:poly_app/common/ui/frosted_effect.dart';
 import 'package:poly_app/common/ui/measure_size.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
+  final bool shouldPop;
+  const OnboardingPage({this.shouldPop = false, Key? key}) : super(key: key);
 
   @override
   ConsumerState<OnboardingPage> createState() => _OnboardingPageState();
@@ -26,11 +27,29 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     final session = ref.watch(activeOnboardingSession);
     if (session.state == OnboardingState.finished) {
-      Future(() {
-        final newU = ref.read(userProvider)!.copyWithAddedLearnTrack(
-            "${session.result!.useCase.code}_en_${session.result!.lang.code}");
-        ref.read(userProvider.notifier).setUser(newU);
-      });
+      if (ref
+          .read(userProvider)!
+          .learnTrackList
+          .any((lt) => lt.split("_").last == session.result!.lang.code)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Already learning"),
+                    content: Text(
+                        "You are already learning ${session.result!.lang.getName(context)}. Aborting..."),
+                  )).then((value) {
+            if (widget.shouldPop) Navigator.of(context).pop();
+          });
+        });
+      } else {
+        Future(() {
+          final newU = ref.read(userProvider)!.copyWithAddedLearnTrack(
+              "${session.result!.useCase.code}_en_${session.result!.lang.code}");
+          ref.read(userProvider.notifier).setUser(newU);
+        });
+        if (widget.shouldPop) Navigator.of(context).pop();
+      }
     }
 
     return Scaffold(

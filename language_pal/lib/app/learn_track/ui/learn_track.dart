@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
+import 'package:poly_app/app/learn_track/ui/learn_track_layover.dart';
 import 'package:poly_app/app/learn_track/ui/subchapter.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
@@ -104,13 +105,17 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
         extendBodyBehindAppBar: true,
         appBar: FrostedAppBar(
           title: const SizedBox(),
-          action: Container(
-            margin: const EdgeInsets.only(right: 24),
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              height: 32,
-              width: 42,
-              child: Flag(code: ref.watch(learnLangProvider).code),
+          action: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () => showLearnTrackOverlay(context),
+            child: Container(
+              margin: const EdgeInsets.only(right: 24),
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                height: 32,
+                width: 42,
+                child: Flag(code: ref.watch(learnLangProvider).code),
+              ),
             ),
           ),
         ),
