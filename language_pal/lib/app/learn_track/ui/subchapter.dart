@@ -25,10 +25,10 @@ class SubchapterPage extends ConsumerStatefulWidget {
       : super(key: key);
 
   @override
-  _SubchapterPageState createState() => _SubchapterPageState();
+  SubchapterPageState createState() => SubchapterPageState();
 }
 
-class _SubchapterPageState extends ConsumerState<SubchapterPage> {
+class SubchapterPageState extends ConsumerState<SubchapterPage> {
   SubchapterModel? subchapter;
 
   IconData getLessonIcon(String type) {
@@ -47,12 +47,11 @@ class _SubchapterPageState extends ConsumerState<SubchapterPage> {
   @override
   Widget build(BuildContext context) {
     final userProgress = ref.watch(userProgressProvider);
-    ref.watch(subchapterProvider(widget.id)).when(
-        data: (data) => setState(() {
-              subchapter = data;
-            }),
-        error: (err, _) => print(err),
-        loading: () {});
+    ref.watch(subchapterProvider(widget.id)).whenData(
+          (data) => setState(() {
+            subchapter = data;
+          }),
+        );
 
     if (subchapter == null) {
       return const LoadingPage();

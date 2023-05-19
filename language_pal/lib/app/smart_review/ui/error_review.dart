@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
-import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/vocab/vocab_prompt.dart';
 import 'package:poly_app/app/smart_review/logic/errors.dart';
@@ -12,10 +10,10 @@ class ReviewErrorScreen extends ConsumerStatefulWidget {
   const ReviewErrorScreen({Key? key}) : super(key: key);
 
   @override
-  _ReviewErrorScreenState createState() => _ReviewErrorScreenState();
+  ReviewErrorScreenState createState() => ReviewErrorScreenState();
 }
 
-class _ReviewErrorScreenState extends ConsumerState<ReviewErrorScreen> {
+class ReviewErrorScreenState extends ConsumerState<ReviewErrorScreen> {
   String currentAnswer = "";
   int currentKey = 1;
 

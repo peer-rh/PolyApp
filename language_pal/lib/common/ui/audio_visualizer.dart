@@ -25,7 +25,7 @@ class _AudioVisualizerState extends State<AudioVisualizer> {
 
   final viz = AudioVisualizerTransformer(
     windowSize: AudioVisualizer.bufferSize,
-    bandType: BandType.EightBand,
+    bandType: BandType.eightBand,
     sampleRate: AudioVisualizer.sampleRate,
     zeroHzScale: 0.05,
     fallSpeed: 0.08,

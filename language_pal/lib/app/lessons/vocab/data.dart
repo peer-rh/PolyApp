@@ -2,7 +2,6 @@ class StaticVocabLessonModel {
   String id;
   String title;
   List<StaticVocabModel> vocabList;
-  // TODO: Add Done and errors
 
   StaticVocabLessonModel({
     required this.id,

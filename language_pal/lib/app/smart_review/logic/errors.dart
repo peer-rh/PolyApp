@@ -10,8 +10,8 @@ final userErrorProvider = ChangeNotifierProvider<UserErrorProvider>((ref) {
   final err = UserErrorProvider(uid!);
 
   ref.listen(activeVocabSession, (previous, next) {
-    if (next?.currentStep?.isCorrect == false) {
-      // TODO: Make sure it doesn't get added multiple times
+    if (next?.currentStep?.isCorrect == false &&
+        previous?.currentStep?.isCorrect != null) {
       err.addError(next!.currentStep!);
     }
   });

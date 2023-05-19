@@ -7,6 +7,7 @@ import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/learn_track/ui/subchapter.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
+import 'package:poly_app/common/ui/flag.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
@@ -106,15 +107,13 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
           action: Container(
             margin: const EdgeInsets.only(right: 24),
             alignment: Alignment.centerLeft,
-            child: Container(
+            child: SizedBox(
               height: 32,
               width: 42,
-              decoration: BoxDecoration(
-                  color: Colors.red, borderRadius: BorderRadius.circular(8)),
+              child: Flag(code: ref.watch(learnLangProvider).code),
             ),
           ),
-        ), // TODO: Show chapter when scrolled down
-        // TODO: Make Action be Button / Flag
+        ),
         body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ListView(

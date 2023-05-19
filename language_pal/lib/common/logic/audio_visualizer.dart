@@ -106,12 +106,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 
 enum BandType {
-  FourBand,
-  FourBandVisual,
-  EightBand,
-  TenBand,
-  TwentySixBand,
-  ThirtyOneBand
+  fourBand,
+  fourBandVisual,
+  eightBand,
+  tenBand,
+  twentySixBand,
+  thirtyOneBand
 }
 
 class AudioVisualizerTransformer {
@@ -205,7 +205,7 @@ class AudioVisualizerTransformer {
 
   AudioVisualizerTransformer({
     this.windowSize = 2048,
-    this.bandType = BandType.EightBand,
+    this.bandType = BandType.eightBand,
     this.sampleRate = 44100,
     this.zeroHzScale = 0.05,
     this.fallSpeed = 0.08,
