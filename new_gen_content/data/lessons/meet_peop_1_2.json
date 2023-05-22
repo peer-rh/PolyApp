@@ -1,0 +1,14 @@
+{
+    "name": "Getting to know someone",
+    "type": "vocab",
+    "content": {
+        "vocab": [
+            "How are you called?",
+            "My name is...",
+            "How old are you",
+            "I am twenty years old",
+            "Where are you from?",
+            "I'm from {{app_country}}"
+        ]
+    }
+}

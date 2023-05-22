@@ -6,3 +6,4 @@ language_pal/ios/Flutter/Env.xcconfig
 generate_content/.env
 generate_content/__pycache__
 generate_content/settings/firebase_service.json
+new_gen_content/.env

@@ -1,0 +1,17 @@
+{
+    "type": "vocab",
+    "name": "Basic Phrases",
+    "content": {
+        "vocab": [
+            "yes",
+            "no",
+            "Thank you",
+            "Please",
+            "What is",
+            "Hello",
+            "How are you?",
+            "I am well",
+            "Goodbye"
+        ]
+    }
+}

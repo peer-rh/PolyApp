@@ -1,0 +1,9 @@
+{
+    "type": "ai_chat",
+    "name": "Your first real conversation",
+    "content": {
+        "avatar": "man",
+        "start_msg": "Hello, how are you?",
+        "prompt_desc": "The assistant greets the user and asks them for their name, their age and their nationality"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Greetings and Goodbye's",
+    "type": "vocab",
+    "content": {
+        "vocab": [
+            "Good Morning",
+            "Good Afternoon",
+            "Good Evening",
+            "Bye",
+            "See you later",
+            "Have a great day"
+        ]
+    }
+}

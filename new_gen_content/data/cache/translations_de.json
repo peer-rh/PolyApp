@@ -1,0 +1,210 @@
+{
+    "And you?": {
+        "approved": true,
+        "translation": "Und du?"
+    },
+    "Basics I": {
+        "approved": true,
+        "translation": "Grundlagen I"
+    },
+    "Building a basic foundation": {
+        "approved": true,
+        "translation": "Eine grundlegende Basis aufbauen"
+    },
+    "Bye": {
+        "approved": true,
+        "translation": "Tschüss"
+    },
+    "Chapter 1: Basics": {
+        "approved": true,
+        "translation": "Kapitel 1: Grundlagen"
+    },
+    "First steps in meeting people.": {
+        "approved": true,
+        "translation": "Die ersten Schritte im Kennenlernen von Leuten."
+    },
+    "Good Afternoon": {
+        "approved": true,
+        "translation": "Guten Nachmittag"
+    },
+    "Good Evening": {
+        "approved": true,
+        "translation": "Guten Abend"
+    },
+    "Good Morning": {
+        "approved": true,
+        "translation": "Guten Morgen"
+    },
+    "Good evening, how are you?": {
+        "approved": true,
+        "translation": "Guten Abend, wie geht es dir?"
+    },
+    "Goodbye": {
+        "approved": true,
+        "translation": "Auf Wiedersehen"
+    },
+    "Have a great day": {
+        "approved": true,
+        "translation": "Haben Sie einen schönen Tag"
+    },
+    "Hello": {
+        "approved": true,
+        "translation": "Hallo"
+    },
+    "Hello, how are you?": {
+        "approved": true,
+        "translation": "Hallo, wie geht es dir?"
+    },
+    "How are you called?": {
+        "approved": true,
+        "translation": "Wie heißt du?"
+    },
+    "How are you?": {
+        "approved": true,
+        "translation": "Wie geht es Ihnen?"
+    },
+    "How do you say ... in German": {
+        "approved": true,
+        "translation": "Wie sagt man ... auf Deutsch?  "
+    },
+    "How old are you": {
+        "approved": true,
+        "translation": "Wie alt bist du?"
+    },
+    "I": {
+        "approved": true,
+        "translation": "Ich"
+    },
+    "I am 25 years old": {
+        "approved": true,
+        "translation": "Ich bin 25 Jahre alt."
+    },
+    "I am doing good as well, thankyou.": {
+        "approved": true,
+        "translation": "Mir geht es auch gut, danke."
+    },
+    "I am doing good, thank you. And you?": {
+        "approved": true,
+        "translation": "Es geht mir gut, danke. Und dir?"
+    },
+    "I am from Germany. And you?": {
+        "approved": true,
+        "translation": "Ich komme aus Deutschland. Und du?"
+    },
+    "I am from Germany. How old are you?": {
+        "approved": true,
+        "translation": "Ich komme aus Deutschland. Wie alt bist du?"
+    },
+    "I am from Spain. And you?": {
+        "approved": true,
+        "translation": "Ich komme aus Spanien. Und du?"
+    },
+    "I am from the United States. And you?": {
+        "approved": true,
+        "translation": "Ich komme aus den Vereinigten Staaten. Und du?"
+    },
+    "I am twenty years old": {
+        "approved": true,
+        "translation": "Ich bin zwanzig Jahre alt."
+    },
+    "I am well": {
+        "approved": true,
+        "translation": "Mir geht es gut"
+    },
+    "I have to go. Goodbye, have a great day": {
+        "approved": true,
+        "translation": "Ich muss gehen. Auf Wiedersehen, einen schönen Tag noch."
+    },
+    "I'm from Germany": {
+        "approved": true,
+        "translation": "Ich komme aus Deutschland."
+    },
+    "I'm from Spain": {
+        "approved": true,
+        "translation": "Ich komme aus Spanien."
+    },
+    "I'm from the United States": {
+        "approved": true,
+        "translation": "Ich komme aus den Vereinigten Staaten."
+    },
+    "I'm sorry": {
+        "approved": true,
+        "translation": "Es tut mir leid.  "
+    },
+    "I'm sorry I only speak a little German": {
+        "approved": true,
+        "translation": "Es tut mir leid, ich spreche nur ein wenig Deutsch.  "
+    },
+    "Meeting People 1": {
+        "approved": true,
+        "translation": "Leute kennenlernen 1"
+    },
+    "My name is Jane. Where are you from?": {
+        "approved": true,
+        "translation": "Ich heiße Jane. Woher kommst du?"
+    },
+    "My name is John. And yours?": {
+        "approved": true,
+        "translation": "Mein Name ist John. Und deiner?"
+    },
+    "My name is...": {
+        "approved": true,
+        "translation": "Mein Name ist..."
+    },
+    "Please": {
+        "approved": true,
+        "translation": "Bitte"
+    },
+    "See you later": {
+        "approved": true,
+        "translation": "Bis später."
+    },
+    "Thank you": {
+        "approved": true,
+        "translation": "Danke"
+    },
+    "What is": {
+        "approved": true,
+        "translation": "Was ist?   "
+    },
+    "What is your name?": {
+        "approved": true,
+        "translation": "Wie heißt du?"
+    },
+    "Where are you from?": {
+        "approved": true,
+        "translation": "Woher kommst du?"
+    },
+    "You're welcome": {
+        "approved": true,
+        "translation": "Bitte schön.  "
+    },
+    "he": {
+        "approved": true,
+        "translation": "Er"
+    },
+    "no": {
+        "approved": true,
+        "translation": "Nein"
+    },
+    "she": {
+        "approved": true,
+        "translation": "Sie"
+    },
+    "they": {
+        "approved": true,
+        "translation": "Sie"
+    },
+    "we": {
+        "approved": true,
+        "translation": "Wir"
+    },
+    "yes": {
+        "approved": true,
+        "translation": "Ja"
+    },
+    "you": {
+        "approved": true,
+        "translation": "Du"
+    }
+}
