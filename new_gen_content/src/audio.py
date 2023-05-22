@@ -14,10 +14,10 @@ def generate_audio(text: str, lang_code: str, avatar: str):
         if vocab lesson use "random" for avatar
     """
     this_id = f"{lang_code}_{avatar}_{text}"
-    this_id = hashlib.md5(this_id.encode()).hexdigest()
+    this_id = hashlib.md5(this_id.encode("utf-8")).hexdigest()
 
-    if os.path.exists(f"out/cache/{this_id}.mp3"):
-        return f"out/cache/{this_id}.mp3"
+    if os.path.exists(f"data/cache/audio/{this_id}.mp3"):
+        return f"data/cache/audio/{this_id}.mp3"
 
     voice = None
     if avatar == "random":

@@ -3,13 +3,17 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/learn_track/data/lesson_model.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
-import 'package:poly_app/app/learn_track/logic/lesson_provider.dart';
 import 'package:poly_app/app/lessons/ai_chat/data.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/languages.dart';
 
+final staticAiChatLessonProvider =
+    FutureProvider.family<StaticAIChatLessonModel, String>((ref, id) async {
+  final staticDoc = ref.watch(staticFirestoreDoc);
+  final doc = await staticDoc.collection("lessons").doc(id).get();
+  return StaticAIChatLessonModel.fromJson(doc.data()!, id);
+});
 final activeChatId = StateProvider<String?>((ref) => null);
 
 final activeChatSession = ChangeNotifierProvider<ActiveChatSession?>((ref) {
@@ -17,7 +21,7 @@ final activeChatSession = ChangeNotifierProvider<ActiveChatSession?>((ref) {
   if (id == null) {
     return null;
   }
-  final mockChatLesson = ref.watch(aiChatLessonProvider(id));
+  final mockChatLesson = ref.watch(staticAiChatLessonProvider(id));
   final lesson = mockChatLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
   final uid = ref.watch(uidProvider);
@@ -30,7 +34,7 @@ final activeChatSession = ChangeNotifierProvider<ActiveChatSession?>((ref) {
 });
 
 class ActiveChatSession extends ChangeNotifier {
-  final AiChatLessonModel lesson;
+  final StaticAIChatLessonModel lesson;
   final String _uid;
   final LanguageModel learnLang;
   final LanguageModel appLang;

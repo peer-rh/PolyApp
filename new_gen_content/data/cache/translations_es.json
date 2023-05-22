@@ -1,7 +1,15 @@
 {
+    "A Basic Conversation": {
+        "approved": true,
+        "translation": "Una Conversación Básica"
+    },
     "And you?": {
         "approved": true,
         "translation": "¿Y tú?"
+    },
+    "Basic Phrases": {
+        "approved": true,
+        "translation": "Frases básicas"
     },
     "Basics I": {
         "approved": true,
@@ -23,6 +31,10 @@
         "approved": true,
         "translation": "Los primeros pasos en conocer personas."
     },
+    "Getting to know someone": {
+        "approved": true,
+        "translation": "Conociendo a alguien"
+    },
     "Good Afternoon": {
         "approved": true,
         "translation": "Buenas tardes"
@@ -42,6 +54,10 @@
     "Goodbye": {
         "approved": true,
         "translation": "adiós"
+    },
+    "Greetings and Goodbye's": {
+        "approved": true,
+        "translation": "Saludos y Despedidas"
     },
     "Have a great day": {
         "approved": true,
@@ -139,6 +155,14 @@
         "approved": true,
         "translation": "Conociendo gente"
     },
+    "Meeting Someone": {
+        "approved": true,
+        "translation": "Conociendo a alguien"
+    },
+    "More Important Phrases": {
+        "approved": true,
+        "translation": "Más Frases Importantes"
+    },
     "My name is Jane. Where are you from?": {
         "approved": true,
         "translation": "Mi nombre es Jane. ¿De dónde eres?"
@@ -154,6 +178,10 @@
     "Please": {
         "approved": true,
         "translation": "por favor"
+    },
+    "Pronouns": {
+        "approved": true,
+        "translation": "Pronombres"
     },
     "See you later": {
         "approved": true,
@@ -178,6 +206,10 @@
     "You're welcome": {
         "approved": true,
         "translation": "De nada"
+    },
+    "Your first real conversation": {
+        "approved": true,
+        "translation": "Tu primera conversación real"
     },
     "he": {
         "approved": true,

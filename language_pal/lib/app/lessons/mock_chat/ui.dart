@@ -6,6 +6,7 @@ import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/app/lessons/mock_chat/logic.dart';
 import 'package:poly_app/common/logic/audio_provider.dart';
+import 'package:poly_app/common/logic/languages.dart';
 import 'package:poly_app/common/ui/divider.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/frosted_effect.dart';
@@ -60,7 +61,10 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                           true => AIMsgBubble(
                               msg: e.learnLang,
                               onPlayAudio: () async {
-                                ref.read(cachedVoiceProvider).play(e.audioUrl);
+                                ref.read(cachedVoiceProvider).play(
+                                    "random",
+                                    ref.read(learnLangProvider).code,
+                                    e.learnLang);
                               },
                               onTranslate: () async {
                                 showDialog(

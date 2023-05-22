@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
 import 'package:poly_app/app/chat_common/components/chat_bubble.dart';
 import 'package:poly_app/app/chat_common/components/input_area.dart';
+import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
 import 'package:poly_app/app/user/logic/onboarding_session.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
@@ -30,12 +31,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       if (ref
           .read(userProvider)!
           .learnTrackList
-          .any((lt) => lt.split("_").last == session.result!.lang.code)) {
+          .any((lt) => lt.llCode == session.result!.lang.code)) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                    title: Text("Already learning"),
+                    title: const Text("Already learning"),
                     content: Text(
                         "You are already learning ${session.result!.lang.getName(context)}. Aborting..."),
                   )).then((value) {
@@ -45,7 +46,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       } else {
         Future(() {
           final newU = ref.read(userProvider)!.copyWithAddedLearnTrack(
-              "${session.result!.useCase.code}_en_${session.result!.lang.code}");
+              LearnTrackId(
+                  id: session.result!.useCase.code,
+                  llCode: session.result!.lang.code,
+                  alCode: "en" // TODO: Change to system
+                  ));
           ref.read(userProvider.notifier).setUser(newU);
         });
         if (widget.shouldPop) Navigator.of(context).pop();

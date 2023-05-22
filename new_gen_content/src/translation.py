@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_KEY")
-print(openai.api_key)
 
 
 class Translator:
@@ -43,14 +42,13 @@ class Translator:
         self.save()
 
     def gen_translate(self, phrases: list):
-        already_gen = []
+        to_gen = []
         for phrase in phrases:
-            if phrase in self.cache:
-                already_gen.append(phrase)
+            if phrase not in self.cache:
+                to_gen.append(phrase)
 
-        phrases = [p for p in phrases if p not in already_gen]
-        if len(phrases) != 0:
-            self.call_openai(phrases)
+        if len(to_gen) != 0:
+            self.call_openai(to_gen)
         self.save()
 
     def call_openai(self, phrases: list):

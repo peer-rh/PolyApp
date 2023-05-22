@@ -46,16 +46,20 @@ class LearnTrackLayover extends ConsumerWidget {
                   alignment: WrapAlignment.center,
                   spacing: 16,
                   children: [
-                    for (var lt in ref.watch(userProvider)!.learnTrackList)
+                    for (var e in ref
+                        .watch(userProvider)!
+                        .learnTrackList
+                        .asMap()
+                        .entries)
                       InkWell(
                           onTap: () => ref
-                              .read(currentLearnTrackIdProvider.notifier)
-                              .state = lt,
+                              .read(userProvider.notifier)
+                              .setActiveLearnTrack(e.key),
                           borderRadius: BorderRadius.circular(8),
                           child: SizedBox(
                               width: 64,
                               height: 48,
-                              child: Flag(code: lt.split("_")[2]))),
+                              child: Flag(code: e.value.learnLang.code))),
                     InkWell(
                       onTap: () {
                         onDismiss();

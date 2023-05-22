@@ -6,6 +6,7 @@ import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/learn_track/ui/learn_track_layover.dart';
 import 'package:poly_app/app/learn_track/ui/subchapter.dart';
+import 'package:poly_app/common/logic/languages.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
 import 'package:poly_app/common/ui/flag.dart';
@@ -24,14 +25,11 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(currentLearnTrackProvider).when(
-        data: (data) {
-          setState(() {
-            learnTrack = data;
-          });
-        },
-        error: (_, __) {},
-        loading: () {});
+    ref.watch(currentLearnTrackProvider).whenData((data) {
+      setState(() {
+        learnTrack = data;
+      });
+    });
 
     final userProgress = ref.watch(userProgressProvider);
     if (learnTrack == null) {
@@ -50,7 +48,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
           builder: (_) => SubchapterPage(subchap.id, () {
             userProgress.setStatus(learnTrack!.id, subchap.id);
           },
-              nextSubchapterTitle: next?.title,
+              nextSubchapterTitle: next?.name,
               onNextSubchapter: next == null
                   ? null
                   : (context) {
@@ -61,7 +59,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
       }
 
       itemList.add(
-        Text(chap.title, style: Theme.of(context).textTheme.headlineLarge),
+        Text(chap.name, style: Theme.of(context).textTheme.headlineLarge),
       );
       itemList.add(
         const SizedBox(height: 8),
@@ -71,7 +69,7 @@ class _LearnTrackPageState extends ConsumerState<LearnTrackPage> {
           final subchap = chap.subchapters[i ~/ 2];
           itemList.add(CustomNavListItem(
             enabled: done || inProgress,
-            title: Text(subchap.title,
+            title: Text(subchap.name,
                 style: Theme.of(context).textTheme.titleSmall),
             highlighted: inProgress,
             icon: getChapterIcon(!(done || inProgress)),

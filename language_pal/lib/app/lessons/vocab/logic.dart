@@ -9,11 +9,12 @@ import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/app/lessons/vocab/data.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
+import 'package:poly_app/common/logic/languages.dart';
 
 final staticVocabProvider =
     FutureProvider.family<StaticVocabLessonModel, String>((ref, id) async {
-  final doc =
-      await FirebaseFirestore.instance.collection("lessons").doc(id).get();
+  final staticDoc = ref.watch(staticFirestoreDoc);
+  final doc = await staticDoc.collection("lessons").doc(id).get();
   return StaticVocabLessonModel.fromJson(doc.data()!, id);
 });
 
@@ -152,7 +153,6 @@ class ActiveVocabSession extends ChangeNotifier {
                   .take(3)
                   .toList()
             ],
-            audioUrl: vocab.audioUrl,
           );
         case InputType.compose:
           if (vocab.learnLang.split(" ").length == 1) return null;
@@ -175,7 +175,6 @@ class ActiveVocabSession extends ChangeNotifier {
             prompt: vocab.learnLang,
             answer: vocab.learnLang,
             type: type,
-            audioUrl: vocab.audioUrl,
           );
 
         case InputType.write:

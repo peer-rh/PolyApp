@@ -9,11 +9,12 @@ import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/app/lessons/mock_chat/data.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
+import 'package:poly_app/common/logic/languages.dart';
 
 final staticMockChatProvider =
     FutureProvider.family<StaticMockChatLessonModel, String>((ref, id) async {
-  final doc =
-      await FirebaseFirestore.instance.collection("lessons").doc(id).get();
+  final staticDoc = ref.watch(staticFirestoreDoc);
+  final doc = await staticDoc.collection("lessons").doc(id).get();
   return StaticMockChatLessonModel.fromJson(doc.data()!, id);
 });
 
@@ -148,7 +149,6 @@ class ActiveMockChatSession extends ChangeNotifier {
               prompt: msg.learnLang,
               answer: msg.learnLang,
               type: type,
-              audioUrl: msg.audioUrl,
               options: [
                 msg.learnLang,
                 ...generateRandomIntegers(4, lesson.msgList.length)
@@ -164,7 +164,7 @@ class ActiveMockChatSession extends ChangeNotifier {
     }
 
     for (StaticMockChatMsgModel m in lesson.msgList) {
-      _steps.add(MockChatMsg(m.learnLang, m.appLang, m.isAi, m.audioUrl,
+      _steps.add(MockChatMsg(m.learnLang, m.appLang, m.isAi,
           step: m.isAi
               ? null
               : switch (random.nextInt(2)) {

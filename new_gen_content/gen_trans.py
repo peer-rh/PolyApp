@@ -23,11 +23,12 @@ if __name__ == "__main__":
                 if lesson.type == "vocab":
                     phrases = [convert_handle_bar(
                         v, app_lang, learn_lang)
-                        for v in lesson.content["vocab"]]
+                        for v in lesson.content["vocab"]] + [lesson.name]
                     trans.gen_translate(phrases)
                 elif lesson.type == "mock_chat":
                     phrases = [convert_handle_bar(
-                        m["msg"], app_lang, learn_lang) for m in lesson.content["msg_list"]]
+                        m["msg"], app_lang, learn_lang) for m in lesson.content["msg_list"]] + [lesson.name]
                     trans.gen_translate(phrases)
                 elif lesson.type == "ai_chat":
-                    trans.gen_translate([lesson.content["start_msg"]])
+                    trans.gen_translate(
+                        [lesson.content["start_msg"], lesson.name])

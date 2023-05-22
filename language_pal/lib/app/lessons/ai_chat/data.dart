@@ -1,6 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+class StaticAIChatLessonModel {
+  String id;
+  String name;
+  String avatar;
+  String startingMsg;
+  String promptDesc;
+  Map<String, dynamic> voiceSettings;
+
+  StaticAIChatLessonModel({
+    required this.id,
+    required this.name,
+    required this.avatar,
+    required this.startingMsg,
+    required this.promptDesc,
+    required this.voiceSettings,
+  });
+
+  factory StaticAIChatLessonModel.fromJson(
+      Map<String, dynamic> map, String id) {
+    return StaticAIChatLessonModel(
+      id: id,
+      name: map["name"],
+      avatar: map["content"]["avatar"],
+      startingMsg: map["content"]["start_msg"],
+      promptDesc: map["content"]["prompt_desc"],
+      voiceSettings: map["content"]["voice_settings"].cast<String, dynamic>(),
+    );
+  }
+}
+
 abstract class ChatMsg {
   String msg;
   bool isAi;

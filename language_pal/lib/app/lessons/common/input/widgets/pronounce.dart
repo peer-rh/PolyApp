@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
+import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/common/ui/audio_visualizer.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
@@ -58,7 +59,7 @@ class _PronounciationInputState extends State<PronounciationInput> {
       "language": "es",
       "text": widget.wanted,
     });
-    if (out.data == widget.wanted) {
+    if (getNormifiedString(out.data) == getNormifiedString(widget.wanted)) {
       widget.onAnswer(out.data);
       widget.onSubmit();
     } else {

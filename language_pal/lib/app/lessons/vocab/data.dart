@@ -1,11 +1,11 @@
 class StaticVocabLessonModel {
   String id;
-  String title;
+  String name;
   List<StaticVocabModel> vocabList;
 
   StaticVocabLessonModel({
     required this.id,
-    required this.title,
+    required this.name,
     required this.vocabList,
   });
 
@@ -13,13 +13,11 @@ class StaticVocabLessonModel {
           Map<String, dynamic> json, String id) =>
       StaticVocabLessonModel(
           id: id,
-          title: json["title"],
-          vocabList: json["content"]["vocab_list"]
+          name: json["name"],
+          vocabList: json["content"]["vocab"]
               .map((x) => StaticVocabModel(
-                    id: x["id"],
                     appLang: x["app_lang"],
                     learnLang: x["learn_lang"],
-                    audioUrl: x["audio_url"],
                   ))
               .toList()
               .cast<StaticVocabModel>());
@@ -28,13 +26,9 @@ class StaticVocabLessonModel {
 class StaticVocabModel {
   String appLang;
   String learnLang;
-  String audioUrl;
-  String id;
 
   StaticVocabModel({
-    required this.id,
     required this.appLang,
     required this.learnLang,
-    required this.audioUrl,
   });
 }

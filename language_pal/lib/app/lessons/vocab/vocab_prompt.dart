@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 import 'package:poly_app/common/logic/audio_provider.dart';
+import 'package:poly_app/common/logic/languages.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 
 class VocabPrompt extends ConsumerWidget {
@@ -12,10 +14,6 @@ class VocabPrompt extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void playAudio(String path) async {
-      ref.read(cachedVoiceProvider).play(path);
-    }
-
     return CustomBox(
         backgroundColor: Theme.of(context).colorScheme.surface,
         child: Column(
@@ -33,7 +31,8 @@ class VocabPrompt extends ConsumerWidget {
             switch (step.type) {
               InputType.listen => GestureDetector(
                   onTap: () {
-                    playAudio(step.audioUrl!);
+                    ref.read(cachedVoiceProvider).play("random",
+                        ref.read(learnLangProvider).code, step.answer);
                   },
                   child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -66,7 +65,8 @@ class VocabPrompt extends ConsumerWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          playAudio(step.audioUrl!);
+                          ref.read(cachedVoiceProvider).play("random",
+                              ref.read(learnLangProvider).code, step.answer);
                         },
                         icon: Icon(CustomIcons.volume,
                             color: Theme.of(context).colorScheme.onSurface),

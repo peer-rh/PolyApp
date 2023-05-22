@@ -122,7 +122,7 @@ export const onboardingGetChatGPTResponse = functions
 
         if (out.search("END:") != -1) {
             let content = out.split("END:")[0].trim();
-            let end = out.split("END:")[1].trim();
+            let end = out.split("END:")[1].trim().split("\n")[0];
             let language = end.split(" ")[0].trim().toLowerCase();
             let reason = end
                 .split(" ")[1]
@@ -175,6 +175,7 @@ export const getWhisperPronounciationResult = functions
             data["language"]
         );
 
-        let result = response.data;
-        return result["text"];
+        let result = response.data["text"];
+        console.log(result);
+        return result;
     });

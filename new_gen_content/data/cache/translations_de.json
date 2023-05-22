@@ -1,7 +1,15 @@
 {
+    "A Basic Conversation": {
+        "approved": true,
+        "translation": "Ein einfaches Gespräch"
+    },
     "And you?": {
         "approved": true,
         "translation": "Und du?"
+    },
+    "Basic Phrases": {
+        "approved": true,
+        "translation": " Basis Vokabular"
     },
     "Basics I": {
         "approved": true,
@@ -23,6 +31,10 @@
         "approved": true,
         "translation": "Die ersten Schritte im Kennenlernen von Leuten."
     },
+    "Getting to know someone": {
+        "approved": true,
+        "translation": "Jemanden kennen lernen"
+    },
     "Good Afternoon": {
         "approved": true,
         "translation": "Guten Nachmittag"
@@ -42,6 +54,10 @@
     "Goodbye": {
         "approved": true,
         "translation": "Auf Wiedersehen"
+    },
+    "Greetings and Goodbye's": {
+        "approved": true,
+        "translation": "Begrüßungen und Verabschiedungen"
     },
     "Have a great day": {
         "approved": true,
@@ -139,6 +155,14 @@
         "approved": true,
         "translation": "Leute kennenlernen 1"
     },
+    "Meeting Someone": {
+        "approved": true,
+        "translation": "Jemanden treffen"
+    },
+    "More Important Phrases": {
+        "approved": true,
+        "translation": "Weitere wichtige Ausdrücke"
+    },
     "My name is Jane. Where are you from?": {
         "approved": true,
         "translation": "Ich heiße Jane. Woher kommst du?"
@@ -154,6 +178,10 @@
     "Please": {
         "approved": true,
         "translation": "Bitte"
+    },
+    "Pronouns": {
+        "approved": true,
+        "translation": "Pronomen"
     },
     "See you later": {
         "approved": true,
@@ -178,6 +206,10 @@
     "You're welcome": {
         "approved": true,
         "translation": "Bitte schön.  "
+    },
+    "Your first real conversation": {
+        "approved": true,
+        "translation": "Dein erstes richtiges Gespräch"
     },
     "he": {
         "approved": true,

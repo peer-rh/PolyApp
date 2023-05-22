@@ -5,7 +5,6 @@ import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/app/lessons/vocab/logic.dart';
 import 'package:poly_app/app/lessons/vocab/vocab_prompt.dart';
-import 'package:poly_app/common/logic/audio_provider.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
@@ -61,7 +60,7 @@ class _VocabPageState extends ConsumerState<VocabPage> {
 
     return Scaffold(
         appBar: FrostedAppBar(
-          title: Text(session.lesson.title),
+          title: Text(session.lesson.name),
         ),
         body: SafeArea(
           child: Padding(
@@ -82,7 +81,7 @@ class _VocabPageState extends ConsumerState<VocabPage> {
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       Text(
-                        "You've just completed \"${session.lesson.title}\"",
+                        "You've just completed \"${session.lesson.name}\"",
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
@@ -148,10 +147,6 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void playAudio(String path) async {
-    ref.read(cachedVoiceProvider).play(path);
   }
 
   @override

@@ -12,7 +12,6 @@ class InputStep {
   InputType type;
   final String prompt;
   final String answer;
-  final String? audioUrl;
   final List<String>? options;
   String? userAnswer;
   bool? get isCorrect {
@@ -26,7 +25,6 @@ class InputStep {
       required this.answer,
       required this.type,
       this.userAnswer,
-      this.audioUrl,
       this.options}) {
     options?.shuffle();
   }
@@ -36,7 +34,6 @@ class InputStep {
       prompt: json['prompt'],
       answer: json['answer'],
       type: InputType.values[json['stepType']],
-      audioUrl: json['audioUrl'],
       options: json['options']?.cast<String>(),
       userAnswer: json['userAnswer'],
     );
@@ -47,7 +44,6 @@ class InputStep {
       "prompt": prompt,
       "answer": answer,
       "stepType": type.index,
-      "audioUrl": audioUrl,
       "options": options,
       "userAnswer": userAnswer,
     };
@@ -57,7 +53,6 @@ class InputStep {
       prompt: prompt,
       answer: answer,
       type: type,
-      audioUrl: audioUrl,
       options: options,
       userAnswer: userAnswer);
 }

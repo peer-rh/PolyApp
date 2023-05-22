@@ -1,8 +1,0 @@
-{
-  "type": "ai_chat",
-  "title": "Your first conversation",
-  "avatar": "woman",
-  "starting_msg": "Hello, how are you?",
-  "prompt_desc": "The assistant greets the user and asks them for their name, their age and their nationality",
-  "goal_desc": "I want to learn how to greet someone and have the first very basic conversation."
-}

@@ -8,7 +8,11 @@ final userProgressProvider =
     ChangeNotifierProvider<UserProgressProvider>((ref) {
   final uid = ref.watch(uidProvider);
   final trackId = ref.watch(currentLearnTrackIdProvider);
-  return UserProgressProvider(uid, trackId);
+  return UserProgressProvider(
+      uid,
+      trackId != null
+          ? "${trackId.alCode}_${trackId.llCode}_${trackId.id}"
+          : null);
 });
 
 class UserProgressProvider extends ChangeNotifier {

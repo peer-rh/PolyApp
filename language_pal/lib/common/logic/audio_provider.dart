@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -55,15 +57,17 @@ class CachedVoiceProvider {
   CachedVoiceProvider(this.ap);
   Map<String, String> cache = {};
 
-  void play(String audioPath) async {
-    if (cache.containsKey(audioPath)) {
-      ap.playLocal(cache[audioPath]!);
+  void play(String avatar, String langCode, String text) async {
+    final thisId =
+        md5.convert(utf8.encode("${langCode}_${avatar}_$text")).toString();
+    if (cache.containsKey(thisId)) {
+      ap.playLocal(cache[thisId]!);
     } else {
       final tmp = await getTemporaryDirectory();
-      final file = File('${tmp.path}/$audioPath');
+      final file = File('${tmp.path}/$thisId.mp3');
       file.create(recursive: true);
-      await FirebaseStorage.instance.ref(audioPath).putFile(file);
-      cache[audioPath] = file.path;
+      await FirebaseStorage.instance.ref("audio/$thisId.mp3").writeToFile(file);
+      cache[thisId] = file.path;
       ap.playLocal(file.path);
     }
   }

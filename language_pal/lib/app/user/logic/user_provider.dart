@@ -28,7 +28,7 @@ class UserProvider extends StateNotifier<UserModel?> {
     if (doc.exists) {
       state = UserModel.fromMap(fbUser.uid, doc.data()!);
     } else {
-      state = UserModel(fbUser.uid, fbUser.email ?? "", []);
+      state = UserModel(fbUser.uid, fbUser.email ?? "", [], 0);
     }
   }
 
@@ -40,5 +40,9 @@ class UserProvider extends StateNotifier<UserModel?> {
           .doc(user.uid)
           .set(user.toMap());
     }
+  }
+
+  void setActiveLearnTrack(int idx) {
+    setUser(state!.copyWithActiveLearnTrackIndex(idx));
   }
 }

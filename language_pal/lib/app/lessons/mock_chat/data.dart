@@ -5,14 +5,11 @@ class MockChatMsg {
   String learnLang;
   String appLang;
   InputStep? step;
-  String audioUrl;
 
-  MockChatMsg(this.learnLang, this.appLang, this.isAi, this.audioUrl,
-      {this.step});
+  MockChatMsg(this.learnLang, this.appLang, this.isAi, {this.step});
 
   factory MockChatMsg.fromJson(Map<String, dynamic> json) {
-    return MockChatMsg(
-        json['learnLang'], json['appLang'], json['isAi'], json['audioUrl'],
+    return MockChatMsg(json['learnLang'], json['appLang'], json['isAi'],
         step: json['inputStep'] != null
             ? InputStep.fromJson(json['inputStep'])
             : null);
@@ -23,7 +20,6 @@ class MockChatMsg {
       "learnLang": learnLang,
       "appLang": appLang,
       "isAi": isAi,
-      "audioUrl": audioUrl,
       "inputStep": step?.toJson(),
     };
   }
@@ -52,7 +48,6 @@ class StaticMockChatLessonModel {
               .map((x) => StaticMockChatMsgModel(
                     appLang: x["app_lang"],
                     learnLang: x["learn_lang"],
-                    audioUrl: x["audio_url"],
                     isAi: x["is_ai"],
                   ))
               .toList()
@@ -62,13 +57,11 @@ class StaticMockChatLessonModel {
 class StaticMockChatMsgModel {
   String appLang;
   String learnLang;
-  String audioUrl;
   bool isAi;
 
   StaticMockChatMsgModel({
     required this.appLang,
     required this.learnLang,
-    required this.audioUrl,
     required this.isAi,
   });
 }

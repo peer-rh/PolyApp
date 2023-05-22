@@ -68,7 +68,7 @@ class SubchapterPageState extends ConsumerState<SubchapterPage> {
       final next = i + 1 < subchapter!.lessons.length
           ? subchapter!.lessons[i + 1]
           : null;
-      final nextTitle = next?.title ?? "Next Subchapter";
+      final nextTitle = next?.name ?? "Next Subchapter";
       final onNext = next == null
           ? (BuildContext context) {
               Navigator.pop(context);
@@ -123,7 +123,7 @@ class SubchapterPageState extends ConsumerState<SubchapterPage> {
         itemList.add(CustomNavListItem(
             enabled: done || inProgress,
             highlighted: inProgress,
-            title: Text(lesson.title,
+            title: Text(lesson.name,
                 style: Theme.of(context).textTheme.titleSmall),
             icon: getLessonIcon(lesson.type),
             onTap: done || inProgress || kDebugMode // TODO: Remove debug mode
@@ -188,7 +188,7 @@ class SubchapterPageState extends ConsumerState<SubchapterPage> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: ListView(
             children: [
-              Text(subchapter!.title,
+              Text(subchapter!.name,
                   style: Theme.of(context).textTheme.displayLarge),
               Text(subchapter!.description,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(

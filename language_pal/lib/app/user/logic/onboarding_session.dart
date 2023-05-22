@@ -18,10 +18,6 @@ class OnboardingSession extends ChangeNotifier {
   get state => _state.value;
 
   ({LanguageModel lang, UseCaseType useCase})? _result;
-  // ({LanguageModel lang, UseCaseType useCase})? _result = (
-  //   lang: LanguageModel.fromCode("en"),
-  //   useCase: UseCaseType.fromCode("travel")
-  // );
   ({LanguageModel lang, UseCaseType useCase})? get result => _result;
 
   OnboardingSession() {
