@@ -52,9 +52,12 @@ class LearnTrackLayover extends ConsumerWidget {
                         .asMap()
                         .entries)
                       InkWell(
-                          onTap: () => ref
-                              .read(userProvider.notifier)
-                              .setActiveLearnTrack(e.key),
+                          onTap: () {
+                            ref
+                                .read(userProvider.notifier)
+                                .setActiveLearnTrack(e.key);
+                            onDismiss();
+                          },
                           borderRadius: BorderRadius.circular(8),
                           child: SizedBox(
                               width: 64,

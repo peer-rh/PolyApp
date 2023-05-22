@@ -41,10 +41,11 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
     if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
+    if (session.finished) Future(() => widget.onFinished());
 
     return Scaffold(
       appBar: FrostedAppBar(
-        title: Text(session.lesson.title),
+        title: Text(session.lesson.name),
       ),
       body: SafeArea(
         child: Padding(
@@ -57,78 +58,79 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                   physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics()),
                   children: [
-                    ...session.pastConv.map((e) => switch (e.isAi) {
-                          true => AIMsgBubble(
-                              msg: e.learnLang,
-                              onPlayAudio: () async {
-                                ref.read(cachedVoiceProvider).play(
-                                    "random",
-                                    ref.read(learnLangProvider).code,
-                                    e.learnLang);
-                              },
-                              onTranslate: () async {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                            title: const Text('Translation'),
-                                            content: Text(e.appLang),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('Close'))
-                                            ]));
-                              },
-                              avatar: session.lesson.avatar),
-                          false => UserMsgBubbleFrame(
-                              color: e.step!.isCorrect!
-                                  ? Theme.of(context).colorScheme.tertiary
-                                  : Theme.of(context).colorScheme.primary,
-                              child: IntrinsicWidth(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+                    ...session.pastConv.map((e) {
+                      return switch (e.isAi) {
+                        true => AIMsgBubble(
+                            msg: e.learnLang,
+                            onPlayAudio: () async {
+                              ref.read(cachedVoiceProvider).play(
+                                  "random",
+                                  ref.read(learnLangProvider).code,
+                                  e.learnLang);
+                            },
+                            onTranslate: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                          title: const Text('Translation'),
+                                          content: Text(e.appLang),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('Close'))
+                                          ]));
+                            },
+                            avatar: session.lesson.avatar),
+                        false => UserMsgBubbleFrame(
+                            color: e.step!.isCorrect!
+                                ? Theme.of(context).colorScheme.tertiary
+                                : Theme.of(context).colorScheme.primary,
+                            child: IntrinsicWidth(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    e.learnLang,
+                                    textWidthBasis: TextWidthBasis.longestLine,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                  ),
+                                  if (!e.step!.isCorrect!)
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 2),
+                                      height: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary
+                                          .withOpacity(0.6),
+                                    ),
+                                  if (!e.step!.isCorrect!)
                                     Text(
-                                      e.learnLang,
-                                      textWidthBasis:
-                                          TextWidthBasis.longestLine,
+                                      e.step!.userAnswer!,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyLarge!
+                                          .bodyMedium!
                                           .copyWith(
                                               color: Theme.of(context)
                                                   .colorScheme
-                                                  .onPrimary),
+                                                  .onPrimary
+                                                  .withOpacity(0.8)),
                                     ),
-                                    if (!e.step!.isCorrect!)
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 2),
-                                        height: 1,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
-                                            .withOpacity(0.6),
-                                      ),
-                                    if (!e.step!.isCorrect!)
-                                      Text(
-                                        e.step!.userAnswer!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary
-                                                    .withOpacity(0.8)),
-                                      ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
-                        }),
+                          ),
+                      };
+                    }),
                     if (session.pastConv.isEmpty)
                       const Text("Select a fitting starting message"),
                     if (session.finished)
@@ -143,15 +145,15 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                               onNextStep: widget.onNextStep),
                           const SizedBox(height: 96),
                         ],
-                      ),
-                    SizedBox(height: offset),
+                      )
+                    else
+                      SizedBox(height: offset),
                   ].reversed.toList()),
               if (!session.finished)
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: MeasureSize(
                     onChange: (size) {
-                      if (size.height == offset) return;
                       setState(() {
                         offset = size.height;
                       });

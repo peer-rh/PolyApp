@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
+import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/app/lessons/mock_chat/data.dart';
@@ -29,18 +30,18 @@ final activeMockChatSession =
   final mockChatLesson = ref.watch(staticMockChatProvider(id));
   final lesson = mockChatLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
-  final uid = ref.watch(uidProvider);
-  if (lesson == null || trackId == null || uid == null) {
+  if (lesson == null || trackId == null) {
     return null;
   }
-  final out = ActiveMockChatSession(lesson, uid);
+  final userTrackDoc = ref.watch(userLearnTrackDocProvider);
+  final out = ActiveMockChatSession(lesson, userTrackDoc);
   ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
   return out;
 });
 
 class ActiveMockChatSession extends ChangeNotifier {
   final StaticMockChatLessonModel lesson;
-  final String _uid;
+  final DocumentReference userTrackDoc;
 
   String? _currentAnswer;
   String get currentAnswer => _currentAnswer ?? "";
@@ -77,17 +78,12 @@ class ActiveMockChatSession extends ChangeNotifier {
 
   List<MockChatMsg> get pastConv => _steps.sublist(0, _currentStep);
 
-  ActiveMockChatSession(this.lesson, this._uid) {
+  ActiveMockChatSession(this.lesson, this.userTrackDoc) {
     _initState();
   }
 
   void _initState() async {
-    final doc = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("lessons")
-        .doc(lesson.id)
-        .get();
+    final doc = await userTrackDoc.collection("lessons").doc(lesson.id).get();
     if (doc.exists) {
       final json = doc.data()!;
       _steps = await json['steps']
@@ -178,12 +174,7 @@ class ActiveMockChatSession extends ChangeNotifier {
   }
 
   void saveState() async {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("lessons")
-        .doc(lesson.id)
-        .set({
+    userTrackDoc.collection("lessons").doc(lesson.id).set({
       "steps": _steps.map((e) => e.toJson()).toList(),
       "currentStep": _currentStep!,
     });

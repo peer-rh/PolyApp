@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
+import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/app/lessons/vocab/data.dart';
@@ -32,7 +33,8 @@ final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
   if (lesson == null || trackId == null || uid == null) {
     return null;
   }
-  final out = ActiveVocabSession(lesson, uid);
+  final userTrackDoc = ref.watch(userLearnTrackDocProvider);
+  final out = ActiveVocabSession(lesson, uid, userTrackDoc);
   ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
   ref.listen(cantListenProvider, (_, newVal) => out.cantListen = newVal);
   return out;
@@ -41,6 +43,7 @@ final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
 class ActiveVocabSession extends ChangeNotifier {
   final StaticVocabLessonModel lesson;
   final String _uid;
+  final DocumentReference userTrackDoc;
 
   String? _currentAnswer;
   String get currentAnswer => _currentAnswer ?? "";
@@ -81,17 +84,12 @@ class ActiveVocabSession extends ChangeNotifier {
     return _steps[_currentStep!];
   }
 
-  ActiveVocabSession(this.lesson, this._uid) {
+  ActiveVocabSession(this.lesson, this._uid, this.userTrackDoc) {
     _initState();
   }
 
   void _initState() async {
-    final doc = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("lessons")
-        .doc(lesson.id)
-        .get();
+    final doc = await userTrackDoc.collection("lessons").doc(lesson.id).get();
     if (doc.exists) {
       final json = doc.data()!;
       _steps = await json['steps']
@@ -224,12 +222,7 @@ class ActiveVocabSession extends ChangeNotifier {
   }
 
   void saveState() async {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("lessons")
-        .doc(lesson.id)
-        .set({
+    userTrackDoc.collection("lessons").doc(lesson.id).set({
       "steps": _steps.map((e) => e.toJson()).toList(),
       "currentStep": _currentStep! + 1,
     });

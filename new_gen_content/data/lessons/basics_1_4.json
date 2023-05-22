@@ -10,7 +10,7 @@
             },
             {
                 "msg": "Hello, how are you?",
-                "is_ai": false
+                "is_ai": true
             },
             {
                 "msg": "I am doing good, thank you. And you?",
@@ -18,7 +18,7 @@
             },
             {
                 "msg": "I am doing good as well, thankyou.",
-                "is_ai": false
+                "is_ai": true
             },
             {
                 "msg": "Bye",
@@ -26,7 +26,7 @@
             },
             {
                 "msg": "Bye",
-                "is_ai": false
+                "is_ai": true
             }
         ]
     }

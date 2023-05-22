@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
+import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/ai_chat/data.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/languages.dart';
@@ -28,8 +29,10 @@ final activeChatSession = ChangeNotifierProvider<ActiveChatSession?>((ref) {
   if (lesson == null || trackId == null || uid == null) {
     return null;
   }
-  final out = ActiveChatSession(
-      lesson, uid, ref.watch(learnLangProvider), ref.watch(appLangProvider));
+
+  final userTrackDoc = ref.watch(userLearnTrackDocProvider);
+  final out = ActiveChatSession(lesson, uid, ref.watch(learnLangProvider),
+      ref.watch(appLangProvider), userTrackDoc);
   return out;
 });
 
@@ -38,6 +41,7 @@ class ActiveChatSession extends ChangeNotifier {
   final String _uid;
   final LanguageModel learnLang;
   final LanguageModel appLang;
+  final DocumentReference userTrackDoc;
 
   final ValueNotifier<ChatStatus> _status =
       ValueNotifier(ChatStatus.initialising);
@@ -70,7 +74,8 @@ class ActiveChatSession extends ChangeNotifier {
 
   bool get finished => _finalRating != null;
 
-  ActiveChatSession(this.lesson, this._uid, this.learnLang, this.appLang) {
+  ActiveChatSession(
+      this.lesson, this._uid, this.learnLang, this.appLang, this.userTrackDoc) {
     _status.addListener(() {
       saveState();
       notifyListeners();
@@ -92,12 +97,7 @@ class ActiveChatSession extends ChangeNotifier {
   }
 
   void _initState() async {
-    final doc = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("lessons")
-        .doc(lesson.id)
-        .get();
+    final doc = await userTrackDoc.collection("lessons").doc(lesson.id).get();
     if (doc.exists) {
       final data = doc.data()!;
       _msgs = (data["msgs"] as List<dynamic>)
@@ -113,12 +113,7 @@ class ActiveChatSession extends ChangeNotifier {
   }
 
   void saveState() {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("lessons")
-        .doc(lesson.id)
-        .set({
+    userTrackDoc.collection("lessons").doc(lesson.id).set({
       "msgs": _msgs!.map((e) => e.toJson()).toList(),
       "finalRating": _finalRating,
       "status": _status.value.name

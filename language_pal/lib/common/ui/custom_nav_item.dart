@@ -50,8 +50,7 @@ class CustomNavListItem extends StatelessWidget {
                         ? Theme.of(context).colorScheme.onPrimary
                         : Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(width: 8),
-            title,
-            const Spacer(),
+            Expanded(child: title),
             const Icon(Icons.chevron_right)
           ],
         ),

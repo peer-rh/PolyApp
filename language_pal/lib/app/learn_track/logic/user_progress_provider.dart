@@ -4,6 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 
+final userLearnTrackDocProvider = Provider<DocumentReference>((ref) {
+  final id = ref.watch(currentLearnTrackIdProvider);
+  final uid = ref.watch(uidProvider);
+
+  return FirebaseFirestore.instance
+      .collection("users")
+      .doc(uid)
+      .collection("tracks")
+      .doc("${id!.alCode}_${id.llCode}_${id.id}");
+});
+
 final userProgressProvider =
     ChangeNotifierProvider<UserProgressProvider>((ref) {
   final uid = ref.watch(uidProvider);

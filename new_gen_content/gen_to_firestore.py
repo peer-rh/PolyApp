@@ -56,12 +56,3 @@ if __name__ == "__main__":
                     for m in gen["content"]["msg_list"]:
                         generate_audio(m["learn_lang"],
                                        learn_lang, gen["content"]["avatar"])
-
-    for i in os.listdir("data/cache/audio"):
-        if i.endswith(".mp3"):
-            # check if already exists
-            blob = stor.blob(f"audio/{i}")
-            if blob.exists():
-                continue
-            blob.upload_from_filename(f"data/cache/audio/{i}")
-            blob.make_public()

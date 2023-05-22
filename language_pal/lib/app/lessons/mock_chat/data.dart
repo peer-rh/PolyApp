@@ -27,13 +27,13 @@ class MockChatMsg {
 
 class StaticMockChatLessonModel {
   String id;
-  String title;
+  String name;
   String avatar;
   List<StaticMockChatMsgModel> msgList;
 
   StaticMockChatLessonModel({
     required this.id,
-    required this.title,
+    required this.name,
     required this.avatar,
     required this.msgList,
   });
@@ -42,7 +42,7 @@ class StaticMockChatLessonModel {
           Map<String, dynamic> json, String id) =>
       StaticMockChatLessonModel(
           id: id,
-          title: json["title"],
+          name: json["name"],
           avatar: json["content"]["avatar"],
           msgList: json["content"]["msg_list"]
               .map((x) => StaticMockChatMsgModel(

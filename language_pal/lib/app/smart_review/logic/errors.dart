@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/vocab/logic.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 
 final userErrorProvider = ChangeNotifierProvider<UserErrorProvider>((ref) {
   final uid = ref.watch(uidProvider);
-  final err = UserErrorProvider(uid!);
+  final userTrackDoc = ref.watch(userLearnTrackDocProvider);
+  final err = UserErrorProvider(uid!, userTrackDoc);
 
   ref.listen(activeVocabSession, (previous, next) {
     if (next?.currentStep?.isCorrect == false &&
@@ -20,23 +22,19 @@ final userErrorProvider = ChangeNotifierProvider<UserErrorProvider>((ref) {
 
 class UserErrorProvider extends ChangeNotifier {
   String uid;
+  final DocumentReference userTrackDoc;
   List<InputStep> _steps = [];
 
   List<InputStep> get steps => _steps;
 
-  UserErrorProvider(this.uid) {
+  UserErrorProvider(this.uid, this.userTrackDoc) {
     _initState();
   }
 
   InputStep? get currentStep => _steps.isEmpty ? null : _steps.first;
 
   void _initState() async {
-    final doc = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
-        .collection("errors")
-        .doc("vocab")
-        .get();
+    final doc = await userTrackDoc.collection("errors").doc("vocab").get();
     if (doc.data() != null) {
       _steps = (doc.data()!["steps"] as List)
           .map((e) => InputStep.fromJson(e))
@@ -56,9 +54,7 @@ class UserErrorProvider extends ChangeNotifier {
 
   void _saveState() {
     notifyListeners();
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
+    userTrackDoc
         .collection("errors")
         .doc("vocab")
         .set({"steps": _steps.map((e) => e.toJson()).toList()});
