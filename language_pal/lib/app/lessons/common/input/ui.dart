@@ -78,7 +78,7 @@ class MockChatInputWidget extends StatelessWidget {
           onSubmit();
         }, disabled: disabled),
       InputType.compose => ComposeInput(step.options!, onChange,
-          disabled: disabled, onSubmit: onSubmit, showSendBtn: true),
+          disabled: disabled, onSubmit: onSubmit, showSendBtn: true, hint: step.prompt),
       InputType.pronounce => PronounciationInput(
           onChange, onSubmit, onSkip, step.answer,
           disabled: disabled),

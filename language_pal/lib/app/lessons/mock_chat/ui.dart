@@ -72,10 +72,23 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                               showDialog(
                                   context: context,
                                   builder: (_) => AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
                                           title: const Text('Translation'),
                                           content: Text(e.appLang),
                                           actions: [
                                             TextButton(
+                                                style: ButtonStyle(
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                  ),
+                                                ),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
@@ -93,7 +106,7 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    e.learnLang,
+                                    e.step!.userAnswer!,
                                     textWidthBasis: TextWidthBasis.longestLine,
                                     style: Theme.of(context)
                                         .textTheme
@@ -115,7 +128,9 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                                     ),
                                   if (!e.step!.isCorrect!)
                                     Text(
-                                      e.step!.userAnswer!,
+                                      e.step!.answer,
+                                      textWidthBasis:
+                                          TextWidthBasis.longestLine,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
@@ -175,7 +190,7 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                                 session.currentStep!.prompt,
                               )),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          padding: const EdgeInsets.symmetric(vertical: 4),
                           child: MockChatInputWidget(
                             step: session.currentStep!,
                             onChange: (value) {
@@ -187,6 +202,7 @@ class _MockChatPageState extends ConsumerState<MockChatPage> {
                               session.submitAnswer();
                             },
                             currentAnswer: session.currentAnswer,
+                            key: ValueKey(session.currentStep!.answer),
                           ),
                         ),
                       ],
