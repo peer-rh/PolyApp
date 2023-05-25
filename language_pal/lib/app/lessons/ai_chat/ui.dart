@@ -400,7 +400,7 @@ class _AudioInputState extends State<AudioInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
