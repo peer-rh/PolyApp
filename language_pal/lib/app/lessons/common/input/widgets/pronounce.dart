@@ -40,7 +40,7 @@ class _PronounciationInputState extends State<PronounciationInput> {
     _fileRecord.start();
     Future.delayed(const Duration(seconds: 10), () {
       // TOOD: Alert what happened
-      stop();
+      if (isRecording) stop();
     });
   }
 
