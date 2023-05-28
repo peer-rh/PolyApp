@@ -49,21 +49,6 @@ class SmartReviewPage extends ConsumerWidget {
               Text("Smart Review",
                   style: Theme.of(context).textTheme.headlineLarge),
               const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Theme.of(context).colorScheme.primary, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  "0% completed",
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ),
-              spacer,
               CustomNavListItem(
                   onTap: () {
                     Navigator.push(
