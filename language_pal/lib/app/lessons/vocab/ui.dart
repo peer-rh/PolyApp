@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
+import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/app/lessons/vocab/logic.dart';
@@ -55,6 +56,9 @@ class _VocabPageState extends ConsumerState<VocabPage> {
     }
 
     if (session.finished) {
+      ref.read(userProgressProvider).addToUserDict(session.lesson.vocabList
+          .map((e) => (appLang: e.appLang, learnLang: e.learnLang))
+          .toList());
       widget.onFinished();
     }
 

@@ -116,6 +116,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
     return Scaffold(
       appBar: FrostedAppBar(title: Text(session.lesson.name)),
+      extendBodyBehindAppBar: true,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [

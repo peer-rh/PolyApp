@@ -118,6 +118,7 @@ class ActiveVocabSession extends ChangeNotifier {
     List<String> allWords = [];
     for (StaticVocabModel v in lesson.vocabList) {
       for (String s in v.learnLang.split(" ")) {
+        print(s);
         allWords.add(s);
       }
     }
@@ -125,7 +126,6 @@ class ActiveVocabSession extends ChangeNotifier {
     InputStep? genInputStep(InputType type, StaticVocabModel vocab) {
       switch (type) {
         case InputType.select:
-          // TODO: Add Audio to options
           return InputStep(
               prompt: vocab.appLang,
               answer: vocab.learnLang,
@@ -164,20 +164,14 @@ class ActiveVocabSession extends ChangeNotifier {
                 ...generateRandomIntegers(8, allWords.length)
                     .map((e) => allWords[e])
                     .where((e) => !correctOptions.contains(e))
-                    .take(8)
+                    .take(6)
                     .toList()
               ]);
 
         case InputType.pronounce:
-          return InputStep(
-            prompt: vocab.learnLang,
-            answer: vocab.learnLang,
-            type: type,
-          );
-
         case InputType.write:
           return InputStep(
-            prompt: vocab.appLang,
+            prompt: vocab.learnLang,
             answer: vocab.learnLang,
             type: type,
           );

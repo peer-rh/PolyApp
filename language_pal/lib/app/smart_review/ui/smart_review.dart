@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/ui/learn_track_layover.dart';
 import 'package:poly_app/app/smart_review/logic/errors.dart';
 import 'package:poly_app/app/smart_review/ui/error_review.dart';
+import 'package:poly_app/app/smart_review/ui/listen_practice.dart';
 import 'package:poly_app/common/logic/languages.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
@@ -38,6 +39,7 @@ class SmartReviewPage extends ConsumerWidget {
             children: [
               Text("Smart Review",
                   style: Theme.of(context).textTheme.headlineLarge),
+              const SizedBox(height: 8),
               CustomNavListItem(
                   onTap: () {
                     Navigator.push(
@@ -51,6 +53,28 @@ class SmartReviewPage extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   icon: CustomIcons.redo),
+              Container(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                      width: 2,
+                      height: 16,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      margin:
+                          const EdgeInsets.only(top: 4, bottom: 4, left: 28))),
+              CustomNavListItem(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const ListenPracticeScreen()));
+                  },
+                  enabled: true,
+                  title: Text(
+                    "Practice listening",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  icon: CustomIcons.headphones),
             ],
           )),
     );
