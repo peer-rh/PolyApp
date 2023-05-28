@@ -71,4 +71,9 @@ class AuthProvider {
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
+
+  void deleteAccount() async {
+    // TODO: Handle error
+    await FirebaseAuth.instance.currentUser?.delete();
+  }
 }
