@@ -52,6 +52,7 @@ class AccountPage extends ConsumerWidget {
               CustomNavListItem(
                   onTap: () {
                     ref.read(authProvider).signOut();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   enabled: true,
                   title: Text("Log Out",
@@ -92,7 +93,8 @@ class AccountPage extends ConsumerWidget {
                         } catch (e) {
                           // TODO: Relinlk to recent sign in
                         }
-                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
                       },
                     );
 
