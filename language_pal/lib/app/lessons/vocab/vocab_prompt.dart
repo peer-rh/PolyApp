@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/common/logic/abilities.dart';
@@ -10,7 +9,9 @@ import 'package:poly_app/common/ui/custom_icons.dart';
 
 class VocabPrompt extends ConsumerWidget {
   final InputStep step;
-  const VocabPrompt({required this.step, super.key});
+  final bool allowDisableType;
+  const VocabPrompt(
+      {required this.step, this.allowDisableType = true, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,41 +82,50 @@ class VocabPrompt extends ConsumerWidget {
                   style: Theme.of(context).textTheme.titleSmall,
                 )
             },
-            switch (step.type) {
-              InputType.listen => TextButton(
-                  onPressed: () {
-                    customAlert(
-                        context: context,
-                        title: "Can't listen",
-                        content:
-                            "This will disable all listening exercises for the next 15 minutes",
-                        onConfirm: () {
-                          ref.read(cantListenProvider.notifier).setOn();
-                        });
-                  },
-                  child: Text(
-                    "I can't listen right now",
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  )),
-              InputType.pronounce => TextButton(
-                  onPressed: () {
-                    customAlert(
-                        context: context,
-                        title: "Can't talk",
-                        content:
-                            "This will disable all pronunciation exercises for the next 15 minutes",
-                        onConfirm: () {
-                          ref.read(cantTalkProvider.notifier).setOn();
-                        });
-                  },
-                  child: Text(
-                    "I can't talk right now",
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  )),
-              _ => const SizedBox(),
-            }
+            if (allowDisableType)
+              switch (step.type) {
+                InputType.listen => TextButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                    ),
+                    onPressed: () {
+                      customAlert(
+                          context: context,
+                          title: "Can't listen",
+                          content:
+                              "This will disable all listening exercises for the next 15 minutes",
+                          onConfirm: () {
+                            ref.read(cantListenProvider.notifier).setOn();
+                          });
+                    },
+                    child: Text(
+                      "I can't listen right now",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
+                    )),
+                InputType.pronounce => TextButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                    ),
+                    onPressed: () {
+                      customAlert(
+                          context: context,
+                          title: "Can't talk",
+                          content:
+                              "This will disable all pronunciation exercises for the next 15 minutes",
+                          onConfirm: () {
+                            ref.read(cantTalkProvider.notifier).setOn();
+                          });
+                    },
+                    child: Text(
+                      "I can't talk right now",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
+                    )),
+                _ => const SizedBox(),
+              }
           ],
         ));
   }

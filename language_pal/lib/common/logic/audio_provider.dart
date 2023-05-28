@@ -58,7 +58,6 @@ class CachedVoiceProvider {
   Map<String, String> cache = {};
 
   void play(String avatar, String langCode, String text) async {
-    print("${langCode}_${avatar}_$text");
     final thisId =
         md5.convert(utf8.encode("${langCode}_${avatar}_$text")).toString();
     if (cache.containsKey(thisId)) {
@@ -67,7 +66,6 @@ class CachedVoiceProvider {
       final tmp = await getTemporaryDirectory();
       final file = File('${tmp.path}/$thisId.mp3');
       file.create(recursive: true);
-      print(thisId);
       await FirebaseStorage.instance.ref("audio/$thisId.mp3").writeToFile(file);
       cache[thisId] = file.path;
       ap.playLocal(file.path);

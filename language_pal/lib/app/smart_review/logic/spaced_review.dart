@@ -6,24 +6,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/util.dart';
+import 'package:poly_app/app/lessons/vocab/data.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 
-final spacedReviewProvider = ChangeNotifierProvider((ref) {
+final spacedReviewProvider =
+    ChangeNotifierProvider<SpacedReviewProvider>((ref) {
   final userTrackDoc = ref.watch(userLearnTrackDocProvider);
   final spacedReview = SpacedReviewProvider(userTrackDoc);
 
   ref.listen(cantTalkProvider, (_, newVal) => spacedReview.cantTalk = newVal);
   ref.listen(
       cantListenProvider, (_, newVal) => spacedReview.cantListen = newVal);
+  return spacedReview;
 });
 
 class SpacedReviewProvider extends ChangeNotifier {
-  List<SpacedReviewItem> _items = [];
+  final List<SpacedReviewItem> _items = [];
   List<String> _allWords = [];
   final DocumentReference userTrackDoc;
 
   bool _cantTalk = false;
   bool _cantListen = false;
+
+  InputType? _staticType;
+  InputType? get staticType => _staticType;
+  set staticType(InputType? newVal) {
+    _staticType = newVal;
+    _currentItem = _getNextItem();
+    notifyListeners();
+  }
 
   set cantTalk(bool newVal) {
     _cantTalk = newVal;
@@ -43,7 +54,7 @@ class SpacedReviewProvider extends ChangeNotifier {
 
   InputStep? _currentItem;
 
-  InputStep? get currentItem {
+  InputStep? get currentStep {
     if (_currentItem == null && _items.isNotEmpty) {
       _currentItem = _getNextItem();
     }
@@ -64,6 +75,10 @@ class SpacedReviewProvider extends ChangeNotifier {
       type = InputType.write;
     }
 
+    if (staticType != null) {
+      type = staticType!;
+    }
+
     return switch (type) {
       InputType.compose => InputStep(
             prompt: item.appLang,
@@ -73,7 +88,7 @@ class SpacedReviewProvider extends ChangeNotifier {
               ...item.learnLang.split(" "),
               ...generateRandomIntegers(6, _allWords.length)
                   .map((e) => _allWords[e])
-                  .where((e) => item.learnLang.split(" ").contains(e))
+                  .where((e) => !item.learnLang.split(" ").contains(e))
                   .take(6)
                   .toList()
             ]),
@@ -89,12 +104,51 @@ class SpacedReviewProvider extends ChangeNotifier {
                   .take(3)
                   .toList()
             ]),
-      InputType.pronounce || InputType.write => InputStep(
+      InputType.pronounce => InputStep(
           prompt: item.learnLang,
-          answer: item.appLang,
+          answer: item.learnLang,
+          type: type,
+        ),
+      InputType.write => InputStep(
+          prompt: item.appLang,
+          answer: item.learnLang,
           type: type,
         ),
     };
+  }
+
+  void addItems(List<StaticVocabModel> items) {
+    _items.addAll(items.map((e) => SpacedReviewItem(
+        DateTime.now().add(const Duration(days: 1)),
+        e.learnLang,
+        e.appLang,
+        1)));
+    _items.sort((a, b) => a.nextReview.compareTo(b.nextReview));
+    _allWords =
+        _items.expand((element) => element.learnLang.split(" ")).toList();
+    _save();
+    notifyListeners();
+  }
+
+  void submitAnswer(String answer) {
+    currentStep!.userAnswer = answer;
+    final thisItem = _items.removeAt(0);
+    _items.add(SpacedReviewItem(
+      DateTime.now().add(Duration(days: thisItem.daysToAdd)),
+      thisItem.learnLang,
+      thisItem.appLang,
+      currentStep!.isCorrect!
+          ? getNextDaysToAdd(thisItem.daysToAdd)
+          : thisItem.daysToAdd,
+    ));
+    _items.sort((a, b) => a.nextReview.compareTo(b.nextReview));
+    _save();
+    notifyListeners();
+  }
+
+  void nextStep() {
+    _currentItem = _getNextItem();
+    notifyListeners();
   }
 
   void _load() async {

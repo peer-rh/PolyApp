@@ -32,10 +32,10 @@ class ChatPage extends ConsumerStatefulWidget {
       super.key});
 
   @override
-  _ChatPageState createState() => _ChatPageState();
+  ChatPageState createState() => ChatPageState();
 }
 
-class _ChatPageState extends ConsumerState<ChatPage> {
+class ChatPageState extends ConsumerState<ChatPage> {
   bool modeIsAudio = false;
   double offset = 0;
   final cont = TextEditingController();

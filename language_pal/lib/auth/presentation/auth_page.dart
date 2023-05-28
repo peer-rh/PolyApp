@@ -147,7 +147,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
               ),
             ),
             const SizedBox(height: 16),
-            CustomDivider(text: "OR"), // TODO: i18n
+            const CustomDivider(text: "OR"), // TODO: i18n
             const SizedBox(height: 16),
             OAuthButtons(ref.read(authProvider)),
             const SizedBox(height: 96),

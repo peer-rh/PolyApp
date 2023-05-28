@@ -30,7 +30,6 @@ class UserProgressProvider extends ChangeNotifier {
   final String? _uid;
   final String? _trackId;
   Map<String, String> _userMap = {};
-  List<({String learnLang, String appLang})> _userDict = [];
 
   UserProgressProvider(this._uid, this._trackId) {
     _initState();
@@ -49,13 +48,8 @@ class UserProgressProvider extends ChangeNotifier {
         .then((value) {
       if (!value.exists) {
         _userMap = {};
-        _userDict = [];
       } else {
-        _userMap =
-            value.data()!["progress"].map((key, value) => MapEntry(key, value));
-        _userDict = value.data()!["dict"].map((e) {
-          return {"learnLang": e["learnLang"], "appLang": e["appLang"]};
-        }).toList();
+        _userMap = value.data()!["progress"].cast<String, String>();
         notifyListeners();
       }
     });
@@ -77,32 +71,6 @@ class UserProgressProvider extends ChangeNotifier {
         .doc(_trackId)
         .set({
       "progress": _userMap.map((key, value) => MapEntry(key, value)),
-      "dict": _userDict
-    });
-  }
-
-  List<({String learnLang, String appLang})> get userDict => _userDict;
-  void addToUserDict(List<({String learnLang, String appLang})> dict) {
-    // Only add if not already in list
-    var add = false;
-    dict.forEach((element) {
-      if (!_userDict.contains(element)) {
-        add = true;
-        _userDict.add(element);
-      }
-    });
-    notifyListeners();
-    if (!add) {
-      return;
-    }
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(_uid)
-        .collection("tracks")
-        .doc(_trackId)
-        .set({
-      "progress": _userMap.map((key, value) => MapEntry(key, value)),
-      "dict": _userDict
     });
   }
 }

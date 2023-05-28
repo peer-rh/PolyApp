@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/ai_chat/data.dart';
-import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/languages.dart';
 
 final staticAiChatLessonProvider =
@@ -25,20 +24,18 @@ final activeChatSession = ChangeNotifierProvider<ActiveChatSession?>((ref) {
   final mockChatLesson = ref.watch(staticAiChatLessonProvider(id));
   final lesson = mockChatLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
-  final uid = ref.watch(uidProvider);
-  if (lesson == null || trackId == null || uid == null) {
+  if (lesson == null || trackId == null) {
     return null;
   }
 
   final userTrackDoc = ref.watch(userLearnTrackDocProvider);
-  final out = ActiveChatSession(lesson, uid, ref.watch(learnLangProvider),
+  final out = ActiveChatSession(lesson, ref.watch(learnLangProvider),
       ref.watch(appLangProvider), userTrackDoc);
   return out;
 });
 
 class ActiveChatSession extends ChangeNotifier {
   final StaticAIChatLessonModel lesson;
-  final String _uid;
   final LanguageModel learnLang;
   final LanguageModel appLang;
   final DocumentReference userTrackDoc;
@@ -48,7 +45,6 @@ class ActiveChatSession extends ChangeNotifier {
   ChatStatus get status => _status.value;
   set status(ChatStatus newVal) => _status.value = newVal;
 
-  // TODO: Maybe make late and not optional
   List<ChatMsg>? _msgs;
   List<ChatMsg>? get msgs => _msgs;
 
@@ -75,7 +71,7 @@ class ActiveChatSession extends ChangeNotifier {
   bool get finished => _finalRating != null;
 
   ActiveChatSession(
-      this.lesson, this._uid, this.learnLang, this.appLang, this.userTrackDoc) {
+      this.lesson, this.learnLang, this.appLang, this.userTrackDoc) {
     _status.addListener(() {
       saveState();
       notifyListeners();

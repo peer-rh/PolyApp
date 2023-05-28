@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/learn_track/logic/learn_track_provider.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/onboarding.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';

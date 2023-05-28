@@ -4,14 +4,16 @@ import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/smart_review/logic/spaced_review.dart';
 import 'package:poly_app/app/smart_review/ui/spaced_review.dart';
 
-class ListenPracticeScreen extends ConsumerStatefulWidget {
-  const ListenPracticeScreen({super.key});
+class PronunciationPracticeScreen extends ConsumerStatefulWidget {
+  const PronunciationPracticeScreen({super.key});
 
   @override
-  ListenPracticeScreenState createState() => ListenPracticeScreenState();
+  PronunciationPracticeScreenState createState() =>
+      PronunciationPracticeScreenState();
 }
 
-class ListenPracticeScreenState extends ConsumerState<ListenPracticeScreen> {
+class PronunciationPracticeScreenState
+    extends ConsumerState<PronunciationPracticeScreen> {
   late SpacedReviewProvider sess;
   @override
   void dispose() {
@@ -25,7 +27,7 @@ class ListenPracticeScreenState extends ConsumerState<ListenPracticeScreen> {
   void didChangeDependencies() {
     sess = ref.watch(spacedReviewProvider);
     Future(() {
-      sess.staticType = InputType.listen;
+      sess.staticType = InputType.pronounce;
     });
     super.didChangeDependencies();
   }

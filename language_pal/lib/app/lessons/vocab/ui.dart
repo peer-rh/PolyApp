@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
-import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/common/ui.dart';
 import 'package:poly_app/app/lessons/vocab/logic.dart';
 import 'package:poly_app/app/lessons/vocab/vocab_prompt.dart';
+import 'package:poly_app/app/smart_review/logic/spaced_review.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 import 'package:poly_app/common/ui/loading_page.dart';
 
@@ -47,6 +47,8 @@ class _VocabPageState extends ConsumerState<VocabPage> {
   }
 
   late Widget currentStep;
+  bool alreadyFinished =
+      true; // Init to true, so that first startup when finished doesn't save
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +57,14 @@ class _VocabPageState extends ConsumerState<VocabPage> {
       return const LoadingPage();
     }
 
-    if (session.finished) {
-      ref.read(userProgressProvider).addToUserDict(session.lesson.vocabList
-          .map((e) => (appLang: e.appLang, learnLang: e.learnLang))
-          .toList());
+    if (session.finished && !alreadyFinished) {
       widget.onFinished();
+      Future(() =>
+          ref.read(spacedReviewProvider).addItems(session.lesson.vocabList));
+      alreadyFinished = true;
+    } else {
+      alreadyFinished =
+          false; // NOTE: Kinda shitty to check whether we've already finished
     }
 
     return Scaffold(
@@ -90,7 +95,6 @@ class _VocabPageState extends ConsumerState<VocabPage> {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 64),
-                      // TODO: Review Errors
                       NextStepWidget(
                           nextStepTitle: widget.nextStepTitle,
                           onNextStep: widget.onNextStep)

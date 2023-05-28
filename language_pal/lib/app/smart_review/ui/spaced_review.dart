@@ -3,26 +3,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/chat_common/components/ai_avatar.dart';
 import 'package:poly_app/app/lessons/common/input/ui.dart';
 import 'package:poly_app/app/lessons/vocab/vocab_prompt.dart';
-import 'package:poly_app/app/smart_review/logic/errors.dart';
+import 'package:poly_app/app/smart_review/logic/spaced_review.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
 
-class ReviewErrorScreen extends ConsumerStatefulWidget {
-  const ReviewErrorScreen({Key? key}) : super(key: key);
+class SpacedReviewScreen extends ConsumerStatefulWidget {
+  final String title;
+  const SpacedReviewScreen({this.title = "Smart Review", Key? key})
+      : super(key: key);
 
   @override
-  ReviewErrorScreenState createState() => ReviewErrorScreenState();
+  SpacedReviewScreenState createState() => SpacedReviewScreenState();
 }
 
-class ReviewErrorScreenState extends ConsumerState<ReviewErrorScreen> {
+class SpacedReviewScreenState extends ConsumerState<SpacedReviewScreen> {
   String currentAnswer = "";
   int currentKey = 1;
 
   @override
   Widget build(BuildContext context) {
-    final err = ref.watch(userErrorProvider);
-    final step = err.currentStep;
+    final srP = ref.watch(spacedReviewProvider);
+    final step = srP.currentStep;
     return Scaffold(
-      appBar: const FrostedAppBar(title: Text("Review Errors")),
+      appBar: FrostedAppBar(title: Text(widget.title)),
       extendBodyBehindAppBar: true,
       body: step == null
           ? Column(
@@ -36,11 +38,11 @@ class ReviewErrorScreenState extends ConsumerState<ReviewErrorScreen> {
                     )),
                 const SizedBox(height: 16),
                 Text(
-                  "Congratulations!",
+                  "Nothing to review!",
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 Text(
-                  "You have no errors left to review!",
+                  "You have to finish lessons to have vocabulary to review.",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -62,15 +64,15 @@ class ReviewErrorScreenState extends ConsumerState<ReviewErrorScreen> {
                         setState(() {});
                       },
                       onSubmit: () {
-                        err.submitAnswer(currentAnswer);
+                        srP.submitAnswer(currentAnswer);
                         setState(() {
                           currentAnswer = "";
                         });
                       },
                       onSkip: () {
                         currentAnswer = "";
-                        err.submitAnswer(currentAnswer);
-                        err.nextStep();
+                        srP.submitAnswer(currentAnswer);
+                        srP.nextStep();
                       },
                       currentAnswer: currentAnswer,
                       key: Key(currentKey.toString()),
@@ -79,13 +81,14 @@ class ReviewErrorScreenState extends ConsumerState<ReviewErrorScreen> {
                     InkWell(
                       onTap: step.userAnswer != null
                           ? () {
-                              err.nextStep();
+                              srP.nextStep();
                               currentAnswer = "";
                               currentKey++;
+                              setState(() {});
                             }
                           : currentAnswer == ""
                               ? null
-                              : () => err.submitAnswer(currentAnswer),
+                              : () => srP.submitAnswer(currentAnswer),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         alignment: Alignment.center,

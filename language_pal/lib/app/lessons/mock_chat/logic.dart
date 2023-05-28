@@ -8,7 +8,6 @@ import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/app/lessons/mock_chat/data.dart';
-import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 import 'package:poly_app/common/logic/languages.dart';
 

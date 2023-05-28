@@ -8,7 +8,6 @@ import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/lessons/common/input/data.dart';
 import 'package:poly_app/app/lessons/common/util.dart';
 import 'package:poly_app/app/lessons/vocab/data.dart';
-import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/common/logic/abilities.dart';
 import 'package:poly_app/common/logic/languages.dart';
 
@@ -29,12 +28,11 @@ final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
   final vocabLesson = ref.watch(staticVocabProvider(learnId));
   final lesson = vocabLesson.asData?.value;
   final trackId = ref.watch(currentLearnTrackIdProvider);
-  final uid = ref.watch(uidProvider);
-  if (lesson == null || trackId == null || uid == null) {
+  if (lesson == null || trackId == null) {
     return null;
   }
   final userTrackDoc = ref.watch(userLearnTrackDocProvider);
-  final out = ActiveVocabSession(lesson, uid, userTrackDoc);
+  final out = ActiveVocabSession(lesson, userTrackDoc);
   ref.listen(cantTalkProvider, (_, newVal) => out.cantTalk = newVal);
   ref.listen(cantListenProvider, (_, newVal) => out.cantListen = newVal);
   return out;
@@ -42,7 +40,6 @@ final activeVocabSession = ChangeNotifierProvider<ActiveVocabSession?>((ref) {
 
 class ActiveVocabSession extends ChangeNotifier {
   final StaticVocabLessonModel lesson;
-  final String _uid;
   final DocumentReference userTrackDoc;
 
   String? _currentAnswer;
@@ -84,7 +81,7 @@ class ActiveVocabSession extends ChangeNotifier {
     return _steps[_currentStep!];
   }
 
-  ActiveVocabSession(this.lesson, this._uid, this.userTrackDoc) {
+  ActiveVocabSession(this.lesson, this.userTrackDoc) {
     _initState();
   }
 
@@ -126,6 +123,7 @@ class ActiveVocabSession extends ChangeNotifier {
     InputStep? genInputStep(InputType type, StaticVocabModel vocab) {
       switch (type) {
         case InputType.select:
+        case InputType.listen:
           return InputStep(
               prompt: vocab.appLang,
               answer: vocab.learnLang,
@@ -138,20 +136,6 @@ class ActiveVocabSession extends ChangeNotifier {
                     .take(3)
                     .toList()
               ]);
-        case InputType.listen:
-          return InputStep(
-            prompt: vocab.appLang,
-            answer: vocab.learnLang,
-            type: type,
-            options: [
-              vocab.learnLang,
-              ...generateRandomIntegers(4, lesson.vocabList.length)
-                  .map((e) => lesson.vocabList[e].learnLang)
-                  .where((e) => e != vocab.learnLang)
-                  .take(3)
-                  .toList()
-            ],
-          );
         case InputType.compose:
           if (vocab.learnLang.split(" ").length == 1) return null;
           final correctOptions = vocab.learnLang.split(" ");
