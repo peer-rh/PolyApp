@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app.dart';
+import 'package:poly_app/app/user/logic/purchases.dart';
 import 'package:poly_app/firebase_options.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -53,6 +54,9 @@ void main() async {
       return true;
     };
   }
+
+  // RevenueCat
+  initPurchasesPlatfomState();
 
   runApp(ProviderScope(child: App()));
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/account_page.dart';
+import 'package:poly_app/app/user/ui/membership.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
@@ -64,7 +65,13 @@ class _UserPageState extends ConsumerState<UserPage> {
                         icon: CustomIcons.accout),
                     spacer,
                     CustomNavListItem(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MembershipPage()));
+                        },
                         enabled: true,
                         title: Text(
                           "Membership",
@@ -73,16 +80,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                         icon: Icons.paid),
                     spacer,
                     CustomNavListItem(
-                        onTap: () {},
-                        enabled: true,
-                        title: Text(
-                          "Gift 7 day trial",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        icon: CustomIcons.gift),
-                    spacer,
-                    CustomNavListItem(
-                        onTap: () {},
+                        onTap: () {
+                          // TODO: implement
+                        },
                         enabled: true,
                         title: Text(
                           "Enable Study Reminders",
@@ -91,7 +91,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                         icon: CustomIcons.clock),
                     spacer,
                     CustomNavListItem(
-                        onTap: () {},
+                        onTap: () {
+                          // TODO: implement
+                        },
                         enabled: true,
                         title: Column(
                           mainAxisSize: MainAxisSize.min,
