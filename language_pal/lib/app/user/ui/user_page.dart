@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poly_app/app/user/data/user_model.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/account_page.dart';
 import 'package:poly_app/app/user/ui/membership.dart';
+import 'package:poly_app/app/user/ui/push_notif.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
@@ -37,8 +39,37 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   Widget build(BuildContext context) {
     final userP = ref.watch(userProvider);
-    final spacer = const SizedBox(height: 24);
+    const spacer = SizedBox(height: 24);
 
+    final day2Char = {
+      0: "M",
+      1: "T",
+      2: "W",
+      3: "T",
+      4: "F",
+      5: "S",
+      6: "S",
+    };
+    int streak = 0;
+    print(userP?.lastActiveDates);
+    DateTime? lastDate;
+    for (DateTime date in userP?.lastActiveDates.reversed ?? []) {
+      if (lastDate == null ||
+          date == lastDate.subtract(const Duration(days: 1))) {
+        streak++;
+        lastDate = date;
+      } else {
+        break;
+      }
+    }
+
+    List<Widget> lastDays = [];
+    for (int i = 0; i < 5; i++) {
+      lastDays.add(dayOfWeekCircle(
+          day2Char[(DateTime.now().weekday - i) % 7]!,
+          userP?.lastActiveDates.contains(today.subtract(Duration(days: i))) ??
+              false));
+    }
     return Scaffold(
         appBar: const FrostedAppBar(
           title: Text("User"),
@@ -81,7 +112,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                     spacer,
                     CustomNavListItem(
                         onTap: () {
-                          // TODO: implement
+                          showReminderDialogue(context);
                         },
                         enabled: true,
                         title: Text(
@@ -100,43 +131,24 @@ class _UserPageState extends ConsumerState<UserPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "7 day Streak",
+                              "$streak day Streak",
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                             Wrap(
                                 spacing: 4,
                                 crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  dayOfWeekCircle("F", true),
-                                  Container(
-                                      height: 2,
-                                      width: 8,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface),
-                                  dayOfWeekCircle("S", true),
-                                  Container(
-                                      height: 2,
-                                      width: 8,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface),
-                                  dayOfWeekCircle("S", true),
-                                  Container(
-                                      height: 2,
-                                      width: 8,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface),
-                                  dayOfWeekCircle("M", true),
-                                  Container(
-                                      height: 2,
-                                      width: 8,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surface),
-                                  dayOfWeekCircle("T", true)
-                                ])
+                                children: lastDays
+                                    .expand((e) => [
+                                          e,
+                                          Container(
+                                              height: 2,
+                                              width: 8,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .surface),
+                                        ])
+                                    .toList()
+                                  ..removeLast())
                           ],
                         ),
                         icon: CustomIcons.calendar),

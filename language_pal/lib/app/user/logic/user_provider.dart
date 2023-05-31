@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/user/data/user_model.dart';
 import 'package:poly_app/auth/logic/auth_provider.dart';
 
-final userProvider = StateNotifierProvider<UserProvider, UserModel?>(
-    (ref) => UserProvider(ref.watch(authStateChangesProvider).value));
+final userProvider = StateNotifierProvider<UserProvider, UserModel?>((ref) {
+  final out = UserProvider(ref.watch(authStateChangesProvider).value);
+  return out;
+});
 
 final uidProvider = Provider<String?>((ref) {
   return ref.watch(userProvider.select((u) => u?.uid));
@@ -28,7 +30,15 @@ class UserProvider extends StateNotifier<UserModel?> {
     if (doc.exists) {
       state = UserModel.fromMap(fbUser.uid, doc.data()!);
     } else {
-      state = UserModel(fbUser.uid, fbUser.email ?? "", [], 0);
+      state = UserModel(
+        fbUser.uid,
+        fbUser.email ?? "",
+        [],
+        0,
+      );
+    }
+    if (!state!.todayAlreadyAdded) {
+      setUser(state!.copyWithAddedLastActiveDate(DateTime.now()));
     }
   }
 
@@ -43,6 +53,6 @@ class UserProvider extends StateNotifier<UserModel?> {
   }
 
   void setActiveLearnTrack(int idx) {
-    setUser(state!.copyWithActiveLearnTrackIndex(idx));
+    setUser(state!.copyWith(activeLearnTrackIndex: idx));
   }
 }

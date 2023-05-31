@@ -23,9 +23,12 @@ final purchasesProvider = ChangeNotifierProvider<PurchasesProvider>((ref) {
   final uid = ref.watch(authProvider).currentUser?.uid;
   return PurchasesProvider(uid);
 });
+final customerInfoProvider = FutureProvider<CustomerInfo>((ref) async {
+  return await ref.watch(purchasesProvider).getCustomerInfo();
+});
 
 final isPremiumProvider = FutureProvider<bool>((ref) async {
-  final customerInfo = await ref.watch(purchasesProvider).getCustomerInfo();
+  final customerInfo = await ref.watch(customerInfoProvider.future);
   return customerInfo.entitlements.all["premium"]?.isActive ?? false;
 });
 
