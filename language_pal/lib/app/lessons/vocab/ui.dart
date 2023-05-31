@@ -38,17 +38,11 @@ class VocabPageState extends ConsumerState<VocabPage> {
     super.didChangeDependencies();
   }
 
-  @override
-  void initState() {
-    setState(() {
-      currentStep = const CurrentStepWidget();
-    });
-    super.initState();
-  }
-
   late Widget currentStep;
   bool alreadyFinished =
       true; // Init to true, so that first startup when finished doesn't save
+
+  final PageController _pageCont = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +50,10 @@ class VocabPageState extends ConsumerState<VocabPage> {
     if (session == null || (session.currentStep == null && !session.finished)) {
       return const LoadingPage();
     }
+
+    if (_pageCont.hasClients)
+      _pageCont.animateToPage(session.currentStepIndex,
+          duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
 
     if (session.finished && !alreadyFinished) {
       widget.onFinished();
@@ -103,9 +101,16 @@ class VocabPageState extends ConsumerState<VocabPage> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Spacer(),
-                      currentStep, // TODO: Done UI
-                      const Spacer(),
+                      Expanded(
+                        child: PageView.builder(
+                          itemCount: session.steps.length,
+                          controller: _pageCont,
+                          itemBuilder: (context, idx) {
+                            return Center(child: CurrentStepWidget(idx));
+                          },
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                      ),
                       InkWell(
                         onTap: session.currentStep!.isCorrect != null
                             ? session.nextStep
@@ -145,18 +150,14 @@ class VocabPageState extends ConsumerState<VocabPage> {
 }
 
 class CurrentStepWidget extends ConsumerStatefulWidget {
-  const CurrentStepWidget({super.key});
+  const CurrentStepWidget(this.idx, {super.key});
+  final int idx;
 
   @override
   ConsumerState<CurrentStepWidget> createState() => _CurrentStepWidgetState();
 }
 
 class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(activeVocabSession);
@@ -167,10 +168,10 @@ class _CurrentStepWidgetState extends ConsumerState<CurrentStepWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        VocabPrompt(step: session.currentStep!),
+        VocabPrompt(step: session.steps[widget.idx]),
         const SizedBox(height: 32),
         VocabInputWidget(
-          step: session.currentStep!,
+          step: session.steps[widget.idx],
           onChange: (String ans) {
             session.currentAnswer = ans;
           },

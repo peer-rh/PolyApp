@@ -63,6 +63,7 @@ class ActiveVocabSession extends ChangeNotifier {
   }
 
   List<InputStep> _steps = [];
+  List<InputStep> get steps => _steps;
   int? _currentStep;
 
   bool get finished => _currentStep == _steps.length;
