@@ -24,10 +24,10 @@ class MockChatPage extends ConsumerStatefulWidget {
       : super(key: key);
 
   @override
-  _MockChatPageState createState() => _MockChatPageState();
+  MockChatPageState createState() => MockChatPageState();
 }
 
-class _MockChatPageState extends ConsumerState<MockChatPage> {
+class MockChatPageState extends ConsumerState<MockChatPage> {
   double offset = 0;
   final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,

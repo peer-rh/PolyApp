@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poly_app/app/learn_track/logic/user_progress_provider.dart';
 import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/auth/logic/auth_provider.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';

@@ -86,10 +86,10 @@ class SpacedReviewProvider extends ChangeNotifier {
             type: type,
             options: [
               ...item.learnLang.split(" "),
-              ...generateRandomIntegers(6, _allWords.length)
+              ...generateRandomIntegers(8, _allWords.length)
                   .map((e) => _allWords[e])
                   .where((e) => !item.learnLang.split(" ").contains(e))
-                  .take(6)
+                  .take(4)
                   .toList()
             ]),
       InputType.listen || InputType.select => InputStep(

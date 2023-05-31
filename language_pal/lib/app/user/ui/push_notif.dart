@@ -52,7 +52,7 @@ void showReminderDialogue(BuildContext context) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text("Study Reminders"),
-          content: PushNotifSelection(),
+          content: const PushNotifSelection(),
           actions: [
             TextButton(
                 style: ButtonStyle(

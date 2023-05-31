@@ -15,7 +15,7 @@ final translationProvider = Provider<TranslationProvider>((ref) {
 
 class TranslationProvider {
   String appLang;
-  Map<String, String> _cache = {};
+  final Map<String, String> _cache = {};
 
   TranslationProvider(this.appLang);
 

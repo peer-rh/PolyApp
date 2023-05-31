@@ -67,7 +67,7 @@ class ActiveMockChatSession extends ChangeNotifier {
       return null;
     }
 
-    final step = _steps[_currentStep!].step!;
+    final step = _steps[_currentStep!].step ?? _steps[_currentStep! - 1].step!;
 
     if (step.type == InputType.pronounce && _cantTalk) {
       step.type = InputType.select;
@@ -135,7 +135,7 @@ class ActiveMockChatSession extends ChangeNotifier {
                 ...generateRandomIntegers(8, allWords.length)
                     .map((e) => allWords[e])
                     .where((e) => !correctOptions.contains(e))
-                    .take(8)
+                    .take(4)
                     .toList()
               ]);
 
@@ -180,11 +180,15 @@ class ActiveMockChatSession extends ChangeNotifier {
   }
 
   void submitAnswer() {
-    // TODO: Add Error logging
     currentStep!.userAnswer = _currentAnswer;
     _currentAnswer = null;
-    _currentStep = min(_currentStep! + 2, _steps.length);
-    saveState();
     notifyListeners();
+    _currentStep = min(_currentStep! + 1, _steps.length);
+    Future.delayed(const Duration(milliseconds: 200), () {
+      print("delayed");
+      _currentStep = min(_currentStep! + 1, _steps.length);
+      notifyListeners();
+    });
+    saveState();
   }
 }

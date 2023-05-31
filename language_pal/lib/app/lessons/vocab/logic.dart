@@ -115,7 +115,6 @@ class ActiveVocabSession extends ChangeNotifier {
     List<String> allWords = [];
     for (StaticVocabModel v in lesson.vocabList) {
       for (String s in v.learnLang.split(" ")) {
-        print(s);
         allWords.add(s);
       }
     }
@@ -148,7 +147,7 @@ class ActiveVocabSession extends ChangeNotifier {
                 ...generateRandomIntegers(8, allWords.length)
                     .map((e) => allWords[e])
                     .where((e) => !correctOptions.contains(e))
-                    .take(6)
+                    .take(4)
                     .toList()
               ]);
 

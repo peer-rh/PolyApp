@@ -89,7 +89,7 @@ class NextStepWidget extends StatelessWidget {
                     )
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Icons.chevron_right,
                   color: Theme.of(context).colorScheme.onBackground,

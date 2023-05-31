@@ -20,10 +20,10 @@ class VocabPage extends ConsumerStatefulWidget {
       super.key});
 
   @override
-  _VocabPageState createState() => _VocabPageState();
+  VocabPageState createState() => VocabPageState();
 }
 
-class _VocabPageState extends ConsumerState<VocabPage> {
+class VocabPageState extends ConsumerState<VocabPage> {
   ActiveVocabSession? session;
   int? currentStepIndex;
 

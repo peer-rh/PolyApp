@@ -52,7 +52,6 @@ class _UserPageState extends ConsumerState<UserPage> {
       6: "S",
     };
     int streak = 0;
-    print(userP?.lastActiveDates);
     DateTime? lastDate;
     for (DateTime date in userP?.lastActiveDates.reversed ?? []) {
       if (lastDate == null ||
@@ -106,7 +105,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         },
                         enabled: true,
                         title: Text(
-                          "Membership",
+                          "Membership (WIP)",
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         icon: Icons.paid),
@@ -117,7 +116,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         },
                         enabled: true,
                         title: Text(
-                          "Enable Study Reminders",
+                          "Manage Study Reminders",
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         icon: CustomIcons.clock),

@@ -27,7 +27,7 @@ class _ComposeInputState extends State<ComposeInput> {
 
   @override
   Widget build(BuildContext context) {
-    void _onReorder(int oldIndex, int newIndex) {
+    void onReorder(int oldIndex, int newIndex) {
       setState(() {
         String row = boxes.removeAt(oldIndex);
         boxes.insert(newIndex, row);
@@ -37,7 +37,7 @@ class _ComposeInputState extends State<ComposeInput> {
     var wrap = ReorderableWrap(
         spacing: 8.0,
         runSpacing: 8.0,
-        onReorder: _onReorder,
+        onReorder: onReorder,
         enableReorder: !widget.disabled,
         children: boxes
             .map((e) => GestureDetector(
