@@ -5,6 +5,7 @@ import 'package:poly_app/app/user/logic/user_provider.dart';
 import 'package:poly_app/app/user/ui/account_page.dart';
 import 'package:poly_app/app/user/ui/membership.dart';
 import 'package:poly_app/app/user/ui/push_notif.dart';
+import 'package:poly_app/app/user/ui/streak.dart';
 import 'package:poly_app/common/ui/custom_icons.dart';
 import 'package:poly_app/common/ui/custom_nav_item.dart';
 import 'package:poly_app/common/ui/frosted_app_bar.dart';
@@ -123,7 +124,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                     spacer,
                     CustomNavListItem(
                         onTap: () {
-                          // TODO: implement
+                          showStreakCalendar(context, userP.lastActiveDates);
                         },
                         enabled: true,
                         title: Column(
@@ -137,7 +138,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                             Wrap(
                                 spacing: 4,
                                 crossAxisAlignment: WrapCrossAlignment.center,
-                                children: lastDays
+                                children: lastDays.reversed
                                     .expand((e) => [
                                           e,
                                           Container(

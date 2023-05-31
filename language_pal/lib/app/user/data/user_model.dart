@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:poly_app/app/learn_track/data/learn_track_model.dart';
 
-get today {
+DateTime get today {
   final now = DateTime.now();
   return DateTime(now.year, now.month, now.day);
 }

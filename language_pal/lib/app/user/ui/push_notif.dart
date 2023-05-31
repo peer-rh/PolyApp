@@ -4,7 +4,7 @@ import 'package:poly_app/app/user/logic/push_notif.dart';
 import 'package:poly_app/common/ui/custom_circular_button.dart';
 
 class PushNotifSelection extends ConsumerWidget {
-  PushNotifSelection({Key? key}) : super(key: key);
+  const PushNotifSelection({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final days2String = {
@@ -28,13 +28,11 @@ class PushNotifSelection extends ConsumerWidget {
                 style: TextStyle(
                     color: days.contains(i)
                         ? Theme.of(context).colorScheme.onPrimary
-                        : null)),
+                        : Theme.of(context).colorScheme.onSurface)),
             size: 48,
-            color:
-                days.contains(i) ? Theme.of(context).colorScheme.primary : null,
-            outlineColor: days.contains(i)
-                ? null
-                : Theme.of(context).colorScheme.onBackground,
+            color: days.contains(i)
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.surface,
             onPressed: () {
               days.contains(i)
                   ? ref.read(reminderProvider.notifier).removeDay(i)
@@ -51,6 +49,8 @@ void showReminderDialogue(BuildContext context) {
       context: context,
       builder: (context) {
         return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text("Study Reminders"),
           content: PushNotifSelection(),
           actions: [
