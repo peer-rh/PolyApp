@@ -22,7 +22,7 @@ export const getChatGPTResponse = functions
             );
         functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
-        let system_message = `We are going to do a roleplay in ${data["learn_lang"]}. The scenario is: ${data["prompt_desc"]}. Use simple vocabulary and grammar. You must not provide a translation or any additional information. If I have said goodbye end with "[END]"`;
+        let system_message = `We are going to do a roleplay in ${data["learn_lang"]}. The scenario is: ${data["prompt_desc"]}. You must not provide a translation or any additional information. If I have said goodbye end with "[END]"`;
 
         const configuration = new Configuration({
             apiKey: openAIKey.value(),

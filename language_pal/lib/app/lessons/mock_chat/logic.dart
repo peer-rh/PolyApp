@@ -122,8 +122,9 @@ class ActiveMockChatSession extends ChangeNotifier {
                     .toList()
               ]);
         case InputType.compose:
-          if (msg.learnLang.split(" ").length == 1) {
-            return genInputStep(InputType.select, msg);
+          if (msg.learnLang.split(" ").length == 1 ||
+              msg.learnLang.split(" ").length >= 8) {
+            return genInputStep(InputType.pronounce, msg);
           }
           final correctOptions = msg.learnLang.split(" ");
           return InputStep(

@@ -113,40 +113,33 @@ class SubchapterPageState extends ConsumerState<SubchapterPage> {
     List<Widget> itemList = [];
     bool done = userProgress.getStatus(subchapter!.id) != null;
     bool inProgress = !done;
-    for (var i = 0;
-        i <
-            subchapter!.lessons.length * 2 -
-                (widget.nextSubchapterTitle == null ? 1 : 0);
-        i++) {
-      if (i % 2 == 0) {
-        final lesson = subchapter!.lessons[i ~/ 2];
-        itemList.add(CustomNavListItem(
-            enabled: done || inProgress,
-            highlighted: inProgress,
-            title: Text(lesson.name,
-                style: Theme.of(context).textTheme.titleSmall),
-            icon: getLessonIcon(lesson.type),
-            onTap: done || inProgress || kDebugMode // TODO: Remove debug mode
-                ? () {
-                    goToLesson(i ~/ 2);
-                  }
-                : null));
-        if (lesson.id == userProgress.getStatus(subchapter!.id)) {
-          done = false;
-          inProgress = true;
-        } else {
-          inProgress = false;
-        }
+    for (var i = 0; i < subchapter!.lessons.length; i++) {
+      final lesson = subchapter!.lessons[i];
+      itemList.add(CustomNavListItem(
+          enabled: done || inProgress,
+          highlighted: inProgress,
+          title:
+              Text(lesson.name, style: Theme.of(context).textTheme.titleSmall),
+          icon: getLessonIcon(lesson.type),
+          onTap: done || inProgress || kDebugMode // TODO: Remove debug mode
+              ? () {
+                  goToLesson(i);
+                }
+              : null));
+      itemList.add(Container(
+          alignment: Alignment.centerLeft,
+          child: Container(
+              width: 2,
+              height: 16,
+              color: (!done)
+                  ? Theme.of(context).colorScheme.surfaceVariant
+                  : Theme.of(context).colorScheme.primary,
+              margin: const EdgeInsets.only(top: 4, bottom: 4, left: 28))));
+      if (lesson.id == userProgress.getStatus(subchapter!.id)) {
+        done = false;
+        inProgress = true;
       } else {
-        itemList.add(Container(
-            alignment: Alignment.centerLeft,
-            child: Container(
-                width: 2,
-                height: 16,
-                color: !done
-                    ? Theme.of(context).colorScheme.surfaceVariant
-                    : Theme.of(context).colorScheme.primary,
-                margin: const EdgeInsets.only(top: 4, bottom: 4, left: 28))));
+        inProgress = false;
       }
     }
     if (widget.nextSubchapterTitle != null) {
@@ -176,6 +169,8 @@ class SubchapterPageState extends ConsumerState<SubchapterPage> {
                   widget.onNextSubchapter!(context);
                 }
               : null));
+    } else {
+      itemList.removeLast();
     }
 
     if (inProgress) {

@@ -1,0 +1,10 @@
+{
+    "name": "Numbers 1",
+    "description": "Learn some basic numbers and times of day.",
+    "lessons": [
+        "num_1_1",
+        "num_1_2",
+        "num_1_3",
+        "num_1_4"
+    ]
+}

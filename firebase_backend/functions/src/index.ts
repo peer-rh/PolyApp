@@ -14,6 +14,8 @@ export {
     getConversationRating,
 } from "./chat_flow";
 
+export { generateVocabList } from "./custom_topic";
+
 export const translate = functions
     .runWith({ secrets: ["OPENAI_KEY"] })
     .https.onCall(async (data, context) => {
@@ -96,7 +98,7 @@ export const onboardingGetChatGPTResponse = functions
             );
         functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
-        let system_message = `You'll try to find out what Language the user wants to learn and what the reason for that is. Nothing more. For both only one selection is possible. Stay in the language of the conversation. The Languages are: "de", "es", "en", "fr". The Reasons are: "work", "travel", "studies", "interest", "move". When you have found them out simply write "END: [language] [reason]"`;
+        let system_message = `You'll try to find out what Language the user wants to learn and what the reason for that is. Nothing more. For both only one selection is possible. Stay in the language of the conversation. The Languages are: "de", "es". The Reasons are: "work", "travel", "studies", "interest", "move". When you have found them out simply write "END: [language] [reason]"`;
 
         const configuration = new Configuration({
             apiKey: openAIKey.value(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poly_app/app/learn_track/ui/learn_track_layover.dart';
 import 'package:poly_app/app/smart_review/logic/errors.dart';
+import 'package:poly_app/app/smart_review/ui/custom_topic_gen.dart';
 import 'package:poly_app/app/smart_review/ui/error_review.dart';
 import 'package:poly_app/app/smart_review/ui/listen_practice.dart';
 import 'package:poly_app/app/smart_review/ui/pronunciation_practice.dart';
@@ -66,7 +67,12 @@ class SmartReviewPage extends ConsumerWidget {
                   icon: CustomIcons.redo),
               spacer,
               CustomNavListItem(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomTopicGenerator()));
+                  },
                   enabled: false,
                   title: Text(
                     "Custom Topic",

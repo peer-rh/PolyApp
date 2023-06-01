@@ -1,0 +1,15 @@
+{
+    "type": "vocab",
+    "name": "More time...",
+    "content": {
+        "vocab": [
+            "clock",
+            "day",
+            "hour",
+            "minute",
+            "month",
+            "second",
+            "year"
+        ]
+    }
+}
