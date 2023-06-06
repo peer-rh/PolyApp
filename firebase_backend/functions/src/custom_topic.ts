@@ -22,11 +22,11 @@ export const generateVocabList = functions
             );
         functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
-        let system_message = `You will generate a list of vocabulary and important phrases for the user who is trying to learn spanish. Follow exactly the format :
+        let system_message = `Generate a list of vocabulary and important phrases for the user who is trying to learn ${data["learn_lang"]}. The list should be themed after the users learning wish. The list should not include words which are the same in both languages. Follow exactly the format :
 TITLE: {{1-3 Words}}
 
 LESSON: {{name}}
-- {{${data["learn_lang"]}}}; {{${data["app_lang"]}}}\n" 
+- {{${data["app_lang"]}}}; {{${data["learn_lang"]}}}\n" 
 
 Generate 2-3 lessons with at most 10 phrases`;
 
@@ -39,14 +39,17 @@ Generate 2-3 lessons with at most 10 phrases`;
             { role: "user", content: data["msg"] },
         ];
         functions.logger.info("Loaded OpenAI API in getAIMsgResponse");
+        console.log(new_data);
         let ans = (
             await openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
-                max_tokens: 100,
+                max_tokens: 512,
                 messages: new_data,
                 user: uid,
             })
         ).data.choices[0].message?.content.split("\n");
+
+        console.log(ans);
 
         if (ans == undefined) {
             throw new functions.https.HttpsError(
@@ -71,8 +74,8 @@ Generate 2-3 lessons with at most 10 phrases`;
                 current_lesson = { "name": this_ans_parse.split(":")[1].trim(), "phrases": [] };
             }
             if (this_ans_parse.startsWith("-")) {
-                let learn_lang = this_ans_parse.split(";")[0].split("-")[1].trim();
-                let app_lang = this_ans_parse.split(";")[1].trim();
+                let app_lang = this_ans_parse.split(";")[0].split("-")[1].trim();
+                let learn_lang = this_ans_parse.split(";")[1].trim();
                 if (current_lesson) {
                     current_lesson["phrases"].push({ "learn_lang": learn_lang, "app_lang": app_lang });
                 }
