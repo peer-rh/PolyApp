@@ -7,3 +7,6 @@ generate_content/.env
 generate_content/__pycache__
 generate_content/settings/firebase_service.json
 new_gen_content/.env
+passwords.txt
+gen_content/data/settings/firebase_service.json
+gen_content/.env
