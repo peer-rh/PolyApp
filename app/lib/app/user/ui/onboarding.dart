@@ -111,12 +111,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               ),
             ),
             // ConversationColumn(conv: conv, scenario: scenario),
-            MeasureSize(
-              onChange: (size) {
+            ResizeObserver(
+              onResized: (size) {
                 if (_offset == size.height) return;
-                setState(() {
-                  _offset = size.height;
-                });
+                Future(() => setState(() {
+                      _offset = size.height;
+                    }));
               },
               child: FrostedEffect(
                 child: Container(
