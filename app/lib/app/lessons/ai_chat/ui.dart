@@ -238,11 +238,11 @@ class ChatPageState extends ConsumerState<ChatPage> {
               ].reversed.toList()),
           if (session.status != ChatStatus.finished &&
               session.status != ChatStatus.waitingForConvRating)
-            MeasureSize(
-              onChange: (size) {
-                setState(() {
-                  offset = size.height;
-                });
+            ResizeObserver(
+              onResized: (size) {
+                Future(() => setState(() {
+                      offset = size.height;
+                    }));
               },
               child: FrostedEffect(
                 child: Padding(

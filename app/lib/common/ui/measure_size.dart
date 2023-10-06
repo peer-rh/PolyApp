@@ -1,38 +1,45 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 typedef OnWidgetSizeChange = void Function(Size size);
 
-class MeasureSize extends StatefulWidget {
+class ResizeObserver extends StatefulWidget {
   final Widget child;
-  final OnWidgetSizeChange onChange;
+  final OnWidgetSizeChange onResized;
 
-  const MeasureSize({
-    required this.onChange,
+  const ResizeObserver({
+    required this.onResized,
     required this.child,
     Key? key,
   }) : super(key: key);
 
   @override
-  MeasureSizeState createState() => MeasureSizeState();
+  ResizeObserverState createState() => ResizeObserverState();
 }
 
-class MeasureSizeState extends State<MeasureSize> {
+class ResizeObserverState extends State<ResizeObserver> {
   var widgetKey = GlobalKey();
-  Size lastSize = Size.zero;
+  bool sent = false;
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (sent) return;
       final size = widgetKey.currentContext!.size!;
-      if (lastSize != size) {
-        lastSize = size;
-        widget.onChange(size);
-      }
+      widget.onResized(size);
+      sent = true;
     });
 
-    return Container(
-      key: widgetKey,
-      child: widget.child,
+    return NotificationListener(
+      onNotification: (notification) {
+        widget.onResized(widgetKey.currentContext!.size!);
+        return true;
+      },
+      child: SizeChangedLayoutNotifier(
+        child: Container(
+          key: widgetKey,
+          child: widget.child,
+        ),
+      ),
     );
   }
 }

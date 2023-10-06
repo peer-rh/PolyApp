@@ -162,8 +162,8 @@ class MockChatPageState extends ConsumerState<MockChatPage> {
             if (!session.finished)
               Align(
                 alignment: Alignment.bottomCenter,
-                child: MeasureSize(
-                  onChange: (size) {
+                child: ResizeObserver(
+                  onResized: (size) {
                     setState(() {
                       offset = size.height;
                     });

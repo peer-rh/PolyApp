@@ -159,7 +159,7 @@ class ActiveChatSession extends ChangeNotifier {
     });
 
     var data = response.data as Map<String, dynamic>;
-    MsgRatingType type = MsgRatingType.fromString(data["type"]);
+    MsgRatingType type = MsgRatingType.fromString(data["result"]);
 
     if (type == MsgRatingType.notParse) {
       FirebaseCrashlytics.instance.recordError(
@@ -167,7 +167,7 @@ class ActiveChatSession extends ChangeNotifier {
           StackTrace.current);
     }
 
-    data["type"] = type.index;
+    data["result"] = type.index;
 
     (_msgs!.last as UserChatMsg).rating = UserMsgRating.fromJson(data);
     if (type == MsgRatingType.correct) {

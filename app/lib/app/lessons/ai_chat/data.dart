@@ -128,20 +128,20 @@ class UserMsgRating {
 
   Map<String, dynamic> toJson() {
     return {
-      "type": type.index,
+      "result": type.index,
       "suggestion": suggestion,
-      "me_corrected": meCorrected,
-      "me_corrected_translated": meCorrectedTranslated,
+      "corrected_me": meCorrected,
+      "corrected_me_translated": meCorrectedTranslated,
       "explanation": explanation,
     };
   }
 
   factory UserMsgRating.fromJson(Map<String, dynamic> data) {
     return UserMsgRating(
-      MsgRatingType.values[data["type"]],
+      MsgRatingType.values[data["result"]],
       data["suggestion"],
-      data["me_corrected"],
-      data["me_corrected_translated"],
+      data["corrected_me"],
+      data["corrected_me_translated"],
       data["explanation"],
     );
   }

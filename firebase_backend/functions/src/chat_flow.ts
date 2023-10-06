@@ -22,7 +22,7 @@ export const getChatGPTResponse = functions
             );
         functions.logger.info("Get getChatGPTResponse called: " + data.toString());
 
-        let system_message = `We are going to do a roleplay in ${data["learn_lang"]}. The scenario is: ${data["prompt_desc"]}. You must not provide a translation or any additional information. If I have said goodbye end with "[END]"`;
+        let system_message = `You are a teaching assistant, teaching me ${data["learn_lang"]} and we are doing a roleplay. After having learned vocabulary for the theme "${data["prompt_desc"]}" I want to apply what I learned in a natural conversation. You must not provide a translation or any additional information. If I have said goodbye end with "[END]"`;
 
         const configuration = new Configuration({
             apiKey: openAIKey.value(),
@@ -63,14 +63,16 @@ export const getAnswerRating = functions
                 "unauthenticated",
                 "The User must be authorized"
             );
-        let text = "";
+        let text = "{";
         for (let i = 0; i < data["messages"].length; i++) {
             if (data["messages"][i]["role"] == "assistant") {
-                text += "ASSISTANT: " + data["messages"][i]["content"] + "\n";
+                text += `{"assistant": ${data["messages"][i]["content"]}},`;
             } else {
-                text += "ME: " + data["messages"][i]["content"] + "\n";
+                text += `{"me": ${data["messages"][i]["content"]}},`;
             }
         }
+        text.substring(0, text.length - 1);
+        text += "}";
 
         console.log(text);
 
@@ -86,12 +88,14 @@ The result is only "correct" if it meets all the criteria. Provide:
     - A Suggestion (how I can improve)
     - A corrected version of my Answer
     - Only One category from the result list
-Use this format: 
-"explanation:...(2 Sentences; Max 18 words)
-suggestion: ...(1 Sentence; Max 10 words; in ${data["app_lang"]})
-corrected_me: ... (in ${data["learn_lang"]})
-corrected_me_translated: ... (in ${data["appL_lang"]})
-result:"grammar_error"/"incomplete"/"unclear"/"impolite"/"correct" (1 Word)"`;
+Use this format (JSON): 
+{
+"explanation": ...(2 Sentences; Max 18 words),
+"suggestion": ...(1 Sentence; Max 10 words; in ${data["app_lang"]})
+"corrected_me": ... (in ${data["learn_lang"]})
+"corrected_me_translated": ... (in ${data["app_lang"]})
+"result":"grammar_error"/"incomplete"/"unclear"/"impolite"/"correct" (1 Word)"
+}`;
 
         const configuration = new Configuration({
             apiKey: openAIKey.value(),
@@ -111,45 +115,10 @@ result:"grammar_error"/"incomplete"/"unclear"/"impolite"/"correct" (1 Word)"`;
         ).data;
 
         functions.logger.info(
-            "Response: " + comp.choices[0].message?.content.split("\n")
+            "Response: " + comp.choices[0].message?.content
         );
-        let ans: string[] | undefined =
-            comp.choices[0].message?.content.split("\n");
-        if (ans == undefined) {
-            throw new functions.https.HttpsError(
-                "internal",
-                "Error while splitting answer"
-            );
-        }
-        // Find the Line with EXPLANATION and parse its content
-        let explanation = "";
-        let suggestion = null;
-        let me_corrected = "";
-        let me_corrected_translated = "";
-        let result = "";
+        let ret = JSON.parse(comp.choices[0].message?.content ?? "{}");
 
-        for (let i = 0; i < ans.length; i++) {
-            if (ans[i].startsWith("explanation:"))
-                explanation = ans[i].substring(12).trim();
-            else if (ans[i].startsWith("suggestion:"))
-                suggestion = ans[i].substring(11).trim();
-            else if (ans[i].startsWith("corrected_me:"))
-                me_corrected = ans[i].substring(13).trim();
-            else if (ans[i].startsWith("corrected_me_translated:"))
-                me_corrected_translated = ans[i].substring(24).trim();
-            else if (ans[i].startsWith("result:"))
-                result = ans[i].substring(7).trim().toLowerCase();
-            result = result.replace(/[^\w\s\']|_/g, "")
-                .replace(/\s+/g, " ");
-        }
-
-        let ret = {
-            explanation: explanation,
-            suggestion: suggestion,
-            me_corrected: me_corrected,
-            me_corrected_translated: me_corrected_translated,
-            type: result,
-        };
         functions.logger.info("Returning: " + JSON.stringify(ret));
         return ret;
     });
