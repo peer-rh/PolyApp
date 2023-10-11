@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "language_pal",
+            "cwd": "language_pal",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "language_pal (profile mode)",
+            "cwd": "language_pal",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "language_pal (release mode)",
+            "cwd": "language_pal",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

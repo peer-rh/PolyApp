@@ -1,0 +1,10 @@
+{
+    "name": "Basics I",
+    "description": "Building a basic foundation",
+    "lessons": [
+        "basics_1_1",
+        "basics_1_2",
+        "basics_1_3",
+        "basics_1_4"
+    ]
+}

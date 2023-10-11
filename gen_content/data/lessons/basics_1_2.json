@@ -1,0 +1,14 @@
+{
+    "type": "vocab",
+    "name": "Pronouns",
+    "content": {
+        "vocab": [
+            "I",
+            "you",
+            "he",
+            "she",
+            "we",
+            "they"
+        ]
+    }
+}

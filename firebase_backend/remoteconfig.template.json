@@ -1,25 +1,1682 @@
 {
-    "parameters": {
-        "scenarios": {
-            "defaultValue": {
-                "value": "[{\"id\":\"RESTAURANT\",\"avatar\":\"assets/avatars/Restaurant.png\",\"emoji\":\"🍽\",\"goal\":\"Learn how to order food in a restaurant\",\"name\":{\"de\":\"Essen Bestellen\",\"en\":\"Ordering Food\",\"es\":\"Ordenando comida\"},\"prompt_desc\":\"At a fine restaunt, you are a very polite waiter and I am the customer\",\"rating_desc\":\"Polite, fairly formal\",\"rating_name\":\"WAITER\",\"starting_msgs\":{\"de\":[\"Hallo haben sie eine Reservierung?\",\"Guten Tag. Wie geht es ihnen? Haben sie eine Reservierung?\",\"Guten Tag. Haben sie eine Reservierung?\"],\"en\":[\"Hello, do you have a reservation?\",\"Good evening. Do you have a reservation?\"],\"es\":[\"Hola, ¿tienes una reserva?\",\"Buenas noches. ¿Tienes una reserva?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-B\",\"language_code\":\"de-DE\",\"pitch\":-4},\"en\":{\"name\":\"en-US-Neural2-A\",\"language_code\":\"en-US\",\"pitch\":-4},\"es\":{\"name\":\"es-ES-Neural2-B\",\"language_code\":\"es-ES\",\"pitch\":-4}}},{\"id\":\"BEACH\",\"avatar\":\"assets/avatars/Beach.png\",\"emoji\":\"🏖\",\"goal\":\"Learn how to talk to a friend at the beach\",\"name\":{\"de\":\"Am Strand\",\"en\":\"At the Beach\",\"es\":\"En la playa\"},\"prompt_desc\":\"You are a friend of mine and we are at the beach\",\"rating_desc\":\"friendly, casual\",\"rating_name\":\"FRIEND\",\"starting_msgs\":{\"de\":[\"Hallo, wie geht es dir?\",\"Nah, wie gehts?\",\"Hallo! Wie geht es dir?\"],\"en\":[\"Hello, how are you?\",\"Hey, how are you doing?\",\"Hi! How are you?\"],\"es\":[\"Hola, ¿cómo estás?\",\"¡Hola! ¿Cómo estás?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-F\",\"language_code\":\"de-DE\",\"pitch\":0},\"en\":{\"name\":\"en-US-Neural2-F\",\"language_code\":\"en-US\",\"pitch\":0},\"es\":{\"name\":\"es-ES-Neural2-D\",\"language_code\":\"es-ES\",\"pitch\":0}}},{\"id\":\"JOB_INTERVIEW\",\"avatar\":\"assets/avatars/Job Interview.png\",\"emoji\":\"👔\",\"goal\":\"Learn how to talk to a potential employer\",\"name\":{\"de\":\"Vorstellungsgespräch\",\"en\":\"Job Interview\",\"es\":\"Entrevista de trabajo\"},\"prompt_desc\":\"You a potential employer and I am a job applicant. You are currently interviewing me\",\"rating_desc\":\"formal, professional\",\"rating_name\":\"EMPLOYER\",\"starting_msgs\":{\"de\":[\"Guten Tag. Für welche Stelle haben sie sich denn beworben?\",\"Hallo, herzlich willkommen bei SprachenFreund GmBH. Für welche Position haben sie sich denn beworben?\"],\"en\":[\"Good afternoon. For which position did you apply?\",\"Hello, welcome to LanguagePal Inc. For which position did you apply?\"],\"es\":[\"Buenas tardes. ¿Para qué posición se postuló?\",\"Hola, bienvenido a LanguagePal Inc. ¿Para qué posición se postuló?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-B\",\"language_code\":\"de-DE\",\"pitch\":-3},\"en\":{\"name\":\"en-US-Neural2-D\",\"language_code\":\"en-US\",\"pitch\":-2},\"es\":{\"name\":\"es-ES-Neural2-B\",\"language_code\":\"es-ES\",\"pitch\":-3}}},{\"id\":\"DOCTOR\",\"avatar\":\"assets/avatars/Doctor.png\",\"emoji\":\"🏥\",\"goal\":\"Learn how to talk to a doctor\",\"name\":{\"de\":\"Arztbesuch\",\"en\":\"Doctor's Office\",\"es\":\"Oficina del médico\"},\"prompt_desc\":\"You are a doctor and I am a patient\",\"rating_desc\":\"polite, formal, professional\",\"rating_name\":\"DOCTOR\",\"starting_msgs\":{\"de\":[\"Guten Tag. Was kann ich für sie tun?\"],\"en\":[\"Good afternoon. What can I do for you?\"],\"es\":[\"Buenas tardes. ¿En qué puedo ayudarle?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-D\",\"language_code\":\"de-DE\",\"pitch\":-4},\"en\":{\"name\":\"en-US-Neural2-D\",\"language_code\":\"en-US\",\"pitch\":-4},\"es\":{\"name\":\"es-ES-Neural2-B\",\"language_code\":\"es-ES\",\"pitch\":-4}}},{\"id\":\"HOTEL_CHECKIN\",\"avatar\":\"assets/avatars/Man.png\",\"emoji\":\"🏨\",\"goal\":\"Learn how to checkin\",\"name\":{\"de\":\"Hotel Checkin\",\"en\":\"Hotel Checkin\",\"es\":\"Checkin del hotel\"},\"prompt_desc\":\"You are a hotel receptionist and I am a guest; I'm trying to check in\",\"rating_desc\":\"polite, fairly formal\",\"rating_name\":\"RECEPTIONIST\",\"starting_msgs\":{\"de\":[\"Guten Tag. Wie kann ich ihnen helfen?\",\"Hallo, wie kann ich ihnen helfen?\"],\"en\":[\"Good afternoon. How can I help you?\",\"Hello, how can I help you?\"],\"es\":[\"Buenas tardes. ¿En qué puedo ayudarle?\",\"Hola, ¿En qué puedo ayudarle?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-D\",\"language_code\":\"de-DE\",\"pitch\":0},\"en\":{\"name\":\"en-US-Neural2-I\",\"language_code\":\"en-US\",\"pitch\":0},\"es\":{\"name\":\"es-ES-Neural2-B\",\"language_code\":\"es-ES\",\"pitch\":0}}},{\"id\":\"HOTEL_CHECKOUT\",\"avatar\":\"assets/avatars/Women.png\",\"emoji\":\"🏨\",\"goal\":\"Learn how to checkout\",\"name\":{\"de\":\"Hotel Checkout\",\"en\":\"Hotel Checkout\",\"es\":\"Checkout del hotel\"},\"prompt_desc\":\"You are a hotel receptionist and I am a guest; I'm trying to check out\",\"rating_desc\":\"polite, fairly formal\",\"rating_name\":\"RECEPTIONIST\",\"starting_msgs\":{\"de\":[\"Guten Tag. Wie kann ich ihnen helfen?\",\"Hallo, wie kann ich ihnen helfen?\"],\"en\":[\"Good afternoon. How can I help you?\",\"Hello, how can I help you?\"],\"es\":[\"Buenas tardes. ¿En qué puedo ayudarle?\",\"Hola, ¿En qué puedo ayudarle?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-C\",\"language_code\":\"de-DE\",\"pitch\":0},\"en\":{\"name\":\"en-US-Neural2-H\",\"language_code\":\"en-US\",\"pitch\":0},\"es\":{\"name\":\"es-ES-Neural2-A\",\"language_code\":\"es-ES\",\"pitch\":0}}},{\"id\":\"ORDERING_DELIVERY\",\"avatar\":\"assets/avatars/Fast Food.png\",\"emoji\":\"🍕\",\"goal\":\"Learn how to order delivery\",\"name\":{\"de\":\"Essen Liefern lassen\",\"en\":\"Ordering Delivery\",\"es\":\"Ordenar entrega\"},\"prompt_desc\":\"You are a delivery person and I am a customer\",\"rating_desc\":\"friendly, fairly casual\",\"rating_name\":\"DELIVERY PERSON\",\"starting_msgs\":{\"de\":[\"Guten Tag. Was wollen sie denn von BurgerPrinz bestellen?\",\"Hallo, PizzaMütze Hotline. Was wollen sie denn von uns bestellen?\"],\"en\":[\"Good afternoon. What would you like to order from BurgerPrince?\",\"Hello, PizzaCap Hotline. What would you like to order from us?\"],\"es\":[\"Buenas tardes. ¿Qué le gustaría pedir de BurgerPrincipe?\",\"Hola, PizzaGorro Hotline. ¿Qué le gustaría pedir de nosotros?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-B\",\"language_code\":\"de-DE\",\"pitch\":0},\"en\":{\"name\":\"en-US-Neural2-J\",\"language_code\":\"en-US\",\"pitch\":-6},\"es\":{\"name\":\"es-ES-Neural2-F\",\"language_code\":\"es-ES\",\"pitch\":0}}},{\"id\":\"ASKING_FOR_DIRECTIONS\",\"avatar\":\"assets/avatars/Man.png\",\"emoji\":\"🧭\",\"goal\":\"Learn how to ask a stranger for directions\",\"name\":{\"de\":\"Nach dem Weg fragen\",\"en\":\"Asking for Directions\",\"es\":\"Preguntar por la dirección\"},\"prompt_desc\":\"You are a local and I am a tourist; I'm trying to find a place\",\"rating_desc\":\"friendly, fairly casual\",\"rating_name\":\"LOCAL\",\"starting_msgs\":{\"de\":[\"Guten Tag. Wie kann ich ihnen helfen?\",\"Hallo, wie kann ich ihnen helfen?\"],\"en\":[\"Good afternoon. How can I help you?\",\"Hello, how can I help you?\"],\"es\":[\"Buenas tardes. ¿En qué puedo ayudarle?\",\"Hola, ¿En qué puedo ayudarle?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-B\",\"language_code\":\"de-DE\",\"pitch\":0},\"en\":{\"name\":\"en-US-Neural2-J\",\"language_code\":\"en-US\",\"pitch\":-6},\"es\":{\"name\":\"es-ES-Neural2-F\",\"language_code\":\"es-ES\",\"pitch\":0}}},{\"id\":\"COFFEESHOP_CONVERSATION\",\"avatar\":\"assets/avatars/Man.png\",\"emoji\":\"☕\",\"goal\":\"Learn how to have a casual conversation\",\"name\":{\"de\":\"Treffen mit Freund\",\"en\":\"Meeting a Friend\",\"es\":\"Reunión con un amigo\"},\"prompt_desc\":\"You are a friend and I am a friend; we're meeting for coffee\",\"rating_desc\":\"friendly, casual\",\"rating_name\":\"FRIEND\",\"starting_msgs\":{\"de\":[\"Hallo, wie geht es dir?\",\"Guten morgen, wie geht es dir?\"],\"en\":[\"Hello, how are you?\",\"Good morning, how are you?\"],\"es\":[\"Hola, ¿cómo estás?\",\"Buenos días, ¿cómo estás?\"]},\"voice_info\":{\"de\":{\"name\":\"de-DE-Neural2-B\",\"language_code\":\"de-DE\",\"pitch\":0},\"en\":{\"name\":\"en-US-Neural2-J\",\"language_code\":\"en-US\",\"pitch\":-6},\"es\":{\"name\":\"es-ES-Neural2-F\",\"language_code\":\"es-ES\",\"pitch\":0}}}]"
-            },
-            "valueType": "JSON"
-        },
-        "use_cases": {
-            "defaultValue": {
-                "value": "[     {         \"id\": \"travel\",         \"emoji\": \"🧳\",         \"name\": {             \"en\": \"Travel\",             \"de\": \"Reisen\"         },         \"recommended\": [             \"HOTEL_CHECKIN\",             \"HOTEL_CHECKOUT\",             \"RESTAURANT\",             \"BEACH\",             \"ASKING_FOR_DIRECTIONS\"         ]     },     {         \"id\": \"work\",         \"emoji\": \"👔\",         \"name\": {             \"en\": \"Work\",             \"de\": \"Arbeit\"         },         \"recommended\": [             \"JOB_INTERVIEW\",             \"RESTAURANT\",             \"DOCTOR\",             \"COFFEESHOP_CONVERSATION\"         ]     },     {         \"id\": \"student\",         \"emoji\": \"🎓\",         \"name\": {             \"en\": \"Semester Abroad\",             \"de\": \"Auslandssemester\"         },         \"recommended\": [             \"ORDERING_DELIVERY\",             \"RESTAURANT\",             \"DOCTOR\",             \"COFFEESHOP_CONVERSATION\"         ]     } ]"
-            },
-            "valueType": "JSON"
+    "travel_en_en": [
+        {
+            "name": "Basics",
+            "items": [
+                {
+                    "name": "The Basics",
+                    "items": [
+                        {
+                            "type": "vocab",
+                            "name": "Basic Phrases",
+                            "items": [
+                                {
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hello",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "yes",
+                                    "learn_lang": "yes",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "no",
+                                    "learn_lang": "no",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Thank you",
+                                    "learn_lang": "Thank you",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Please",
+                                    "learn_lang": "Please",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "No Problem",
+                                    "learn_lang": "No Problem",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I",
+                                    "learn_lang": "I",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You",
+                                    "learn_lang": "You",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "He",
+                                    "learn_lang": "He",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "She",
+                                    "learn_lang": "She",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "We",
+                                    "learn_lang": "We",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You (plural)",
+                                    "learn_lang": "You (plural)",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sorry",
+                                    "learn_lang": "Sorry",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is",
+                                    "learn_lang": "What is",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "How do you say … in English",
+                                    "learn_lang": "How do you say … in English",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is … in English",
+                                    "learn_lang": "What is … in English",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Greetings and Goodbye's",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hello",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Morning",
+                                    "learn_lang": "Good Morning",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Afternoon",
+                                    "learn_lang": "Good Afternoon",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Evening",
+                                    "learn_lang": "Good Evening",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Hi",
+                                    "learn_lang": "Hi",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Bye",
+                                    "learn_lang": "Bye",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "See you later",
+                                    "learn_lang": "See you later",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Have a great day",
+                                    "learn_lang": "Have a great day",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Introducing yourself",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "I am",
+                                    "learn_lang": "I am",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You are",
+                                    "learn_lang": "You are",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "We are",
+                                    "learn_lang": "We are",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is your name?",
+                                    "learn_lang": "What is your name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "My name is",
+                                    "learn_lang": "My name is",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "And you?",
+                                    "learn_lang": "And you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "How are you?",
+                                    "learn_lang": "How are you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I am doing good, thank you",
+                                    "learn_lang": "I am doing good, thank you",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Do you speak english",
+                                    "learn_lang": "Do you speak english",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I speak English",
+                                    "learn_lang": "I speak English",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I sadly only speak a little English",
+                                    "learn_lang": "I sadly only speak a little English",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mock_chat",
+                            "avatar": "man",
+                            "name": "First Steps",
+                            "starts_with_ai": false,
+                            "items": [
+                                {
+                                    "type": "user",
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hello",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Good Morning, how are you?",
+                                    "learn_lang": "Good Morning, how are you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "I am doing good, thank you. And you?",
+                                    "learn_lang": "I am doing good, thank you. And you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "I am doing good as well, thankyou. What is your name?",
+                                    "learn_lang": "I am doing good as well, thankyou. What is your name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "My name is Peter. What is your name?",
+                                    "learn_lang": "My name is Peter. What is your name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "My Name is John. Do you speak English?",
+                                    "learn_lang": "My Name is John. Do you speak English?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "I sadly only speak a little English",
+                                    "learn_lang": "I sadly only speak a little English",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Ok. See you later",
+                                    "learn_lang": "Ok. See you later",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Bye",
+                                    "learn_lang": "Bye",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Your first conversation",
+                            "type": "ai_chat",
+                            "avatar": "woman",
+                            "starting_msg": "Hello",
+                            "prompt_desc": "Ask the user how they are doing, what their name is, if he speaks English and then end the conversation by saying goodbye.",
+                            "goal_desc": "I want to learn how to greet someone and have the first very basic conversation.",
+                            "voice_info": {
+                                "name": "en-US-Neural2-F",
+                                "language_code": "en-US",
+                                "pitch": 0
+                            }
+                        }
+                    ]
+                }
+            ]
         }
-    },
-    "version": {
-        "versionNumber": "1",
-        "updateTime": "2023-04-07T13:34:13.326867Z",
-        "updateUser": {
-            "email": "peer.rheinboldt@gmail.com"
-        },
-        "updateOrigin": "CONSOLE",
-        "updateType": "INCREMENTAL_UPDATE"
-    }
+    ],
+    "travel_en_de": [
+        {
+            "name": "Basics",
+            "items": [
+                {
+                    "name": "The Basics",
+                    "items": [
+                        {
+                            "type": "vocab",
+                            "name": "Basic Phrases",
+                            "items": [
+                                {
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "yes",
+                                    "learn_lang": "ja",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "no",
+                                    "learn_lang": "keine",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Thank you",
+                                    "learn_lang": "Dankeschön",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Please",
+                                    "learn_lang": "Bitte",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "No Problem",
+                                    "learn_lang": "Kein Problem",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I",
+                                    "learn_lang": "I",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You",
+                                    "learn_lang": "Sie",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "He",
+                                    "learn_lang": "Er",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "She",
+                                    "learn_lang": "Sie",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "We",
+                                    "learn_lang": "Wir",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You (plural)",
+                                    "learn_lang": "You (Plural)",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sorry",
+                                    "learn_lang": "Entschuldigung",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is",
+                                    "learn_lang": "Was ist",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "How do you say … in German",
+                                    "learn_lang": "Wie sagt man ... auf Deutsch",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is … in English",
+                                    "learn_lang": "Was ist ... auf Englisch",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Greetings and Goodbye's",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Morning",
+                                    "learn_lang": "Guten Morgen",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Afternoon",
+                                    "learn_lang": "Guten Tag",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Evening",
+                                    "learn_lang": "Guten Abend",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Hi",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Bye",
+                                    "learn_lang": "Tschüss",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "See you later",
+                                    "learn_lang": "Wir sehen uns später",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Have a great day",
+                                    "learn_lang": "Schönen Tag noch",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Introducing yourself",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "I am",
+                                    "learn_lang": "Ich bin",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You are",
+                                    "learn_lang": "Sie sind",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "We are",
+                                    "learn_lang": "Wir sind",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is your name?",
+                                    "learn_lang": "Wie ist Ihr Name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "My name is",
+                                    "learn_lang": "Mein Name ist",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "And you?",
+                                    "learn_lang": "Und Sie?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "How are you?",
+                                    "learn_lang": "Wie geht es Ihnen?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I am doing good, thank you",
+                                    "learn_lang": "Mir geht es gut, danke",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Do you speak english",
+                                    "learn_lang": "Sprechen Sie Englisch?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I speak English",
+                                    "learn_lang": "Ich spreche Englisch",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I sadly only speak a little German",
+                                    "learn_lang": "Ich spreche leider nur ein wenig Deutsch",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mock_chat",
+                            "avatar": "man",
+                            "name": "First Steps",
+                            "starts_with_ai": false,
+                            "items": [
+                                {
+                                    "type": "user",
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Good Morning, how are you?",
+                                    "learn_lang": "Guten Morgen, wie geht es Ihnen?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "I am doing good, thank you. And you?",
+                                    "learn_lang": "Mir geht es gut, danke. Und Ihnen?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "I am doing good as well, thankyou. What is your name?",
+                                    "learn_lang": "Mir geht es auch gut, vielen Dank. Wie ist Ihr Name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "My name is Peter. What is your name?",
+                                    "learn_lang": "Mein Name ist Peter. Wie heißt du?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "My Name is John. Do you speak German?",
+                                    "learn_lang": "Mein Name ist John. Sprichst du Deutsch?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "I sadly only speak a little German",
+                                    "learn_lang": "Ich spreche leider nur ein wenig Deutsch",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Ok. See you later",
+                                    "learn_lang": "Na gut. Wir sehen uns später",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Bye",
+                                    "learn_lang": "Tschüss",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Your first conversation",
+                            "type": "ai_chat",
+                            "avatar": "woman",
+                            "starting_msg": "Hallo",
+                            "prompt_desc": "Ask the user how they are doing, what their name is, if he speaks English and then end the conversation by saying goodbye.",
+                            "goal_desc": "I want to learn how to greet someone and have the first very basic conversation.",
+                            "voice_info": {
+                                "name": "de-DE-Neural2-F",
+                                "language_code": "de-DE",
+                                "pitch": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "travel_en_es": [
+        {
+            "name": "Basics",
+            "items": [
+                {
+                    "name": "The Basics",
+                    "items": [
+                        {
+                            "type": "vocab",
+                            "name": "Basic Phrases",
+                            "items": [
+                                {
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "yes",
+                                    "learn_lang": "sí",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "no",
+                                    "learn_lang": "no",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Thank you",
+                                    "learn_lang": "Gracias",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Please",
+                                    "learn_lang": "Por favor,",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "No Problem",
+                                    "learn_lang": "Ningún problema",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I",
+                                    "learn_lang": "I",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You",
+                                    "learn_lang": "Usted",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "He",
+                                    "learn_lang": "Él",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "She",
+                                    "learn_lang": "Ella",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "We",
+                                    "learn_lang": "Nosotros",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You (plural)",
+                                    "learn_lang": "Vosotros (plural)",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sorry",
+                                    "learn_lang": "Lo siento",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is",
+                                    "learn_lang": "¿Qué es la",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "How do you say … in Spanish",
+                                    "learn_lang": "Cómo Se Dice ... en Inglés",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is … in English",
+                                    "learn_lang": "Qué es ... en inglés",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Greetings and Goodbye's",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Morning",
+                                    "learn_lang": "Buenos días",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Afternoon",
+                                    "learn_lang": "Buenas tardes",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Good Evening",
+                                    "learn_lang": "Buenas tardes",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Hi",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Bye",
+                                    "learn_lang": "Adiós",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "See you later",
+                                    "learn_lang": "Hasta luego.",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Have a great day",
+                                    "learn_lang": "Que tenga un buen día",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Introducing yourself",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "I am",
+                                    "learn_lang": "Yo soy",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You are",
+                                    "learn_lang": "Usted es",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "We are",
+                                    "learn_lang": "Somos",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "What is your name?",
+                                    "learn_lang": "¿Cómo te llamas?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "My name is",
+                                    "learn_lang": "Me llamo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "And you?",
+                                    "learn_lang": "¿Y tú?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "How are you?",
+                                    "learn_lang": "¿Qué tal?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I am doing good, thank you",
+                                    "learn_lang": "Me va bien, gracias",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Do you speak english",
+                                    "learn_lang": "¿Habla usted inglés?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I speak English",
+                                    "learn_lang": "Hablo inglés",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I sadly only speak a little Spanish",
+                                    "learn_lang": "Lamentablemente sólo hablo un poco de español",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mock_chat",
+                            "avatar": "man",
+                            "name": "First Steps",
+                            "starts_with_ai": false,
+                            "items": [
+                                {
+                                    "type": "user",
+                                    "app_lang": "Hello",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Good Morning, how are you?",
+                                    "learn_lang": "Buenos días, ¿cómo está?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "I am doing good, thank you. And you?",
+                                    "learn_lang": "Me va bien, gracias. ¿Y a ti?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "I am doing good as well, thankyou. What is your name?",
+                                    "learn_lang": "A mí también me va bien, gracias. ¿Cómo te llamas?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "My name is Peter. What is your name?",
+                                    "learn_lang": "Me llamo Peter. ¿Cómo te llamas tú?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "My Name is John. Do you speak Spanish?",
+                                    "learn_lang": "Me llamo John. ¿Hablas español?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "I sadly only speak a little Spanish",
+                                    "learn_lang": "Lamentablemente sólo hablo un poco de español",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Ok. See you later",
+                                    "learn_lang": "De acuerdo. Hasta luego.",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Bye",
+                                    "learn_lang": "Adiós",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Your first conversation",
+                            "type": "ai_chat",
+                            "avatar": "woman",
+                            "starting_msg": "Hola",
+                            "prompt_desc": "Ask the user how they are doing, what their name is, if he speaks English and then end the conversation by saying goodbye.",
+                            "goal_desc": "I want to learn how to greet someone and have the first very basic conversation.",
+                            "voice_info": {
+                                "name": "es-ES-Neural2-D",
+                                "language_code": "es-ES",
+                                "pitch": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "travel_de_en": [
+        {
+            "name": "Basics",
+            "items": [
+                {
+                    "name": "The Basics",
+                    "items": [
+                        {
+                            "type": "vocab",
+                            "name": "Basic Phrases",
+                            "items": [
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hello",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "ja",
+                                    "learn_lang": "yes",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "keine",
+                                    "learn_lang": "no",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Dankeschön",
+                                    "learn_lang": "Thank you",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Bitte",
+                                    "learn_lang": "Please",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Kein Problem",
+                                    "learn_lang": "No Problem",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I",
+                                    "learn_lang": "I",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie",
+                                    "learn_lang": "You",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Er",
+                                    "learn_lang": "He",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie",
+                                    "learn_lang": "She",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir",
+                                    "learn_lang": "We",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You (Plural)",
+                                    "learn_lang": "You (plural)",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Entschuldigung",
+                                    "learn_lang": "Sorry",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Was ist",
+                                    "learn_lang": "What is",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie sagt man ... auf Englisch",
+                                    "learn_lang": "How do you say … in English",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Was ist ... auf Deutsch",
+                                    "learn_lang": "What is … in German",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Greetings and Goodbye's",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hello",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Morgen",
+                                    "learn_lang": "Good Morning",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Tag",
+                                    "learn_lang": "Good Afternoon",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Abend",
+                                    "learn_lang": "Good Evening",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hi",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Tschüss",
+                                    "learn_lang": "Bye",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir sehen uns später",
+                                    "learn_lang": "See you later",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Schönen Tag noch",
+                                    "learn_lang": "Have a great day",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Introducing yourself",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Ich bin",
+                                    "learn_lang": "I am",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie sind",
+                                    "learn_lang": "You are",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir sind",
+                                    "learn_lang": "We are",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie ist Ihr Name?",
+                                    "learn_lang": "What is your name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Mein Name ist",
+                                    "learn_lang": "My name is",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Und Sie?",
+                                    "learn_lang": "And you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie geht es Ihnen?",
+                                    "learn_lang": "How are you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Mir geht es gut, danke",
+                                    "learn_lang": "I am doing good, thank you",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sprechen Sie Englisch?",
+                                    "learn_lang": "Do you speak english",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Ich spreche Deutsch",
+                                    "learn_lang": "I speak German",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Ich spreche leider nur ein wenig Englisch",
+                                    "learn_lang": "I sadly only speak a little English",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mock_chat",
+                            "avatar": "man",
+                            "name": "First Steps",
+                            "starts_with_ai": false,
+                            "items": [
+                                {
+                                    "type": "user",
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hello",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Guten Morgen, wie geht es Ihnen?",
+                                    "learn_lang": "Good Morning, how are you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Mir geht es gut, danke. Und Ihnen?",
+                                    "learn_lang": "I am doing good, thank you. And you?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Mir geht es auch gut, vielen Dank. Wie ist Ihr Name?",
+                                    "learn_lang": "I am doing good as well, thankyou. What is your name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Mein Name ist Peter. Wie heißt du?",
+                                    "learn_lang": "My name is Peter. What is your name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Mein Name ist John. Sprichst du Englisch?",
+                                    "learn_lang": "My Name is John. Do you speak English?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Ich spreche leider nur ein wenig Englisch",
+                                    "learn_lang": "I sadly only speak a little English",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Na gut. Wir sehen uns später",
+                                    "learn_lang": "Ok. See you later",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Tschüss",
+                                    "learn_lang": "Bye",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Your first conversation",
+                            "type": "ai_chat",
+                            "avatar": "woman",
+                            "starting_msg": "Hello",
+                            "prompt_desc": "Ask the user how they are doing, what their name is, if he speaks German and then end the conversation by saying goodbye.",
+                            "goal_desc": "I want to learn how to greet someone and have the first very basic conversation.",
+                            "voice_info": {
+                                "name": "en-US-Neural2-F",
+                                "language_code": "en-US",
+                                "pitch": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "travel_de_de": [
+        {
+            "name": "Basics",
+            "items": [
+                {
+                    "name": "The Basics",
+                    "items": [
+                        {
+                            "type": "vocab",
+                            "name": "Basic Phrases",
+                            "items": [
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "ja",
+                                    "learn_lang": "ja",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "keine",
+                                    "learn_lang": "keine",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Dankeschön",
+                                    "learn_lang": "Dankeschön",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Bitte",
+                                    "learn_lang": "Bitte",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Kein Problem",
+                                    "learn_lang": "Kein Problem",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I",
+                                    "learn_lang": "I",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie",
+                                    "learn_lang": "Sie",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Er",
+                                    "learn_lang": "Er",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie",
+                                    "learn_lang": "Sie",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir",
+                                    "learn_lang": "Wir",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You (Plural)",
+                                    "learn_lang": "You (Plural)",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Entschuldigung",
+                                    "learn_lang": "Entschuldigung",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Was ist",
+                                    "learn_lang": "Was ist",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie sagt man ... auf Deutsch",
+                                    "learn_lang": "Wie sagt man ... auf Deutsch",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Was ist ... auf Deutsch",
+                                    "learn_lang": "Was ist ... auf Deutsch",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Greetings and Goodbye's",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Morgen",
+                                    "learn_lang": "Guten Morgen",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Tag",
+                                    "learn_lang": "Guten Tag",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Abend",
+                                    "learn_lang": "Guten Abend",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Tschüss",
+                                    "learn_lang": "Tschüss",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir sehen uns später",
+                                    "learn_lang": "Wir sehen uns später",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Schönen Tag noch",
+                                    "learn_lang": "Schönen Tag noch",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Introducing yourself",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Ich bin",
+                                    "learn_lang": "Ich bin",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie sind",
+                                    "learn_lang": "Sie sind",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir sind",
+                                    "learn_lang": "Wir sind",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie ist Ihr Name?",
+                                    "learn_lang": "Wie ist Ihr Name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Mein Name ist",
+                                    "learn_lang": "Mein Name ist",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Und Sie?",
+                                    "learn_lang": "Und Sie?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie geht es Ihnen?",
+                                    "learn_lang": "Wie geht es Ihnen?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Mir geht es gut, danke",
+                                    "learn_lang": "Mir geht es gut, danke",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sprechen Sie Englisch?",
+                                    "learn_lang": "Sprechen Sie Englisch?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Ich spreche Deutsch",
+                                    "learn_lang": "Ich spreche Deutsch",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Ich spreche leider nur ein wenig Deutsch",
+                                    "learn_lang": "Ich spreche leider nur ein wenig Deutsch",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mock_chat",
+                            "avatar": "man",
+                            "name": "First Steps",
+                            "starts_with_ai": false,
+                            "items": [
+                                {
+                                    "type": "user",
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hallo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Guten Morgen, wie geht es Ihnen?",
+                                    "learn_lang": "Guten Morgen, wie geht es Ihnen?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Mir geht es gut, danke. Und Ihnen?",
+                                    "learn_lang": "Mir geht es gut, danke. Und Ihnen?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Mir geht es auch gut, vielen Dank. Wie ist Ihr Name?",
+                                    "learn_lang": "Mir geht es auch gut, vielen Dank. Wie ist Ihr Name?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Mein Name ist Peter. Wie heißt du?",
+                                    "learn_lang": "Mein Name ist Peter. Wie heißt du?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Mein Name ist John. Sprichst du Deutsch?",
+                                    "learn_lang": "Mein Name ist John. Sprichst du Deutsch?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Ich spreche leider nur ein wenig Deutsch",
+                                    "learn_lang": "Ich spreche leider nur ein wenig Deutsch",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Na gut. Wir sehen uns später",
+                                    "learn_lang": "Na gut. Wir sehen uns später",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Tschüss",
+                                    "learn_lang": "Tschüss",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Your first conversation",
+                            "type": "ai_chat",
+                            "avatar": "woman",
+                            "starting_msg": "Hallo",
+                            "prompt_desc": "Ask the user how they are doing, what their name is, if he speaks German and then end the conversation by saying goodbye.",
+                            "goal_desc": "I want to learn how to greet someone and have the first very basic conversation.",
+                            "voice_info": {
+                                "name": "de-DE-Neural2-F",
+                                "language_code": "de-DE",
+                                "pitch": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "travel_de_es": [
+        {
+            "name": "Basics",
+            "items": [
+                {
+                    "name": "The Basics",
+                    "items": [
+                        {
+                            "type": "vocab",
+                            "name": "Basic Phrases",
+                            "items": [
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "ja",
+                                    "learn_lang": "sí",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "keine",
+                                    "learn_lang": "no",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Dankeschön",
+                                    "learn_lang": "Gracias",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Bitte",
+                                    "learn_lang": "Por favor,",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Kein Problem",
+                                    "learn_lang": "Ningún problema",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "I",
+                                    "learn_lang": "I",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie",
+                                    "learn_lang": "Usted",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Er",
+                                    "learn_lang": "Él",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie",
+                                    "learn_lang": "Ella",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir",
+                                    "learn_lang": "Nosotros",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "You (Plural)",
+                                    "learn_lang": "Vosotros (plural)",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Entschuldigung",
+                                    "learn_lang": "Lo siento",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Was ist",
+                                    "learn_lang": "¿Qué es la",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie sagt man ... auf Spanisch",
+                                    "learn_lang": "Cómo Se Dice ... en Inglés",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Was ist ... auf Deutsch",
+                                    "learn_lang": "Qué es ... en alemán",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Greetings and Goodbye's",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Morgen",
+                                    "learn_lang": "Buenos días",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Tag",
+                                    "learn_lang": "Buenas tardes",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Guten Abend",
+                                    "learn_lang": "Buenas tardes",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Tschüss",
+                                    "learn_lang": "Adiós",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir sehen uns später",
+                                    "learn_lang": "Hasta luego.",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Schönen Tag noch",
+                                    "learn_lang": "Que tenga un buen día",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Introducing yourself",
+                            "type": "vocab",
+                            "items": [
+                                {
+                                    "app_lang": "Ich bin",
+                                    "learn_lang": "Yo soy",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sie sind",
+                                    "learn_lang": "Usted es",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wir sind",
+                                    "learn_lang": "Somos",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie ist Ihr Name?",
+                                    "learn_lang": "¿Cómo te llamas?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Mein Name ist",
+                                    "learn_lang": "Me llamo",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Und Sie?",
+                                    "learn_lang": "¿Y tú?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Wie geht es Ihnen?",
+                                    "learn_lang": "¿Qué tal?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Mir geht es gut, danke",
+                                    "learn_lang": "Me va bien, gracias",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Sprechen Sie Englisch?",
+                                    "learn_lang": "¿Habla usted inglés?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Ich spreche Deutsch",
+                                    "learn_lang": "Hablo alemán",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "app_lang": "Ich spreche leider nur ein wenig Spanisch",
+                                    "learn_lang": "Lamentablemente sólo hablo un poco de español",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mock_chat",
+                            "avatar": "man",
+                            "name": "First Steps",
+                            "starts_with_ai": false,
+                            "items": [
+                                {
+                                    "type": "user",
+                                    "app_lang": "Hallo",
+                                    "learn_lang": "Hola",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Guten Morgen, wie geht es Ihnen?",
+                                    "learn_lang": "Buenos días, ¿cómo está?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Mir geht es gut, danke. Und Ihnen?",
+                                    "learn_lang": "Me va bien, gracias. ¿Y a ti?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Mir geht es auch gut, vielen Dank. Wie ist Ihr Name?",
+                                    "learn_lang": "A mí también me va bien, gracias. ¿Cómo te llamas?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Mein Name ist Peter. Wie heißt du?",
+                                    "learn_lang": "Me llamo Peter. ¿Cómo te llamas tú?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Mein Name ist John. Sprichst du Spanisch?",
+                                    "learn_lang": "Me llamo John. ¿Hablas español?",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Ich spreche leider nur ein wenig Spanisch",
+                                    "learn_lang": "Lamentablemente sólo hablo un poco de español",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "ai",
+                                    "app_lang": "Na gut. Wir sehen uns später",
+                                    "learn_lang": "De acuerdo. Hasta luego.",
+                                    "audio_url": ""
+                                },
+                                {
+                                    "type": "user",
+                                    "app_lang": "Tschüss",
+                                    "learn_lang": "Adiós",
+                                    "audio_url": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Your first conversation",
+                            "type": "ai_chat",
+                            "avatar": "woman",
+                            "starting_msg": "Hola",
+                            "prompt_desc": "Ask the user how they are doing, what their name is, if he speaks German and then end the conversation by saying goodbye.",
+                            "goal_desc": "I want to learn how to greet someone and have the first very basic conversation.",
+                            "voice_info": {
+                                "name": "es-ES-Neural2-D",
+                                "language_code": "es-ES",
+                                "pitch": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }

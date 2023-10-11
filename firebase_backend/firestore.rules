@@ -4,6 +4,9 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if isUserAuthenticated();
     }
+    match /static/{document=**} {
+      allow read: if isUserAuthenticated();
+    }
     match /users/{app_user_id}/purchaser-info/{uid} {
       allow read: if request.auth.uid == uid;
     }

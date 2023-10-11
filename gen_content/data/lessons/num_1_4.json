@@ -1,0 +1,33 @@
+{
+    "type": "mock_chat",
+    "name": "Asking for the time",
+    "content": {
+        "avatar": "man",
+        "msg_list": [
+            {
+                "msg": "Hello",
+                "is_ai": true
+            },
+            {
+                "msg": "Hello, how are you?",
+                "is_ai": false
+            },
+            {
+                "msg": "I am doing good, thank you. Could you tell me the time?",
+                "is_ai": true
+            },
+            {
+                "msg": "Yes, it is 10:30",
+                "is_ai": false
+            },
+            {
+                "msg": "Thank you. Goodbye",
+                "is_ai": true
+            },
+            {
+                "msg": "Goodbye",
+                "is_ai": true
+            }
+        ]
+    }
+}

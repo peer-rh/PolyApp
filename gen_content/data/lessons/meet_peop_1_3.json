@@ -1,0 +1,57 @@
+{
+    "type": "mock_chat",
+    "name": "Meeting Someone",
+    "content": {
+        "avatar": "woman",
+        "msg_list": [
+            {
+                "is_ai": true,
+                "msg": "Hello"
+            },
+            {
+                "is_ai": false,
+                "msg": "Good evening, how are you?"
+            },
+            {
+                "is_ai": true,
+                "msg": "I am doing good, thank you. And you?"
+            },
+            {
+                "is_ai": false,
+                "msg": "I am doing good as well, thankyou."
+            },
+            {
+                "is_ai": true,
+                "msg": "What is your name?"
+            },
+            {
+                "is_ai": false,
+                "msg": "My name is John. And yours?"
+            },
+            {
+                "is_ai": true,
+                "msg": "My name is Jane. Where are you from?"
+            },
+            {
+                "is_ai": false,
+                "msg": "I am from {{app_country}}. And you?"
+            },
+            {
+                "is_ai": true,
+                "msg": "I am from {{learn_country}}. How old are you?"
+            },
+            {
+                "is_ai": false,
+                "msg": "I am 25 years old"
+            },
+            {
+                "is_ai": true,
+                "msg": "I have to go. Goodbye, have a great day"
+            },
+            {
+                "is_ai": false,
+                "msg": "See you later"
+            }
+        ]
+    }
+}

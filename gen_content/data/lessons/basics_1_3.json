@@ -1,0 +1,14 @@
+{
+    "type": "vocab",
+    "name": "More Important Phrases",
+    "content": {
+        "vocab": [
+            "I'm sorry",
+            "I'm sorry I only speak a little {{learn_lang}}",
+            "You're welcome",
+            "What is",
+            "How do you say ... in {{learn_lang}}",
+            "And you?"
+        ]
+    }
+}

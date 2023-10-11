@@ -1,0 +1,13 @@
+{
+    "name": "Travel",
+    "chapters": [
+        {
+            "name": "Chapter 1: Basics",
+            "subchapters": [
+                "basics_1",
+                "meeting_people_1",
+                "numbers_1"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "type": "mock_chat",
+    "name": "A Basic Conversation",
+    "content": {
+        "avatar": "man",
+        "msg_list": [
+            {
+                "msg": "Hello",
+                "is_ai": false
+            },
+            {
+                "msg": "Hello, how are you?",
+                "is_ai": true
+            },
+            {
+                "msg": "I am doing good, thank you. And you?",
+                "is_ai": false
+            },
+            {
+                "msg": "I am doing good as well, thankyou.",
+                "is_ai": true
+            },
+            {
+                "msg": "Bye",
+                "is_ai": false
+            },
+            {
+                "msg": "Bye",
+                "is_ai": true
+            }
+        ]
+    }
+}
