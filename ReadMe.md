@@ -1,5 +1,5 @@
 # Poly App (Unfinished)
-> See [this commit](https://github.com/peer-rh/PolyApp/tree/dc665e783d6fb8582e337d6430d99f292ed5ff9d) for a working version, which only encapsulated Chat features
+> See [this commit](https://github.com/peer-rh/PolyApp/tree/dc665e783d6fb8582e337d6430d99f292ed5ff9d) for a working version, which only encapsulated Chat features.
 > This commit still has a lot of unfinished corners in the vocabulary part, however chat features should work
 
 - Poly is a app aimed at making language learning efficient, affordable and fun
