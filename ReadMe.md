@@ -6,6 +6,9 @@
 - It uses ChatGPT API for an interactive chat experience
 - It is built with Flutter and Firebase
 - It features a Chat/Dialogue experience which is tailored to certain scenarios and the vocabulary learned in the chapter
+  - The user can have a conversation with the AI chatbot in a roleplay scenario
+  - Additionally the user get feedback on how good his answer was
+  - Additionally supported is the Audio mode, where the user listens to the response and talks to respond
 - Additionally there is a Vocabulary System which is inspired by Duolingo, which included exercises, such as pronounce, listen, match and write
 - For the developement there is also a system which makes static content creation fast
   - A tool to convert translations into different languages
